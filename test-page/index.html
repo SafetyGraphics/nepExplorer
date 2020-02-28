@@ -1,0 +1,33 @@
+---
+redirect_from:
+  - /test/
+---
+
+<html>
+    <head>
+      <title>nep-explorer - Example</title>
+      <meta http-equiv = 'Content-Type' content = 'text/html; charset = utf-8'>
+
+      <script type = 'text/javascript' src = 'https://d3js.org/d3.v3.min.js'></script>
+      <script type = 'text/javascript' src = 'https://cdn.jsdelivr.net/gh/RhoInc/Webcharts/build/webcharts.min.js'></script>
+
+      <script type = 'text/javascript' src = '../nepExplorer.js'></script>
+
+      <link type = 'text/css' rel = 'stylesheet' href = 'https://cdn.jsdelivr.net/gh/RhoInc/Webcharts/css/webcharts.min.css'>
+      <link type = 'text/css' rel = 'stylesheet' href = './index.css'>
+    </head>
+
+    <body>
+      <div id = 'title'>nep-explorer</div>
+      <div id = 'subtitle'>Example 1</div>
+      <div id= 'info'>This is a demo page for the interactive nep-explorer tool created by the Rho. Code, details and documentation are available on <a href="https://github.com/SafetyGraphics/nep-explorer">github</a>.</div>
+      <div id = 'container'></div>
+    </body>
+
+    <script type = 'text/javascript'>
+      const chart =nepExplorer('#container', {});
+      d3.csv('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinical-trials/sdtm/cdisc-pilot-01/lb.csv', function (data) {
+        chart.init(data);
+      });
+</script>
+</html>

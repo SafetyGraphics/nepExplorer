@@ -1,0 +1,56 @@
+{
+    "name": "nep-explorer",
+    "description": "Interactive Graphic for Exploring Kidney Function Data in Clinical Trials",
+    "version": "0.2.0",
+    "author": "Rho, Inc.",
+    "license": "MIT",
+    "homepage": "https://github.com/SafetyGraphics/nep-explorer",
+    "module": "./src/index.js",
+    "main": "./nepExplorer.js",
+    "keywords": [
+        "nephrotoxicity",
+        " explorer",
+        " interactive",
+        " safety",
+        " clinical trials"
+    ],
+    "dependencies": {
+        "d3": "^3",
+        "webcharts": "^1.11.6"
+    },
+    "scripts": {
+        "build": "npm audit fix && npm run bundle && npm run format",
+        "build-offline": "npm run bundle && npm run format",
+        "build-all": "npm audit fix && npm run bundle && npm run format && npm run build-wiki && npm run check-settings-schema",
+        "build-wiki": "npm run build-configuration-wiki && npm run build-data-guidelines-wiki",
+        "build-configuration-wiki": "node ./scripts/build-configuration-wiki.js",
+        "build-data-guidelines-wiki": "node ./scripts/build-data-guidelines-wiki.js",
+        "bundle": "rollup -c",
+        "check-settings-schema": "node ./scripts/check-settings-schema.js",
+        "format": "npm run format-src && npm run format-bundle",
+        "format-src": "prettier --print-width=100 --tab-width=4 --single-quote --write \"./src/**/*.js\"",
+        "test-page": "start chrome ./test-page/index.html && start firefox ./test-page/index.html && start iexplore file://%CD%/test-page/index.html",
+        "watch": "rollup -c -w",
+        "format-bundle": "prettier --print-width=100 --tab-width=4 --single-quote --write ./nepExplorer.js"
+    },
+    "devDependencies": {
+        "babel-plugin-external-helpers": "^6.22.0",
+        "babel-preset-env": "^1.7.0",
+        "babel-register": "^6.26.0",
+        "prettier": "^1.18.2",
+        "rollup": "^1.26.0",
+        "rollup-plugin-babel": "^3.0.7",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-json": "^4.0.0",
+        "rollup-plugin-node-resolve": "^5.2.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/SafetyGraphics/nep-explorer.git"
+    },
+    "bugs": {
+        "url": "https://github.com/SafetyGraphics/nep-explorer/issues"
+    },
+    "org": "SafetyGraphics",
+    "function": "nepExplorer"
+}

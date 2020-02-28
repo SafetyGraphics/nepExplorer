@@ -1,0 +1,144 @@
+{
+  "description": "JSON schema for the configuration of safety-delta-delta",
+  "overview": "The most straightforward way to customize the Safety Delta-Delta plot is by using a configuration object whose properties describe the behavior and appearance of the chart. Since the Safety Histogram is a Webcharts `chart` object, many default Webcharts settings are set in the [webchartsSettings.js file](https://github.com/RhoInc/safety-delta-delta/blob/master/src/configuration/webchartsSettings.js) as [described below](#webcharts-settings). Refer to the [Webcharts documentation](https://github.com/RhoInc/Webcharts/wiki/Chart-Configuration) for more details on these settings.\nIn addition to the standard Webcharts settings several custom settings not available in the base Webcharts library have been added to the Safety Delta-Delta plot to facilitate data mapping and other custom functionality. These custom settings are described in detail below. All defaults can be overwritten by users.",
+  "title": "settings",
+  "type": "object",
+  "version": "1.0.0",
+  "data-guidelines": "The Safety Delta-Delta plot accepts [JSON](https://en.wikipedia.org/wiki/JSON) data of the format returned by [`d3.csv()`](https://github.com/d3/d3-3.x-api-reference/blob/master/CSV.md). The renderer visualizes clinical medical signs data with **one row per measurement** plus the required variables specified below.",
+  "data-structure": "one record per measurement",
+  "properties": {
+    "measure_col": {
+      "title": "Medical Sign",
+      "description": "a variable that contains the names of each medical sign",
+      "type": "string",
+      "default": "TEST",
+      "data-mapping": true,
+      "data-type": "character",
+      "required": true
+    },
+    "value_col": {
+      "title": "Result",
+      "description": "a variable that contains the results for each medical sign; non-numeric results are removed with a notification thrown to the log",
+      "type": "string",
+      "default": "STRESN",
+      "data-mapping": true,
+      "data-type": "numeric",
+      "required": true
+    },
+    "id_col": {
+      "title": "ID",
+      "description": "a variable that contains IDs for each participant",
+      "type": "string",
+      "default": "USUBJID",
+      "data-mapping": true,
+      "data-type": "character",
+      "required": true
+    },
+    "visit_col": {
+      "title": "Visit",
+      "description": "a variable that contains the categorical visit where the measure was collected",
+      "type": "string",
+      "default": "VISIT",
+      "data-mapping": true,
+      "data-type": "character",
+      "required": true
+    },
+    "visitn_col": {
+      "title": "Visit (Numeric)",
+      "description": "a variable that contains the numeric visit where the measure was collected",
+      "type": "string",
+      "default": "VISITN",
+      "data-mapping": true,
+      "data-type": "character",
+      "required": true
+    },
+    "measure": {
+      "title": "Measures",
+      "description": "Measures to be used in delta-delta scatter plot. Must be a value of the `settings.measure_value` column",
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "string",
+          "title": "X Measure",
+          "description": "Measure to be shown on the x-axis of the delta-delta plot"
+        },
+        "y": {
+          "type": "string",
+          "title": "Y Measure",
+          "description": "Measure to be shown on the y-axis of the delta-delta plot"
+        }
+      }
+    },
+    "add_regression_line": {
+      "title": "Add Regression Line",
+      "description": "Indicates whether a regression line should be drawn on the delta-delta scatter plot",
+      "type": "boolean",
+      "default": "false",
+      "data-mapping": false,
+      "required": false
+    },
+    "visits": {
+      "title": "",
+      "description": "",
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "string",
+          "title": "X Measure",
+          "description": "Measure to be shown on the x-axis of the delta-delta plot"
+        },
+        "y": {
+          "type": "string",
+          "title": "Y Measure",
+          "description": "Measure to be shown on the y-axis of the delta-delta plot"
+        }
+      }
+    },
+    "filters": {
+      "title": "Filter Variables",
+      "description": "an array of variables and metadata that will appear in the controls as data filters",
+      "type": "array",
+      "items": {
+        "properties": {
+          "label": {
+            "description": "a description of the variable",
+            "title": "Variable Label",
+            "type": "string"
+          },
+          "value_col": {
+            "description": "the name of the variable",
+            "title": "Variable Name",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "data-mapping": true,
+      "data-type": "either",
+      "required": false
+    },
+    "details": {
+      "title": "Listing Variables",
+      "description": "an array of variables and metadata that will appear in the data listing",
+      "type": "array",
+      "items": {
+        "properties": {
+          "label": {
+            "description": "a description of the variable",
+            "title": "Variable Label",
+            "type": "string"
+          },
+          "value_col": {
+            "description": "the name of the variable",
+            "title": "Variable Name",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "data-mapping": true,
+      "data-type": "either",
+      "required": false
+    }
+  }
+}
