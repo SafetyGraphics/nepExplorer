@@ -1,5 +1,7 @@
-import addLineClick from './onResize/addLineClick';
+import drawKdigoStages from './onResize/drawKdigoStages';
+import addPointClick from './onResize/addPointClick';
 
 export default function onResize() {
-    addLineClick.call(this);
+    drawKdigoStages.call(this);
+    addPointClick.call(this);
 }

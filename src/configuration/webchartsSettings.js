@@ -1,27 +1,26 @@
 export default function webchartsSettings() {
     return {
         x: {
-            column: null,
-            type: 'ordinal',
-            label: 'Visit'
+            column: 'creat_fchg',
+            type: 'linear',
+            label: 'Creatinine Fold Change from Baseline',
+            format: '.1f',
+            domain: [1,null],
         },
         y: {
-            column: null,
+            column: 'egfr_creat_chg',
             type: 'linear',
-            label: 'Value',
-            behavior: 'flex',
-            format: '0.2f'
+            label: 'eGFR Percent Change from Baseline',
+            format: ',1d',
+            domain: [0,null],
         },
         marks: [
             {
-                type: 'line',
-                per: null,
-                attributes: { 'stroke-width': 0.5, stroke: '#999' }
+                type: 'circle',
+                per: ['key'],
+                tooltip: '$x,$y',
             }
         ],
-        gridlines: 'xy',
-        aspect: 3,
-        color_by: null,
-        max_width: 900
+        aspect: 1,
     };
 }
