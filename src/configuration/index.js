@@ -3,7 +3,6 @@ import webchartsSettings from './webchartsSettings';
 import syncSettings from './syncSettings';
 import controlInputs from './controlInputs';
 import syncControlInputs from './syncControlInputs';
-import listingSettings from './listingSettings';
 
 export default {
     rendererSettings,
@@ -12,5 +11,4 @@ export default {
     syncSettings,
     controlInputs,
     syncControlInputs,
-    listingSettings
 };

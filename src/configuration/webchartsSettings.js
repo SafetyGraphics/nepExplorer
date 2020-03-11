@@ -18,9 +18,10 @@ export default function webchartsSettings() {
             {
                 type: 'circle',
                 per: ['key'],
-                tooltip: '$x,$y',
+                tooltip: '[key]: $x,$y',
             }
         ],
-        aspect: 1,
+        resizable: false,
+        aspect: 2,
     };
 }

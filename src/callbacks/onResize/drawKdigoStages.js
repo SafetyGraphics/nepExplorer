@@ -26,22 +26,22 @@ export default function drawKdigoStages() {
     //    .attr('height', this.plot_height/4)
     //    .attr('fill', 'white');
 
-    const kdigo_criteria = Object.keys(this.config.kdigo_criteria)
-        .map(key => this.config.kdigo_criteria[key]);
+    //const kdigo_criteria = Object.keys(this.config.kdigo_criteria)
+    //    .map(key => this.config.kdigo_criteria[key]);
 
-    kdigo_criteria.unshift({
-        creat_fchg: 1,
-        egfr_creat_fchg: 0,
-        color: 'white',
-    });
+    //kdigo_criteria.unshift({
+    //    creat_fchg: 1,
+    //    egfr_creat_fchg: 0,
+    //    color: 'white',
+    //});
 
-    kdigo_criteria.push({
-        creat_fchg: this.x_dom[1],
-        egfr_creat_fchg: this.y_dom[1],
-        color: this.config.kdigo_criteria.stage_3.color,
-    });
+    //kdigo_criteria.push({
+    //    creat_fchg: this.x_dom[1],
+    //    egfr_creat_fchg: this.y_dom[1],
+    //    color: this.config.kdigo_criteria.stage_3.color,
+    //});
 
-    console.table(kdigo_criteria);
+    //console.table(kdigo_criteria);
 
     //const d = kdigo_criteria[2];
     //console.log(this.y(d.egfr_creat_fchg));
@@ -63,21 +63,74 @@ export default function drawKdigoStages() {
     //    console.log(d);
     //});
 
-    const kdigoStages = this.svg
+    //const kdigoStages = this.svg
+    //    .insert('g', '.overlay')
+    //    .classed('kdigo-stages', true);
+
+    //kdigoStages
+    //    .selectAll('rect.kdigo-stage')
+    //    .data(kdigo_criteria.reverse())
+    //    .enter()
+    //    .append('rect')
+    //    .classed('kdigo-stage', true)
+    //    .attr({
+    //        x: d => 0,
+    //        y: d => this.y(d.egfr_creat_fchg),
+    //        width: d => this.x(d.creat_fchg),
+    //        height: d => this.plot_height - this.y(d.egfr_creat_fchg),
+    //        fill: d => d.color,
+    //    });
+
+    this.svg.select('.kdigo-stages').remove();
+    const g = this.svg
         .insert('g', '.overlay')
         .classed('kdigo-stages', true);
-
-    kdigoStages
-        .selectAll('rect.kdigo-stage')
-        .data(kdigo_criteria.reverse())
+    const rects = g
+        .selectAll('rect')
+        .data([
+            {
+                label: 'KDIGO Stage 3',
+                dimensions: [
+                    [1,this.x_dom[1]],
+                    [0,this.y_dom[1]],
+                ],
+                color: 'red',
+            },
+            {
+                label: 'KDIGO Stage 2',
+                dimensions: [
+                    [1,3],
+                    [0,75],
+                ],
+                color: 'orange',
+            },
+            {
+                label: 'KDIGO Stage 1',
+                dimensions: [
+                    [1,2],
+                    [0,50],
+                ],
+                color: 'yellow',
+            },
+            {
+                label: '',
+                dimensions: [
+                    [1,1.5],
+                    [0,25],
+                ],
+                color: 'white',
+            },
+        ])
         .enter()
         .append('rect')
         .classed('kdigo-stage', true)
         .attr({
-            x: d => 0,
-            y: d => this.y(d.egfr_creat_fchg),
-            width: d => this.x(d.creat_fchg),
-            height: d => this.plot_height - this.y(d.egfr_creat_fchg),
+            x: d => this.x(d.dimensions[0][0]),
+            y: d => this.y(d.dimensions[1][1]),
+            width: d => this.x(d.dimensions[0][1]) - this.x(d.dimensions[0][0]),
+            height: d => this.y(d.dimensions[1][0]) - this.y(d.dimensions[1][1]),
             fill: d => d.color,
+            'clip-path': `url(#${this.id})`,
         });
+    rects.append('title').text(d => d.label);
 }

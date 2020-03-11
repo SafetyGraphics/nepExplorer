@@ -4,6 +4,8 @@ import configuration from './configuration/index';
 import { createChart, createControls, createTable } from 'webcharts';
 import callbacks from './callbacks/index';
 
+import chart2settings from './resultsOverTime/settings';
+
 // layout and styles
 import layout from './layout';
 import styles from './styles';
@@ -12,7 +14,7 @@ import destroy from './destroy';
 
 export default function nepExplorer(element = 'body', settings = {}) {
     // layout and styles
-    layout(element);
+    const containers = layout(element);
     styles();
 
     //Define chart.
@@ -35,7 +37,7 @@ export default function nepExplorer(element = 'body', settings = {}) {
 
     // chart
     const chart = createChart(
-        document.querySelector(element).querySelector('#wc-chart'),
+        containers.chart1.node(),
         syncedSettings,
         controls
     );
@@ -43,17 +45,38 @@ export default function nepExplorer(element = 'body', settings = {}) {
     for (const callback in callbacks)
         chart.on(callback.substring(2).toLowerCase(), callbacks[callback]);
 
-    // listing
-    const listingSettings = configuration.listingSettings();
-    const listing = createTable(
-        document.querySelector(element).querySelector('#wc-listing'),
-        listingSettings
+    const chart2 = createChart(
+        containers.chart2.node(),
+        chart2settings(),
     );
-    listing.wrap.style('display', 'none'); // empty table's popping up briefly
-    listing.init([]);
 
-    chart.listing = listing;
-    listing.chart = chart;
+    chart2.on('layout', function() {
+        this.participantLabel = this.wrap.insert('span', ':first-child');
+    });
+
+    chart2.on('draw', function() {
+        this.participantLabel.text(d => `Participant ID: ${this.raw_data[0].id}`);
+    });
+
+    chart.chart2 = chart2;
+
+    const chart3settings = chart2settings();
+    chart3settings.y.column = 'xuln';
+    chart3settings.y.label = 'Standardized Result [xULN]';
+    const chart3 = createChart(
+        containers.chart3.node(),
+        chart3settings,
+    );
+
+    chart3.on('layout', function() {
+        this.participantLabel = this.wrap.insert('span', ':first-child');
+    });
+
+    chart3.on('draw', function() {
+        this.participantLabel.text(d => `Participant ID: ${this.raw_data[0].id}`);
+    });
+
+    chart.chart3 = chart3;
 
     const nepExplorer = {
         element,
@@ -62,10 +85,10 @@ export default function nepExplorer(element = 'body', settings = {}) {
             merged: mergedSettings,
             synced: syncedSettings,
             controlInputs: syncedControlInputs,
-            listing: listingSettings,
         },
         chart,
-        listing,
+        chart2,
+        chart3,
         init,
         destroy
     };

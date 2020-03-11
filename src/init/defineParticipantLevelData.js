@@ -13,6 +13,12 @@ export default function defineParticipantLevelData({settings: {synced: settings}
                 d.fchg = baseline && baseline.result > 0
                     ? d.result/baseline.result
                     : null;
+                d.pchg = baseline && baseline.result > 0
+                    ? (d.result/baseline.result - 1)*100
+                    : null;
+                d.xuln = d.result > 0 && d.uln > 0
+                    ? d.result/d.uln
+                    : null;
             });
 
             const datum = {
@@ -25,6 +31,8 @@ export default function defineParticipantLevelData({settings: {synced: settings}
             datum.max_chg = d3.max(datum.data, d => d.chg);
             datum.min_fchg = d3.min(datum.data, d => d.fchg);
             datum.max_fchg = d3.max(datum.data, d => d.fchg);
+            datum.min_pchg = d3.min(datum.data, d => d.pchg);
+            datum.max_pchg = d3.max(datum.data, d => d.pchg);
 
             return datum;
         })
