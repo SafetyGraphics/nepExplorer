@@ -36,19 +36,12 @@ export default function nepExplorer(element = 'body', settings = {}) {
     });
 
     // chart
-    const chart = createChart(
-        containers.chart1.node(),
-        syncedSettings,
-        controls
-    );
+    const chart = createChart(containers.chart1.node(), syncedSettings, controls);
 
     for (const callback in callbacks)
         chart.on(callback.substring(2).toLowerCase(), callbacks[callback]);
 
-    const chart2 = createChart(
-        containers.chart2.node(),
-        chart2settings(),
-    );
+    const chart2 = createChart(containers.chart2.node(), chart2settings());
 
     chart2.on('layout', function() {
         this.participantLabel = this.wrap.insert('span', ':first-child');
@@ -63,10 +56,7 @@ export default function nepExplorer(element = 'body', settings = {}) {
     const chart3settings = chart2settings();
     chart3settings.y.column = 'xuln';
     chart3settings.y.label = 'Standardized Result [xULN]';
-    const chart3 = createChart(
-        containers.chart3.node(),
-        chart3settings,
-    );
+    const chart3 = createChart(containers.chart3.node(), chart3settings);
 
     chart3.on('layout', function() {
         this.participantLabel = this.wrap.insert('span', ':first-child');
@@ -84,7 +74,7 @@ export default function nepExplorer(element = 'body', settings = {}) {
             user: settings,
             merged: mergedSettings,
             synced: syncedSettings,
-            controlInputs: syncedControlInputs,
+            controlInputs: syncedControlInputs
         },
         chart,
         chart2,

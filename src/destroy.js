@@ -1,2 +1,1 @@
-export default function destroy() {
-}
+export default function destroy() {}

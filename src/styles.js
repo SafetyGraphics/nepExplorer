@@ -35,7 +35,7 @@ export default function styles() {
         '}',
         '.wc-framework .wc-component--chart-3 {',
         '    float: right;',
-        '}',
+        '}'
         //'.wc-framework .wc-component--chart:nth-child(3n-2) {',
         //'    float: left;',
         //'}',

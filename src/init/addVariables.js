@@ -1,4 +1,4 @@
-export default function addVariables({settings: {synced: settings}, data: {data: data}}) {
+export default function addVariables({ settings: { synced: settings }, data: { data: data } }) {
     data.forEach(d => {
         d.id = d[settings.id_col];
         d.visit = d[settings.visit_col];

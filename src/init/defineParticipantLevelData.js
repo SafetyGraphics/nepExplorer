@@ -1,24 +1,20 @@
-export default function defineParticipantLevelData({settings: {synced: settings}, data: {data: data}}) {
-    const participantLevel = d3.nest()
+export default function defineParticipantLevelData({
+    settings: { synced: settings },
+    data: { data: data }
+}) {
+    const participantLevel = d3
+        .nest()
         .key(d => d.id)
         .key(d => d.measure)
         .rollup(data => {
-            const baseline = data
-                .find(d => settings.baseline.values.includes(d.baseline));
+            const baseline = data.find(d => settings.baseline.values.includes(d.baseline));
 
             data.forEach(d => {
-                d.chg = baseline
-                    ? d.result - baseline.result
-                    : null;
-                d.fchg = baseline && baseline.result > 0
-                    ? d.result/baseline.result
-                    : null;
-                d.pchg = baseline && baseline.result > 0
-                    ? (d.result/baseline.result - 1)*100
-                    : null;
-                d.xuln = d.result > 0 && d.uln > 0
-                    ? d.result/d.uln
-                    : null;
+                d.chg = baseline ? d.result - baseline.result : null;
+                d.fchg = baseline && baseline.result > 0 ? d.result / baseline.result : null;
+                d.pchg =
+                    baseline && baseline.result > 0 ? (d.result / baseline.result - 1) * 100 : null;
+                d.xuln = d.result > 0 && d.uln > 0 ? d.result / d.uln : null;
             });
 
             const datum = {
@@ -42,16 +38,16 @@ export default function defineParticipantLevelData({settings: {synced: settings}
         const egfr_creat = d.values.find(di => di.key === settings.measure_values.egfr_creat);
         const creat = d.values.find(di => di.key === settings.measure_values.creat);
 
-        d.egfr_creat_chg = egfr_creat ? (egfr_creat.values.max_fchg - 1)*100 : null;
+        d.egfr_creat_chg = egfr_creat ? (egfr_creat.values.max_fchg - 1) * 100 : null;
         d.creat_fchg = creat ? creat.values.max_fchg : null;
-        d.creat_fn = d.creat_chg >= .3 ? 1 : 0;
+        d.creat_fn = d.creat_chg >= 0.3 ? 1 : 0;
 
         const egfr_cystatc = d.values.find(di => di.key === settings.measure_values.egfr_cystatc);
         const cystatc = d.values.find(di => di.key === settings.measure_values.cystatc);
 
         d.egfr_cystatc_chg = egfr_cystatc ? egfr_cystatc.values.max_chg : null;
         d.cystatc_fchg = cystatc ? cystatc.values.max_fchg : null;
-        d.cystatc_fn = d.cystatc_chg >= .3 ? 1 : 0;
+        d.cystatc_fn = d.cystatc_chg >= 0.3 ? 1 : 0;
     });
 
     return participantLevel;

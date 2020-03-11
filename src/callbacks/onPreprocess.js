@@ -1,2 +1,1 @@
-export default function onPreprocess() {
-}
+export default function onPreprocess() {}

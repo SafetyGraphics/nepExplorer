@@ -82,44 +82,42 @@ export default function drawKdigoStages() {
     //    });
 
     this.svg.select('.kdigo-stages').remove();
-    const g = this.svg
-        .insert('g', '.overlay')
-        .classed('kdigo-stages', true);
+    const g = this.svg.insert('g', '.overlay').classed('kdigo-stages', true);
     const rects = g
         .selectAll('rect')
         .data([
             {
                 label: 'KDIGO Stage 3',
                 dimensions: [
-                    [1,this.x_dom[1]],
-                    [0,this.y_dom[1]],
+                    [1, this.x_dom[1]],
+                    [0, this.y_dom[1]]
                 ],
-                color: 'red',
+                color: 'red'
             },
             {
                 label: 'KDIGO Stage 2',
                 dimensions: [
-                    [1,3],
-                    [0,75],
+                    [1, 3],
+                    [0, 75]
                 ],
-                color: 'orange',
+                color: 'orange'
             },
             {
                 label: 'KDIGO Stage 1',
                 dimensions: [
-                    [1,2],
-                    [0,50],
+                    [1, 2],
+                    [0, 50]
                 ],
-                color: 'yellow',
+                color: 'yellow'
             },
             {
                 label: '',
                 dimensions: [
-                    [1,1.5],
-                    [0,25],
+                    [1, 1.5],
+                    [0, 25]
                 ],
-                color: 'white',
-            },
+                color: 'white'
+            }
         ])
         .enter()
         .append('rect')
@@ -130,7 +128,7 @@ export default function drawKdigoStages() {
             width: d => this.x(d.dimensions[0][1]) - this.x(d.dimensions[0][0]),
             height: d => this.y(d.dimensions[1][0]) - this.y(d.dimensions[1][1]),
             fill: d => d.color,
-            'clip-path': `url(#${this.id})`,
+            'clip-path': `url(#${this.id})`
         });
     rects.append('title').text(d => d.label);
 }

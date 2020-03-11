@@ -1,144 +1,285 @@
 {
-  "description": "JSON schema for the configuration of safety-delta-delta",
-  "overview": "The most straightforward way to customize the Safety Delta-Delta plot is by using a configuration object whose properties describe the behavior and appearance of the chart. Since the Safety Histogram is a Webcharts `chart` object, many default Webcharts settings are set in the [webchartsSettings.js file](https://github.com/RhoInc/safety-delta-delta/blob/master/src/configuration/webchartsSettings.js) as [described below](#webcharts-settings). Refer to the [Webcharts documentation](https://github.com/RhoInc/Webcharts/wiki/Chart-Configuration) for more details on these settings.\nIn addition to the standard Webcharts settings several custom settings not available in the base Webcharts library have been added to the Safety Delta-Delta plot to facilitate data mapping and other custom functionality. These custom settings are described in detail below. All defaults can be overwritten by users.",
-  "title": "settings",
-  "type": "object",
-  "version": "1.0.0",
-  "data-guidelines": "The Safety Delta-Delta plot accepts [JSON](https://en.wikipedia.org/wiki/JSON) data of the format returned by [`d3.csv()`](https://github.com/d3/d3-3.x-api-reference/blob/master/CSV.md). The renderer visualizes clinical medical signs data with **one row per measurement** plus the required variables specified below.",
-  "data-structure": "one record per measurement",
-  "properties": {
-    "measure_col": {
-      "title": "Medical Sign",
-      "description": "a variable that contains the names of each medical sign",
-      "type": "string",
-      "default": "TEST",
-      "data-mapping": true,
-      "data-type": "character",
-      "required": true
-    },
-    "value_col": {
-      "title": "Result",
-      "description": "a variable that contains the results for each medical sign; non-numeric results are removed with a notification thrown to the log",
-      "type": "string",
-      "default": "STRESN",
-      "data-mapping": true,
-      "data-type": "numeric",
-      "required": true
-    },
-    "id_col": {
-      "title": "ID",
-      "description": "a variable that contains IDs for each participant",
-      "type": "string",
-      "default": "USUBJID",
-      "data-mapping": true,
-      "data-type": "character",
-      "required": true
-    },
-    "visit_col": {
-      "title": "Visit",
-      "description": "a variable that contains the categorical visit where the measure was collected",
-      "type": "string",
-      "default": "VISIT",
-      "data-mapping": true,
-      "data-type": "character",
-      "required": true
-    },
-    "visitn_col": {
-      "title": "Visit (Numeric)",
-      "description": "a variable that contains the numeric visit where the measure was collected",
-      "type": "string",
-      "default": "VISITN",
-      "data-mapping": true,
-      "data-type": "character",
-      "required": true
-    },
-    "measure": {
-      "title": "Measures",
-      "description": "Measures to be used in delta-delta scatter plot. Must be a value of the `settings.measure_value` column",
-      "type": "object",
-      "properties": {
-        "x": {
-          "type": "string",
-          "title": "X Measure",
-          "description": "Measure to be shown on the x-axis of the delta-delta plot"
+    "description": "JSON schema for the configuration of nep-explorer",
+    "overview": "The most straightforward way to customize the Nephrotoxicity Explorer is by using a configuration object whose properties describe the behavior and appearance of the chart. Since the Nephrotoxicity Explorer is a Webcharts `chart` object, many default Webcharts settings are set in the [webchartsSettings.js file](https://github.com/SafetyGraphics/nep-explorer/blob/master/src/configuration/webchartsSettings.js) as [described below](#webcharts-settings). Refer to the [Webcharts documentation](https://github.com/SafetyGraphics/Webcharts/wiki/Chart-Configuration) for more details on these settings.\nIn addition to the standard Webcharts settings several custom settings not available in the base Webcharts library have been added to the Nephrotoxicity Explorer to facilitate data mapping and other custom functionality. These custom settings are described in detail below. All defaults can be overwritten by users.",
+    "title": "settings",
+    "type": "object",
+    "version": "0.1.0",
+    "data-guidelines": "The Nephrotoxicity Explorer accepts [JSON](https://en.wikipedia.org/wiki/JSON) data of the format returned by [`d3.csv()`](https://github.com/d3/d3-3.x-api-reference/blob/master/CSV.md). The renderer visualizes clinical medical signs data with **one row per measurement** plus the required variables specified below.",
+    "data-structure": "one record per participant per timepoint per measure",
+    "properties": {
+        "id_col": {
+            "title": "ID",
+            "description": "a variable that contains IDs for each participant",
+            "type": "string",
+            "default": "USUBJID",
+            "data-mapping": true,
+            "data-type": "character",
+            "required": false
         },
-        "y": {
-          "type": "string",
-          "title": "Y Measure",
-          "description": "Measure to be shown on the y-axis of the delta-delta plot"
+        "visit_col": {
+            "title": "Visit",
+            "description": "name of variable that captures visit name",
+            "default": "VISIT",
+            "type": "string",
+            "data-mapping": true,
+            "data-type": "string",
+            "required": false
+        },
+        "visitn_col": {
+            "title": "Sort Order of Visit",
+            "description": "name of variable that captures sort order of visit",
+            "default": "VISITNUM",
+            "type": "string",
+            "data-mapping": true,
+            "data-type": "number",
+            "required": false
+        },
+        "studyday_col": {
+            "title": "Study Day of Visit",
+            "description": "name of variable that captures study day of visit",
+            "default": "DY",
+            "type": "string",
+            "data-mapping": true,
+            "data-type": "number",
+            "required": true
+        },
+        "measure_col": {
+            "title": "Medical Sign",
+            "description": "a variable that contains the names of each medical sign",
+            "type": "string",
+            "default": "TEST",
+            "data-mapping": true,
+            "data-type": "character",
+            "required": true
+        },
+        "value_col": {
+            "title": "Result",
+            "description": "a variable that contains the results for each medical sign; non-numeric results are removed with a notification thrown to the log",
+            "type": "string",
+            "default": "STRESN",
+            "data-mapping": true,
+            "data-type": "numeric",
+            "required": true
+        },
+        "unit_col": {
+            "title": "Unit",
+            "description": "a variable that contains the units of each medical sign",
+            "type": "string",
+            "default": "STRESU",
+            "data-mapping": true,
+            "data-type": "character",
+            "required": false
+        },
+        "normal_col_low": {
+            "title": "Lower Limit of Normal",
+            "description": "a variable that contains the lower limit of normal of the medical sign",
+            "type": "string",
+            "default": "STNRLO",
+            "data-mapping": true,
+            "data-type": "numeric",
+            "required": false
+        },
+        "normal_col_high": {
+            "title": "Upper Limit of Normal",
+            "description": "a variable that contains the upper limit of normal of the medical sign",
+            "type": "string",
+            "default": "STNRHI",
+            "data-mapping": true,
+            "data-type": "numeric",
+            "required": false
+        },
+        "filters": {
+            "title": "Filter Variables",
+            "description": "an array of variables and metadata that will appear in the controls as data filters",
+            "type": "array",
+            "items": {
+                "properties": {
+                    "label": {
+                        "description": "a description of the variable",
+                        "title": "Variable Label",
+                        "type": "string"
+                    },
+                    "value_col": {
+                        "description": "the name of the variable",
+                        "title": "Variable Name",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "data-mapping": true,
+            "data-type": "either",
+            "required": false
+        },
+        "baseline": {
+            "title": "Baseline Flag",
+            "description": "the variable and value that identify the baseline record for a given measure",
+            "type": "object",
+            "properties": {
+                "value_col": {
+                    "title": "Baseline Variable",
+                    "description": "a variable that identifies a baseline record",
+                    "type": "string",
+                    "default": "ABLFL"
+                },
+                "values": {
+                    "title": "Baseline Value(s)",
+                    "description": "the value or values of the baseline variable that identify a baseline record",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "Y"
+                    ]
+                }
+            }
+        },
+        "measure_values": {
+            "title": "Measure Mappings",
+            "description": "a list of key:value pairs that identify specific measures in the data",
+            "type": "object",
+            "properties": {
+                "creat": {
+                    "title": "Creatinine",
+                    "description": "Creatinine",
+                    "type": "string",
+                    "default": "Creatinine"
+                },
+                "egfr_creat": {
+                    "title": "eGFR",
+                    "description": "eGFR",
+                    "type": "string",
+                    "default": "eGFR"
+                },
+                "cystatc": {
+                    "title": "Cystatin C",
+                    "description": "Cystatin C",
+                    "type": "string",
+                    "default": "Cystatin C"
+                },
+                "egfr_cystatc": {
+                    "title": "eGFRcys",
+                    "description": "eGFRcys",
+                    "type": "string",
+                    "default": "eGFRcys"
+                },
+                "bun": {
+                    "title": "Blood Urea Nitrogen",
+                    "description": "Blood Urea Nitrogen",
+                    "type": "string",
+                    "default": "Blood Urea Nitrogen"
+                },
+                "sodium": {
+                    "title": "Sodium",
+                    "description": "Sodium",
+                    "type": "string",
+                    "default": "Sodium"
+                },
+                "k": {
+                    "title": "Potassium",
+                    "description": "Potassium",
+                    "type": "string",
+                    "default": "Potassium"
+                },
+                "bicarb": {
+                    "title": "Bicarbonate",
+                    "description": "Bicarbonate",
+                    "type": "string",
+                    "default": "Bicarbonate"
+                },
+                "cl": {
+                    "title": "Chloride",
+                    "description": "Chloride",
+                    "type": "string",
+                    "default": "Chloride"
+                },
+                "phos": {
+                    "title": "Phosphate",
+                    "description": "Phosphate",
+                    "type": "string",
+                    "default": "Phosphate"
+                },
+                "ca": {
+                    "title": "Calcium",
+                    "description": "Calcium",
+                    "type": "string",
+                    "default": "Calcium"
+                },
+                "diabp": {
+                    "title": "Diastolic Blood Pressure",
+                    "description": "Diastolic Blood Pressure",
+                    "type": "string",
+                    "default": "Diastolic Blood Pressure"
+                },
+                "sysbp": {
+                    "title": "Systolic Blood Pressure",
+                    "description": "Systolic Blood Pressure",
+                    "type": "string",
+                    "default": "Systolic Blood Pressure"
+                },
+                "alb": {
+                    "title": "Albumin",
+                    "description": "Albumin",
+                    "type": "string",
+                    "default": "Albumin"
+                },
+                "albcreat": {
+                    "title": "Albumin/Creatinine",
+                    "description": "Albumin/Creatinine",
+                    "type": "string",
+                    "default": "Albumin/Creatinine"
+                }
+            }
+        },
+        "kdigo_criteria": {
+            "title": "KDIGO Criteria",
+            "description": "a list of KDIGO stages and associated attributes",
+            "type": "object",
+            "properties": {
+                "stage_1": {
+                    "creat_fchg": {
+                        "title": "Stage 1 Fold Change Serum Creatinine",
+                        "default": 1.5
+                    },
+                    "egfr_creat_fchg": {
+                        "title": "Stage 1 Percent Change eGFR",
+                        "default": 25
+                    },
+                    "color": {
+                        "title": "Stage 1 Color",
+                        "default": "yellow"
+                    }
+                },
+                "stage_2": {
+                    "creat_fchg": {
+                        "title": "Stage 2 Fold Change Serum Creatinine",
+                        "default": 2
+                    },
+                    "egfr_creat_fchg": {
+                        "title": "Stage 2 Percent Change eGFR",
+                        "default": 50
+                    },
+                    "color": {
+                        "title": "Stage 2 Color",
+                        "default": "orange"
+                    }
+                },
+                "stage_3": {
+                    "creat_fchg": {
+                        "title": "Stage 3 Fold Change Serum Creatinine",
+                        "default": 3
+                    },
+                    "egfr_creat_fchg": {
+                        "title": "Stage 3 Percent Change eGFR",
+                        "default": 75
+                    },
+                    "color": {
+                        "title": "Stage 3 Color",
+                        "default": "red"
+                    }
+                }
+            }
         }
-      }
-    },
-    "add_regression_line": {
-      "title": "Add Regression Line",
-      "description": "Indicates whether a regression line should be drawn on the delta-delta scatter plot",
-      "type": "boolean",
-      "default": "false",
-      "data-mapping": false,
-      "required": false
-    },
-    "visits": {
-      "title": "",
-      "description": "",
-      "type": "object",
-      "properties": {
-        "x": {
-          "type": "string",
-          "title": "X Measure",
-          "description": "Measure to be shown on the x-axis of the delta-delta plot"
-        },
-        "y": {
-          "type": "string",
-          "title": "Y Measure",
-          "description": "Measure to be shown on the y-axis of the delta-delta plot"
-        }
-      }
-    },
-    "filters": {
-      "title": "Filter Variables",
-      "description": "an array of variables and metadata that will appear in the controls as data filters",
-      "type": "array",
-      "items": {
-        "properties": {
-          "label": {
-            "description": "a description of the variable",
-            "title": "Variable Label",
-            "type": "string"
-          },
-          "value_col": {
-            "description": "the name of the variable",
-            "title": "Variable Name",
-            "type": "string"
-          }
-        },
-        "type": "object"
-      },
-      "data-mapping": true,
-      "data-type": "either",
-      "required": false
-    },
-    "details": {
-      "title": "Listing Variables",
-      "description": "an array of variables and metadata that will appear in the data listing",
-      "type": "array",
-      "items": {
-        "properties": {
-          "label": {
-            "description": "a description of the variable",
-            "title": "Variable Label",
-            "type": "string"
-          },
-          "value_col": {
-            "description": "the name of the variable",
-            "title": "Variable Name",
-            "type": "string"
-          }
-        },
-        "type": "object"
-      },
-      "data-mapping": true,
-      "data-type": "either",
-      "required": false
     }
-  }
 }

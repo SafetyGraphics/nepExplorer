@@ -1,13 +1,15 @@
-(function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('d3'), require('webcharts')) :
-    typeof define === 'function' && define.amd ? define(['d3', 'webcharts'], factory) :
-    (global = global || self, global.nepExplorer = factory(global.d3, global.webCharts));
-}(this, (function (d3$1, webcharts) { 'use strict';
+(function(global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined'
+        ? (module.exports = factory(require('d3'), require('webcharts')))
+        : typeof define === 'function' && define.amd
+        ? define(['d3', 'webcharts'], factory)
+        : ((global = global || self), (global.nepExplorer = factory(global.d3, global.webCharts)));
+})(this, function(d3$1, webcharts) {
+    'use strict';
 
     if (typeof Object.assign != 'function') {
         Object.defineProperty(Object, 'assign', {
             value: function assign(target, varArgs) {
-
                 if (target == null) {
                     // TypeError if undefined or null
                     throw new TypeError('Cannot convert undefined or null to object');
@@ -124,19 +126,21 @@
         });
     }
 
-    Math.log10 = Math.log10 = Math.log10 || function (x) {
-        return Math.log(x) * Math.LOG10E;
-    };
+    Math.log10 = Math.log10 =
+        Math.log10 ||
+        function(x) {
+            return Math.log(x) * Math.LOG10E;
+        };
 
     // https://github.com/wbkd/d3-extended
-    d3$1.selection.prototype.moveToFront = function () {
-        return this.each(function () {
+    d3$1.selection.prototype.moveToFront = function() {
+        return this.each(function() {
             this.parentNode.appendChild(this);
         });
     };
 
-    d3$1.selection.prototype.moveToBack = function () {
-        return this.each(function () {
+    d3$1.selection.prototype.moveToBack = function() {
+        return this.each(function() {
             var firstChild = this.parentNode.firstChild;
             if (firstChild) {
                 this.parentNode.insertBefore(this, firstChild);
@@ -175,7 +179,7 @@
                 k: 'Potassium',
                 bicarb: 'Bicarbonate',
                 cl: 'Chloride',
-                phos: 'Phosphate',
+                phos: 'Phosphorus',
                 ca: 'Calcium',
 
                 // blood pressure
@@ -205,11 +209,11 @@
             },
             kdigo_dc_criteria: {
                 stage_1: {
-                    creat: .3,
+                    creat: 0.3,
                     egfr: 25
                 },
                 stage_2: {
-                    creat: .7,
+                    creat: 0.7,
                     egfr: 50
                 },
                 stage_3: {
@@ -236,11 +240,13 @@
                 format: ',1d',
                 domain: [0, null]
             },
-            marks: [{
-                type: 'circle',
-                per: ['key'],
-                tooltip: '[key]: $x,$y'
-            }],
+            marks: [
+                {
+                    type: 'circle',
+                    per: ['key'],
+                    tooltip: '[key]: $x,$y'
+                }
+            ],
             resizable: false,
             aspect: 2
         };
@@ -257,7 +263,7 @@
     function syncControlInputs(controlInputs, settings) {
         //Add filters to default controls.
         if (Array.isArray(settings.filters) && settings.filters.length > 0) {
-            settings.filters.forEach(function (filter) {
+            settings.filters.forEach(function(filter) {
                 var filterObj = {
                     type: 'subsetter',
                     value_col: filter.value_col || filter,
@@ -378,73 +384,118 @@
 
         this.svg.select('.kdigo-stages').remove();
         var g = this.svg.insert('g', '.overlay').classed('kdigo-stages', true);
-        var rects = g.selectAll('rect').data([{
-            label: 'KDIGO Stage 3',
-            dimensions: [[1, this.x_dom[1]], [0, this.y_dom[1]]],
-            color: 'red'
-        }, {
-            label: 'KDIGO Stage 2',
-            dimensions: [[1, 3], [0, 75]],
-            color: 'orange'
-        }, {
-            label: 'KDIGO Stage 1',
-            dimensions: [[1, 2], [0, 50]],
-            color: 'yellow'
-        }, {
-            label: '',
-            dimensions: [[1, 1.5], [0, 25]],
-            color: 'white'
-        }]).enter().append('rect').classed('kdigo-stage', true).attr({
-            x: function x(d) {
-                return _this.x(d.dimensions[0][0]);
-            },
-            y: function y(d) {
-                return _this.y(d.dimensions[1][1]);
-            },
-            width: function width(d) {
-                return _this.x(d.dimensions[0][1]) - _this.x(d.dimensions[0][0]);
-            },
-            height: function height(d) {
-                return _this.y(d.dimensions[1][0]) - _this.y(d.dimensions[1][1]);
-            },
-            fill: function fill(d) {
-                return d.color;
-            },
-            'clip-path': 'url(#' + this.id + ')'
-        });
-        rects.append('title').text(function (d) {
+        var rects = g
+            .selectAll('rect')
+            .data([
+                {
+                    label: 'KDIGO Stage 3',
+                    dimensions: [
+                        [1, this.x_dom[1]],
+                        [0, this.y_dom[1]]
+                    ],
+                    color: 'red'
+                },
+                {
+                    label: 'KDIGO Stage 2',
+                    dimensions: [
+                        [1, 3],
+                        [0, 75]
+                    ],
+                    color: 'orange'
+                },
+                {
+                    label: 'KDIGO Stage 1',
+                    dimensions: [
+                        [1, 2],
+                        [0, 50]
+                    ],
+                    color: 'yellow'
+                },
+                {
+                    label: '',
+                    dimensions: [
+                        [1, 1.5],
+                        [0, 25]
+                    ],
+                    color: 'white'
+                }
+            ])
+            .enter()
+            .append('rect')
+            .classed('kdigo-stage', true)
+            .attr({
+                x: function x(d) {
+                    return _this.x(d.dimensions[0][0]);
+                },
+                y: function y(d) {
+                    return _this.y(d.dimensions[1][1]);
+                },
+                width: function width(d) {
+                    return _this.x(d.dimensions[0][1]) - _this.x(d.dimensions[0][0]);
+                },
+                height: function height(d) {
+                    return _this.y(d.dimensions[1][0]) - _this.y(d.dimensions[1][1]);
+                },
+                fill: function fill(d) {
+                    return d.color;
+                },
+                'clip-path': 'url(#' + this.id + ')'
+            });
+        rects.append('title').text(function(d) {
             return d.label;
         });
     }
 
     function addPointClick() {
         var chart = this;
-        var points = this.marks.find(function (mark) {
+        var points = this.marks.find(function(mark) {
             return mark.type === 'circle';
         }).circles;
 
-        points.on('mouseover', function (d) {
-            d3$1.select(this).classed('highlighted', true);
-        }).on('mouseout', function (d) {
-            d3$1.select(this).classed('highlighted', false);
-        }).on('click', function (d) {
-            points.classed('selected', false);
-            d3$1.select(this).classed('selected', true);
+        points
+            .on('mouseover', function(d) {
+                d3$1.select(this).classed('highlighted', true);
+            })
+            .on('mouseout', function(d) {
+                d3$1.select(this).classed('highlighted', false);
+            })
+            .on('click', function(d) {
+                points.classed('selected', false);
+                d3$1.select(this).classed('selected', true);
 
-            var measures = d3.merge(d.values.raw[0].values.filter(function (d) {
-                return [chart.config.measure_values.creat, chart.config.measure_values.cystatc].includes(d.key);
-            }).map(function (d) {
-                return d.values.data;
-            }));
-            chart.chart2.draw(measures);
+                var measures = d3.merge(
+                    d.values.raw[0].values
+                        .filter(function(d) {
+                            return [
+                                chart.config.measure_values.creat,
+                                chart.config.measure_values.cystatc
+                            ].includes(d.key);
+                        })
+                        .map(function(d) {
+                            return d.values.data;
+                        })
+                );
+                chart.chart2.draw(measures);
 
-            var chart3measures = d3.merge(d.values.raw[0].values.filter(function (d) {
-                return [chart.config.measure_values.bun, chart.config.measure_values.sodium, chart.config.measure_values.k, chart.config.measure_values.bicarb, chart.config.measure_values.cl, chart.config.measure_values.phos, chart.config.measure_values.ca].includes(d.key);
-            }).map(function (d) {
-                return d.values.data;
-            }));
-            chart.chart3.draw(chart3measures);
-        });
+                var chart3measures = d3.merge(
+                    d.values.raw[0].values
+                        .filter(function(d) {
+                            return [
+                                chart.config.measure_values.bun,
+                                chart.config.measure_values.sodium,
+                                chart.config.measure_values.k,
+                                chart.config.measure_values.bicarb,
+                                chart.config.measure_values.cl,
+                                chart.config.measure_values.phos,
+                                chart.config.measure_values.ca
+                            ].includes(d.key);
+                        })
+                        .map(function(d) {
+                            return d.values.data;
+                        })
+                );
+                chart.chart3.draw(chart3measures);
+            });
     }
 
     function onResize() {
@@ -480,15 +531,18 @@
                 label: 'Percent Change from Baseline (%)',
                 format: '.1f'
             },
-            marks: [{
-                type: 'line',
-                per: ['measure'],
-                tooltip: '$x,$y'
-            }, {
-                type: 'circle',
-                per: ['measure', 'studyday'],
-                tooltip: '$x,$y'
-            }],
+            marks: [
+                {
+                    type: 'line',
+                    per: ['measure'],
+                    tooltip: '$x,$y'
+                },
+                {
+                    type: 'circle',
+                    per: ['measure', 'studyday'],
+                    tooltip: '$x,$y'
+                }
+            ],
             color_by: 'measure',
             legend: {
                 label: ''
@@ -501,21 +555,78 @@
 
     function layout(element) {
         var containers = {
-            main: d3$1.select(element).append('div').classed('wc-framework', true)
+            main: d3$1
+                .select(element)
+                .append('div')
+                .classed('wc-framework', true)
         };
-        containers.controls = containers.main.append('div').classed('wc-component wc-component--controls', true);
-        containers.chart1 = containers.main.append('div').classed('wc-component wc-component--chart wc-component--chart-1', true);
-        containers.chart1.append('span').classed('wc-header', true).text('KDIGO Stages');
-        containers.chart2 = containers.main.append('div').classed('wc-component wc-component--chart wc-component--chart-2', true);
-        containers.chart2.append('span').classed('wc-header', true).text('Percent Change from Baseline by Study Day');
-        containers.chart3 = containers.main.append('div').classed('wc-component wc-component--chart wc-component--chart-3', true);
-        containers.chart3.append('span').classed('wc-header', true).text('Standardized Result [xULN] by Study Day');
+        containers.controls = containers.main
+            .append('div')
+            .classed('wc-component wc-component--controls', true);
+        containers.chart1 = containers.main
+            .append('div')
+            .classed('wc-component wc-component--chart wc-component--chart-1', true);
+        containers.chart1
+            .append('span')
+            .classed('wc-header', true)
+            .text('KDIGO Stages');
+        containers.chart2 = containers.main
+            .append('div')
+            .classed('wc-component wc-component--chart wc-component--chart-2', true);
+        containers.chart2
+            .append('span')
+            .classed('wc-header', true)
+            .text('Percent Change from Baseline by Study Day');
+        containers.chart3 = containers.main
+            .append('div')
+            .classed('wc-component wc-component--chart wc-component--chart-3', true);
+        containers.chart3
+            .append('span')
+            .classed('wc-header', true)
+            .text('Standardized Result [xULN] by Study Day');
 
         return containers;
     }
 
     function styles() {
-        var styles = ['.wc-framework {', '    width: 100%;', '    display: inline-block;', '}', '.wc-hidden {', '    display: none !important;', '}', '.wc-invisible {', '    visibility: hidden;', '}', '.wc-header {', '    font-size: 20px;', '    font-weight: bold;', '}', '.wc-row {', '    width: 100%;', '    display: inline-block;', '}', '.wc-component--chart {', '    display: inline-block;', '}', '.wc-framework .wc-component--chart {', '    width: 32%;', '}', '.wc-framework .wc-data-mark {', '    cursor: pointer;', '}', '.wc-framework .wc-component--chart-1 {', '    float: left;', '}', '.wc-framework .wc-component--chart-2 {', '    margin: 0 2%;', '}', '.wc-framework .wc-component--chart-3 {', '    float: right;', '}'];
+        var styles = [
+            '.wc-framework {',
+            '    width: 100%;',
+            '    display: inline-block;',
+            '}',
+            '.wc-hidden {',
+            '    display: none !important;',
+            '}',
+            '.wc-invisible {',
+            '    visibility: hidden;',
+            '}',
+            '.wc-header {',
+            '    font-size: 20px;',
+            '    font-weight: bold;',
+            '}',
+            '.wc-row {',
+            '    width: 100%;',
+            '    display: inline-block;',
+            '}',
+            '.wc-component--chart {',
+            '    display: inline-block;',
+            '}',
+            '.wc-framework .wc-component--chart {',
+            '    width: 32%;',
+            '}',
+            '.wc-framework .wc-data-mark {',
+            '    cursor: pointer;',
+            '}',
+            '.wc-framework .wc-component--chart-1 {',
+            '    float: left;',
+            '}',
+            '.wc-framework .wc-component--chart-2 {',
+            '    margin: 0 2%;',
+            '}',
+            '.wc-framework .wc-component--chart-3 {',
+            '    float: right;',
+            '}'
+        ];
 
         var style = document.createElement('style');
         style.type = 'text/css';
@@ -529,7 +640,7 @@
         var settings = _ref.settings.synced,
             data = _ref.data.data;
 
-        data.forEach(function (d) {
+        data.forEach(function(d) {
             d.id = d[settings.id_col];
             d.visit = d[settings.visit_col];
             d.visitn = parseFloat(d[settings.visitn_col]);
@@ -549,76 +660,84 @@
         var settings = _ref.settings.synced,
             data = _ref.data.data;
 
-        var participantLevel = d3.nest().key(function (d) {
-            return d.id;
-        }).key(function (d) {
-            return d.measure;
-        }).rollup(function (data) {
-            var baseline = data.find(function (d) {
-                return settings.baseline.values.includes(d.baseline);
-            });
+        var participantLevel = d3
+            .nest()
+            .key(function(d) {
+                return d.id;
+            })
+            .key(function(d) {
+                return d.measure;
+            })
+            .rollup(function(data) {
+                var baseline = data.find(function(d) {
+                    return settings.baseline.values.includes(d.baseline);
+                });
 
-            data.forEach(function (d) {
-                d.chg = baseline ? d.result - baseline.result : null;
-                d.fchg = baseline && baseline.result > 0 ? d.result / baseline.result : null;
-                d.pchg = baseline && baseline.result > 0 ? (d.result / baseline.result - 1) * 100 : null;
-                d.xuln = d.result > 0 && d.uln > 0 ? d.result / d.uln : null;
-            });
+                data.forEach(function(d) {
+                    d.chg = baseline ? d.result - baseline.result : null;
+                    d.fchg = baseline && baseline.result > 0 ? d.result / baseline.result : null;
+                    d.pchg =
+                        baseline && baseline.result > 0
+                            ? (d.result / baseline.result - 1) * 100
+                            : null;
+                    d.xuln = d.result > 0 && d.uln > 0 ? d.result / d.uln : null;
+                });
 
-            var datum = {
-                data: data
-            };
+                var datum = {
+                    data: data
+                };
 
-            datum.min = d3.min(datum.data, function (d) {
-                return d.result;
-            });
-            datum.max = d3.max(datum.data, function (d) {
-                return d.result;
-            });
-            datum.min_chg = d3.min(datum.data, function (d) {
-                return d.chg;
-            });
-            datum.max_chg = d3.max(datum.data, function (d) {
-                return d.chg;
-            });
-            datum.min_fchg = d3.min(datum.data, function (d) {
-                return d.fchg;
-            });
-            datum.max_fchg = d3.max(datum.data, function (d) {
-                return d.fchg;
-            });
-            datum.min_pchg = d3.min(datum.data, function (d) {
-                return d.pchg;
-            });
-            datum.max_pchg = d3.max(datum.data, function (d) {
-                return d.pchg;
-            });
+                datum.min = d3.min(datum.data, function(d) {
+                    return d.result;
+                });
+                datum.max = d3.max(datum.data, function(d) {
+                    return d.result;
+                });
+                datum.min_chg = d3.min(datum.data, function(d) {
+                    return d.chg;
+                });
+                datum.max_chg = d3.max(datum.data, function(d) {
+                    return d.chg;
+                });
+                datum.min_fchg = d3.min(datum.data, function(d) {
+                    return d.fchg;
+                });
+                datum.max_fchg = d3.max(datum.data, function(d) {
+                    return d.fchg;
+                });
+                datum.min_pchg = d3.min(datum.data, function(d) {
+                    return d.pchg;
+                });
+                datum.max_pchg = d3.max(datum.data, function(d) {
+                    return d.pchg;
+                });
 
-            return datum;
-        }).entries(data);
+                return datum;
+            })
+            .entries(data);
 
-        participantLevel.forEach(function (d) {
-            var egfr_creat = d.values.find(function (di) {
+        participantLevel.forEach(function(d) {
+            var egfr_creat = d.values.find(function(di) {
                 return di.key === settings.measure_values.egfr_creat;
             });
-            var creat = d.values.find(function (di) {
+            var creat = d.values.find(function(di) {
                 return di.key === settings.measure_values.creat;
             });
 
             d.egfr_creat_chg = egfr_creat ? (egfr_creat.values.max_fchg - 1) * 100 : null;
             d.creat_fchg = creat ? creat.values.max_fchg : null;
-            d.creat_fn = d.creat_chg >= .3 ? 1 : 0;
+            d.creat_fn = d.creat_chg >= 0.3 ? 1 : 0;
 
-            var egfr_cystatc = d.values.find(function (di) {
+            var egfr_cystatc = d.values.find(function(di) {
                 return di.key === settings.measure_values.egfr_cystatc;
             });
-            var cystatc = d.values.find(function (di) {
+            var cystatc = d.values.find(function(di) {
                 return di.key === settings.measure_values.cystatc;
             });
 
             d.egfr_cystatc_chg = egfr_cystatc ? egfr_cystatc.values.max_chg : null;
             d.cystatc_fchg = cystatc ? cystatc.values.max_fchg : null;
-            d.cystatc_fn = d.cystatc_chg >= .3 ? 1 : 0;
+            d.cystatc_fn = d.cystatc_chg >= 0.3 ? 1 : 0;
         });
 
         return participantLevel;
@@ -633,20 +752,39 @@
         addVariables(this);
         this.data.participants = defineParticipantLevelData(this);
         this.chart.init(this.data.participants);
-        var participant = this.data.participants.find(function (d) {
+        var participant = this.data.participants.find(function(d) {
             return d.key === '02-008';
         });
-        var chart2measures = d3.merge(participant.values.filter(function (d) {
-            return [_this.settings.synced.measure_values.creat, _this.settings.synced.measure_values.cystatc].includes(d.key);
-        }).map(function (d) {
-            return d.values.data;
-        }));
+        var chart2measures = d3.merge(
+            participant.values
+                .filter(function(d) {
+                    return [
+                        _this.settings.synced.measure_values.creat,
+                        _this.settings.synced.measure_values.cystatc
+                    ].includes(d.key);
+                })
+                .map(function(d) {
+                    return d.values.data;
+                })
+        );
         this.chart2.init(chart2measures);
-        var chart3measures = d3.merge(participant.values.filter(function (d) {
-            return [_this.settings.synced.measure_values.bun, _this.settings.synced.measure_values.sodium, _this.settings.synced.measure_values.k, _this.settings.synced.measure_values.bicarb, _this.settings.synced.measure_values.cl, _this.settings.synced.measure_values.phos, _this.settings.synced.measure_values.ca].includes(d.key);
-        }).map(function (d) {
-            return d.values.data;
-        }));
+        var chart3measures = d3.merge(
+            participant.values
+                .filter(function(d) {
+                    return [
+                        _this.settings.synced.measure_values.bun,
+                        _this.settings.synced.measure_values.sodium,
+                        _this.settings.synced.measure_values.k,
+                        _this.settings.synced.measure_values.bicarb,
+                        _this.settings.synced.measure_values.cl,
+                        _this.settings.synced.measure_values.phos,
+                        _this.settings.synced.measure_values.ca
+                    ].includes(d.key);
+                })
+                .map(function(d) {
+                    return d.values.data;
+                })
+        );
         this.chart3.init(chart3measures);
     }
 
@@ -661,31 +799,42 @@
         styles();
 
         //Define chart.
-        var mergedSettings = Object.assign({}, JSON.parse(JSON.stringify(configuration.settings)), settings$1);
+        var mergedSettings = Object.assign(
+            {},
+            JSON.parse(JSON.stringify(configuration.settings)),
+            settings$1
+        );
         var syncedSettings = configuration.syncSettings(mergedSettings);
 
         // controls
-        var syncedControlInputs = configuration.syncControlInputs(configuration.controlInputs(), syncedSettings);
-        var controls = webcharts.createControls(document.querySelector(element).querySelector('#wc-controls'), {
-            location: 'top',
-            inputs: syncedControlInputs
-        });
+        var syncedControlInputs = configuration.syncControlInputs(
+            configuration.controlInputs(),
+            syncedSettings
+        );
+        var controls = webcharts.createControls(
+            document.querySelector(element).querySelector('#wc-controls'),
+            {
+                location: 'top',
+                inputs: syncedControlInputs
+            }
+        );
 
         // chart
         var chart = webcharts.createChart(containers.chart1.node(), syncedSettings, controls);
 
         for (var callback in callbacks) {
             chart.on(callback.substring(2).toLowerCase(), callbacks[callback]);
-        }var chart2 = webcharts.createChart(containers.chart2.node(), settings());
+        }
+        var chart2 = webcharts.createChart(containers.chart2.node(), settings());
 
-        chart2.on('layout', function () {
+        chart2.on('layout', function() {
             this.participantLabel = this.wrap.insert('span', ':first-child');
         });
 
-        chart2.on('draw', function () {
+        chart2.on('draw', function() {
             var _this = this;
 
-            this.participantLabel.text(function (d) {
+            this.participantLabel.text(function(d) {
                 return 'Participant ID: ' + _this.raw_data[0].id;
             });
         });
@@ -697,14 +846,14 @@
         chart3settings.y.label = 'Standardized Result [xULN]';
         var chart3 = webcharts.createChart(containers.chart3.node(), chart3settings);
 
-        chart3.on('layout', function () {
+        chart3.on('layout', function() {
             this.participantLabel = this.wrap.insert('span', ':first-child');
         });
 
-        chart3.on('draw', function () {
+        chart3.on('draw', function() {
             var _this2 = this;
 
-            this.participantLabel.text(function (d) {
+            this.participantLabel.text(function(d) {
                 return 'Participant ID: ' + _this2.raw_data[0].id;
             });
         });
@@ -730,5 +879,4 @@
     }
 
     return nepExplorer;
-
-})));
+});

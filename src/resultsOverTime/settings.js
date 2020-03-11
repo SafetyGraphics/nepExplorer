@@ -4,32 +4,32 @@ export default function settings() {
             column: 'studyday',
             type: 'linear',
             label: 'Study Day',
-            format: ',1d',
+            format: ',1d'
         },
         y: {
             column: 'pchg',
             type: 'linear',
             label: 'Percent Change from Baseline (%)',
-            format: '.1f',
+            format: '.1f'
         },
         marks: [
             {
                 type: 'line',
                 per: ['measure'],
-                tooltip: '$x,$y',
+                tooltip: '$x,$y'
             },
             {
                 type: 'circle',
                 per: ['measure', 'studyday'],
-                tooltip: '$x,$y',
+                tooltip: '$x,$y'
             }
         ],
         color_by: 'measure',
         legend: {
-            label: '',
+            label: ''
         },
         gridlines: 'xy',
         resizable: false,
-        aspect: 2,
+        aspect: 2
     };
 }

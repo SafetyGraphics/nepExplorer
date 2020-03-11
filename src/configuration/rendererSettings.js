@@ -29,7 +29,7 @@ export default function rendererSettings() {
             k: 'Potassium',
             bicarb: 'Bicarbonate',
             cl: 'Chloride',
-            phos: 'Phosphate',
+            phos: 'Phosphorus',
             ca: 'Calcium',
 
             // blood pressure
@@ -38,38 +38,38 @@ export default function rendererSettings() {
 
             // albumin/creatinine
             alb: 'Albumin',
-            albcreat: 'Albumin/Creatinine',
+            albcreat: 'Albumin/Creatinine'
         },
         kdigo_criteria: {
             stage_1: {
                 creat_fchg: 1.5,
                 egfr_creat_fchg: 25,
-                color: 'yellow',
+                color: 'yellow'
             },
             stage_2: {
                 creat_fchg: 2,
                 egfr_creat_fchg: 50,
-                color: 'orange',
+                color: 'orange'
             },
             stage_3: {
                 creat_fchg: 3,
                 egfr_creat_fchg: 75,
-                color: 'red',
-            },
+                color: 'red'
+            }
         },
         kdigo_dc_criteria: {
             stage_1: {
-                creat: .3,
-                egfr: 25,
+                creat: 0.3,
+                egfr: 25
             },
             stage_2: {
-                creat: .7,
-                egfr: 50,
+                creat: 0.7,
+                egfr: 50
             },
             stage_3: {
                 creat: 1.2,
-                egfr: 75,
-            },
-        },
+                egfr: 75
+            }
+        }
     };
 }
