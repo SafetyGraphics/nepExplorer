@@ -111,6 +111,20 @@ export default function styles() {
         '}',
         '.wc-component--time-series-chart {',
         '    width: 100%;',
+        '}',
+        '.wc-diff .wc-hover-line {',
+        '    stroke: #fff;',
+        '    stroke-width: 16;',
+        '    stroke-opacity: 0;',
+        '}',
+        '.wc-diff .wc-visible-line {',
+        '    stroke: #aaa;',
+        '    stroke-width: 2;',
+        '    stroke-dasharray: 2,2;',
+        '}',
+        '.wc-diff .wc-visible-line.wc-hovered {',
+        '    stroke: #777;',
+        '    stroke-width: 4;',
         '}'
     ];
 

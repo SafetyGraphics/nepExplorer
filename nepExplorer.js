@@ -289,6 +289,20 @@
             '}',
             '.wc-component--time-series-chart {',
             '    width: 100%;',
+            '}',
+            '.wc-diff .wc-hover-line {',
+            '    stroke: #fff;',
+            '    stroke-width: 16;',
+            '    stroke-opacity: 0;',
+            '}',
+            '.wc-diff .wc-visible-line {',
+            '    stroke: #aaa;',
+            '    stroke-width: 2;',
+            '    stroke-dasharray: 2,2;',
+            '}',
+            '.wc-diff .wc-visible-line.wc-hovered {',
+            '    stroke: #777;',
+            '    stroke-width: 4;',
             '}'
         ];
         var style = document.createElement('style');
@@ -929,6 +943,7 @@
 
     function albcreat() {
         return {
+            diff: true,
             measures: ['creat', 'cystatc'],
             y: {
                 column: 'pchg',
@@ -939,6 +954,7 @@
 
     function albcreat$1() {
         return {
+            diff: true,
             measures: ['egfr_creat', 'egfr_cystatc'],
             y: {
                 column: 'chg',
@@ -988,6 +1004,7 @@
     function timeSeries(chart) {
         var chartSettings = customSettings[chart]();
         var settings = {
+            diff: !!chartSettings.diff,
             measures: chartSettings.measures,
             x: {
                 column: 'studyday',
@@ -1198,7 +1215,110 @@
 
     function onDraw$1() {}
 
-    function onResize$1() {}
+    function drawDifference() {
+        var _this = this;
+
+        this.svg.selectAll('.wc-diffs').remove();
+
+        if (this.config.diff) {
+            var g = this.svg.insert('g', '.point-supergroup').classed('wc-diffs', true);
+            var mark = this.marks.find(function(mark) {
+                return mark.type === 'circle';
+            });
+            var matches = d3
+                .nest()
+                .key(function(d) {
+                    return d.total;
+                })
+                .rollup(function(data) {
+                    var datum = {
+                        n: data.length
+                    };
+
+                    if (data.length > 1) {
+                        datum.measure1 = data[0].values.raw[0].measure;
+                        datum.y1 = data[0].values.y;
+                        datum.result1 = data[0].values.raw[0].result;
+                        datum.measure2 = data[1].values.raw[0].measure;
+                        datum.y2 = data[1].values.y;
+                        datum.result2 = data[1].values.raw[0].result;
+                        datum.diff = datum.y2 - datum.y1;
+                    }
+
+                    return datum;
+                })
+                .entries(mark.data)
+                .filter(function(d) {
+                    return d.values.n > 1;
+                });
+            var diffs = g
+                .selectAll('g')
+                .data(matches)
+                .enter()
+                .append('g')
+                .classed('wc-diff', true);
+            diffs
+                .append('line')
+                .classed('wc-visible-line', true)
+                .attr({
+                    x1: function x1(d) {
+                        return _this.x(+d.key);
+                    },
+                    x2: function x2(d) {
+                        return _this.x(+d.key);
+                    },
+                    y1: function y1(d) {
+                        return _this.y(d.values.y1);
+                    },
+                    y2: function y2(d) {
+                        return _this.y(d.values.y2);
+                    }
+                });
+            var hoverLines = diffs
+                .append('line')
+                .classed('wc-hover-line', true)
+                .attr({
+                    x1: function x1(d) {
+                        return _this.x(+d.key);
+                    },
+                    x2: function x2(d) {
+                        return _this.x(+d.key);
+                    },
+                    y1: function y1(d) {
+                        return _this.y(d.values.y1);
+                    },
+                    y2: function y2(d) {
+                        return _this.y(d.values.y2);
+                    }
+                });
+            hoverLines.append('title').text(function(d) {
+                return 'Study day '
+                    .concat(d.key, '\n')
+                    .concat(d.values.measure1, ': ')
+                    .concat(d.values.y1, ' (')
+                    .concat(d.values.result1, ')\n')
+                    .concat(d.values.measure2, ': ')
+                    .concat(d.values.y2, ' (')
+                    .concat(d.values.result2, ')\nDifference: ')
+                    .concat(d.values.diff);
+            });
+            hoverLines
+                .on('mouseover', function(d) {
+                    d3.select(this.parentNode)
+                        .select('.wc-visible-line')
+                        .classed('wc-hovered', true);
+                })
+                .on('mouseout', function(d) {
+                    d3.select(this.parentNode)
+                        .select('.wc-visible-line')
+                        .classed('wc-hovered', false);
+                });
+        }
+    }
+
+    function onResize$1() {
+        drawDifference.call(this);
+    }
 
     function onDestroy$1() {}
 

@@ -1,9 +1,11 @@
 import customSettings from './timeSeries/index';
 
+// TODO: add deep merge
 export default function timeSeries(chart) {
     const chartSettings = customSettings[chart]();
 
     const settings = {
+        diff: !!chartSettings.diff,
         measures: chartSettings.measures,
         x: {
             column: 'studyday',
