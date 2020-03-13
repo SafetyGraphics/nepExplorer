@@ -44,12 +44,17 @@ export default function renderer() {
         filters: [],
         groups: [],
         details: [
-            {value_col: 'AGE', label: 'Age'},
-            {value_col: 'SEX', label: 'Sex'},
-            {value_col: 'RACE', label: 'Race'},
+            { value_col: 'AGE', label: 'Age' },
+            { value_col: 'SEX', label: 'Sex' },
+            { value_col: 'RACE', label: 'Race' }
         ],
         baseline_value: 'Y',
         kdigo_criteria: {
+            no_aki: {
+                creat_fchg: 0,
+                egfr_creat_chg: 0,
+                color: 'white'
+            },
             stage_1: {
                 creat_fchg: 1.5,
                 egfr_creat_chg: 25,
@@ -82,7 +87,6 @@ export default function renderer() {
                 egfr: 75,
                 color: 'red'
             }
-        },
+        }
     };
 }
-

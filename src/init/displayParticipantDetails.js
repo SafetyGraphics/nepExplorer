@@ -1,6 +1,5 @@
 export default function displayParticipantDetails(id) {
-    const participant = this.data.participants
-        .find(d => d.key === id);
+    const participant = this.data.participants.find(d => d.key === id);
 
     this.containers.detailsParticipant
         .classed('wc-hidden', false)
@@ -9,8 +8,8 @@ export default function displayParticipantDetails(id) {
 
     const lis = this.containers.detailsParticipant
         .selectAll('li')
-            .data(this.settings.synced.details)
-            .enter()
+        .data(this.settings.synced.details)
+        .enter()
         .append('li')
         .classed('wc-details__li', true);
 

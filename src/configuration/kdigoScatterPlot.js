@@ -18,11 +18,11 @@ export default function kdigoScatterPlot() {
             {
                 type: 'circle',
                 per: ['key'],
-                tooltip: '[key]: $x,$y',
+                tooltip: '[key]: $x,$y'
             }
         ],
         resizable: false,
         aspect: 2,
-        gridlines: 'xy',
+        gridlines: 'xy'
     };
 }

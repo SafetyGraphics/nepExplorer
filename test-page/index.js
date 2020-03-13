@@ -6,25 +6,7 @@ fetch('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinica
             d.ABLFL = d.VISIT === 'Screening' ? 'Y' : '';
         });
         const settings = {
-            groups: [
-                {
-                    value_col: 'SEX',
-                    label: 'Sex',
-                },
-                {
-                    value_col: 'ARM',
-                    label: 'Treatment Group',
-                },
-                {
-                    value_col: 'RACE',
-                    label: 'Race',
-                },
-                {
-                    value_col: 'SITE',
-                    label: 'Site',
-                },
-            ],
         };
         const instance = nepExplorer('#container', settings);
-        instance.init(data);
+        instance.init(data, '02-008');
     });

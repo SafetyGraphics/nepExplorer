@@ -7,18 +7,24 @@ export default function defineParticipantLevelData({
         .key(d => d.id)
         .key(d => d.measure)
         .rollup(data => {
-            const baseline = data.find(d => (
+            const baseline = data.find(d =>
                 Array.isArray(settings.baseline_value)
                     ? settings.baseline_value.includes(d.baseline)
                     : settings.baseline_value === d.baseline
-            ));
+            );
 
             data.forEach(d => {
                 d.chg = baseline ? d.result - baseline.result : null;
-                d.fchg = baseline && baseline.result > 0 ? d.result / baseline.result : null;
+                d.fchg =
+                    baseline && baseline.result > 0
+                        ? Math.round((d.result / baseline.result) * 100) / 100
+                        : null;
                 d.pchg =
-                    baseline && baseline.result > 0 ? (d.result / baseline.result - 1) * 100 : null;
-                d.xuln = d.result > 0 && d.uln > 0 ? d.result / d.uln : null;
+                    baseline && baseline.result > 0
+                        ? Math.round((d.result / baseline.result - 1) * 100 * 100) / 100
+                        : null;
+                d.xuln =
+                    d.result > 0 && d.uln > 0 ? Math.round((d.result / d.uln) * 100) / 100 : null;
             });
 
             const datum = {
@@ -64,9 +70,14 @@ export default function defineParticipantLevelData({
             .sort(d3.descending)
             .find(key => {
                 const criterion = settings.kdigo_criteria[key];
-                return criterion.creat_fchg <= d.creat_fchg || criterion.egfr_creat_chg <= d.egfr_creat_chg;
+                return (
+                    criterion.creat_fchg <= d.creat_fchg ||
+                    criterion.egfr_creat_chg <= d.egfr_creat_chg
+                );
             });
-        d.kdigo = kdigo ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI') : 'No AKI';
+        d.kdigo = kdigo
+            ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
+            : '???';
 
         // color
         d.creat_fn = d.creat_chg >= 0.3 ? 1 : 0;

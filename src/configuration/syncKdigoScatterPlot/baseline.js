@@ -7,5 +7,5 @@ export default function baseline(settings) {
             settings.baseline_value = settings.baseline.values;
     }
 
-    return [settings.baseline_col,settings.baseline_value];
+    return [settings.baseline_col, settings.baseline_value];
 }

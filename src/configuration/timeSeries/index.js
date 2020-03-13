@@ -9,5 +9,5 @@ export default {
     egfr,
     uln,
     bp,
-    albcreat,
-}
+    albcreat
+};

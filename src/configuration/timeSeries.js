@@ -31,11 +31,11 @@ export default function timeSeries(chart) {
         color_by: 'measure',
         legend: {
             label: 'Measure',
-            location: 'top',
+            location: 'top'
         },
         gridlines: 'xy',
         resizable: false,
-        aspect: 4,
+        aspect: 4
     };
 
     return settings;

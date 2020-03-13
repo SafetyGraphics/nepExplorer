@@ -1,7 +1,7 @@
 import { select } from 'd3';
-import addClearFunctionality from './addPointClick/addClearFunctionality';
-import displayParticipantDetails from './addPointClick/displayParticipantDetails';
-import drawTimeSeriesCharts from './addPointClick/drawTimeSeriesCharts';
+import addClearFunctionality from '../../init/addClearFunctionality';
+import displayParticipantDetails from '../../init/displayParticipantDetails';
+import drawTimeSeriesCharts from '../../init/drawTimeSeriesCharts';
 
 export default function addPointClick() {
     const chart = this;
@@ -9,14 +9,15 @@ export default function addPointClick() {
 
     points
         .on('mouseover', function(d) {
-            select(this).classed('highlighted', true);
+            select(this).classed('wc-highlighted', true);
         })
         .on('mouseout', function(d) {
-            select(this).classed('highlighted', false);
+            select(this).classed('wc-highlighted', false);
         })
         .on('click', function(d) {
-            points.classed('selected', false);
-            select(this).classed('selected', true);
+            points.classed('wc-selected', false);
+            select(this).classed('wc-selected', true);
+            chart.nepExplorer.selected = d.key;
             chart.nepExplorer.containers.detailsHeader.text('Participant Details');
             addClearFunctionality.call(chart.nepExplorer);
             displayParticipantDetails.call(chart.nepExplorer, d.key);

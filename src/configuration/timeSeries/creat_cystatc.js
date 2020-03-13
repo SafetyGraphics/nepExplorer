@@ -1,12 +1,9 @@
 export default function albcreat() {
     return {
-        measures: [
-            'creat',
-            'cystatc',
-        ],
+        measures: ['creat', 'cystatc'],
         y: {
             column: 'pchg',
             label: 'Change from Baseline (%)'
-        },
+        }
     };
 }

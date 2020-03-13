@@ -1,6 +1,9 @@
 export default function details(settings) {
     // Define default details.
-    const details = [{ value_col: settings.id_col, label: 'Subject Identifier' }];
+    const details = [
+        { value_col: settings.id_col, label: 'Subject Identifier' },
+        { value_col: 'kdigo', label: 'KDIGO' }
+    ];
 
     // Add filters to default details.
     if (settings.filters)
@@ -55,8 +58,6 @@ export default function details(settings) {
         });
         settings.details = details;
     }
-
-    details.push({ value_col: 'kdigo', label: 'KDIGO Stage' });
 
     return details;
 }
