@@ -1,16 +1,17 @@
-import rendererSettings from './rendererSettings';
-import webchartsSettings from './webchartsSettings';
-import syncSettings from './syncSettings';
+import renderer from './renderer';
+import kdigoScatterPlot from './kdigoScatterPlot';
+import syncKdigoScatterPlot from './syncKdigoScatterPlot';
+import timeSeries from './timeSeries';
+import syncTimeSeries from './syncTimeSeries';
 import controlInputs from './controlInputs';
 import syncControlInputs from './syncControlInputs';
-import listingSettings from './listingSettings';
 
 export default {
-    rendererSettings,
-    webchartsSettings,
-    settings: Object.assign({}, rendererSettings(), webchartsSettings()),
-    syncSettings,
+    renderer,
+    kdigoScatterPlot,
+    syncKdigoScatterPlot,
+    timeSeries,
+    syncTimeSeries,
     controlInputs,
-    syncControlInputs,
-    listingSettings
+    syncControlInputs
 };

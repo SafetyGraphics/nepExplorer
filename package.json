@@ -1,7 +1,7 @@
 {
     "name": "nep-explorer",
     "description": "Interactive Graphic for Exploring Kidney Function Data in Clinical Trials",
-    "version": "0.2.0",
+    "version": "0.1.0",
     "author": "Rho, Inc.",
     "license": "MIT",
     "homepage": "https://github.com/SafetyGraphics/nep-explorer",
@@ -9,10 +9,9 @@
     "main": "./nepExplorer.js",
     "keywords": [
         "nephrotoxicity",
-        " explorer",
-        " interactive",
-        " safety",
-        " clinical trials"
+        "kidney",
+        "interactive",
+        "clinical trial"
     ],
     "dependencies": {
         "d3": "^3",
@@ -28,18 +27,18 @@
         "bundle": "rollup -c",
         "check-settings-schema": "node ./scripts/check-settings-schema.js",
         "format": "npm run format-src && npm run format-bundle",
+        "format-bundle": "prettier --print-width=100 --tab-width=4 --single-quote --write ./nepExplorer.js",
         "format-src": "prettier --print-width=100 --tab-width=4 --single-quote --write \"./src/**/*.js\"",
         "test-page": "start chrome ./test-page/index.html && start firefox ./test-page/index.html && start iexplore file://%CD%/test-page/index.html",
-        "watch": "rollup -c -w",
-        "format-bundle": "prettier --print-width=100 --tab-width=4 --single-quote --write ./nepExplorer.js"
+        "watch": "rollup -c -w"
     },
     "devDependencies": {
-        "babel-plugin-external-helpers": "^6.22.0",
-        "babel-preset-env": "^1.7.0",
-        "babel-register": "^6.26.0",
-        "prettier": "^1.18.2",
-        "rollup": "^1.26.0",
-        "rollup-plugin-babel": "^3.0.7",
+        "@babel/core": "^7.4.5",
+        "@babel/preset-env": "^7.4.5",
+        "@babel/register": "^7.4.5",
+        "prettier": "^1.19.1",
+        "rollup": "^1.29.0",
+        "rollup-plugin-babel": "^4.3.3",
         "rollup-plugin-commonjs": "^10.1.0",
         "rollup-plugin-json": "^4.0.0",
         "rollup-plugin-node-resolve": "^5.2.0"
