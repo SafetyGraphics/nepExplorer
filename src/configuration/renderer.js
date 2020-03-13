@@ -1,5 +1,6 @@
-export default function rendererSettings() {
+export default function renderer() {
     return {
+        // data mappings
         id_col: 'USUBJID',
         visit_col: 'VISIT',
         visitn_col: 'VISITNUM',
@@ -9,11 +10,9 @@ export default function rendererSettings() {
         unit_col: 'STRESU',
         normal_col_low: 'STNRLO',
         normal_col_high: 'STNRHI',
-        filters: [],
-        baseline: {
-            value_col: 'ABLFL', //synced with studyday_col in syncsettings()
-            values: ['Y']
-        },
+        baseline_col: 'ABLFL',
+
+        // value mappings
         measure_values: {
             // creatinine-based measures
             creat: 'Creatinine',
@@ -40,6 +39,10 @@ export default function rendererSettings() {
             alb: 'Albumin',
             albcreat: 'Albumin/Creatinine'
         },
+
+        // renderer settings
+        filters: [],
+        baseline_value: 'Y',
         kdigo_criteria: {
             stage_1: {
                 creat_fchg: 1.5,
@@ -70,6 +73,7 @@ export default function rendererSettings() {
                 creat: 1.2,
                 egfr: 75
             }
-        }
+        },
     };
 }
+

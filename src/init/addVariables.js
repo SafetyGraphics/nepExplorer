@@ -9,7 +9,7 @@ export default function addVariables({ settings: { synced: settings }, data: { d
         d.unit = d[settings.unit_col];
         d.lln = parseFloat(d[settings.normal_col_low]);
         d.uln = parseFloat(d[settings.normal_col_high]);
-        d.baseline = d[settings.baseline.value_col];
+        d.baseline = d[settings.baseline_col];
     });
 
     return data;

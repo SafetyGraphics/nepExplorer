@@ -1,5 +1,10 @@
-export default function settings() {
-    return {
+import customSettings from './timeSeries/index';
+
+export default function timeSeries(chart) {
+    const chartSettings = customSettings[chart]();
+
+    const settings = {
+        measures: chartSettings.measures,
         x: {
             column: 'studyday',
             type: 'linear',
@@ -7,9 +12,8 @@ export default function settings() {
             format: ',1d'
         },
         y: {
-            column: 'pchg',
+            ...chartSettings.y,
             type: 'linear',
-            label: 'Percent Change from Baseline (%)',
             format: '.1f'
         },
         marks: [
@@ -26,10 +30,13 @@ export default function settings() {
         ],
         color_by: 'measure',
         legend: {
-            label: ''
+            label: 'Measure',
+            location: 'top',
         },
         gridlines: 'xy',
         resizable: false,
-        aspect: 2
+        aspect: 4,
     };
+
+    return settings;
 }

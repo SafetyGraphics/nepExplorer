@@ -1,4 +1,4 @@
-export default function webchartsSettings() {
+export default function kdigoScatterPlot() {
     return {
         x: {
             column: 'creat_fchg',
@@ -18,7 +18,7 @@ export default function webchartsSettings() {
             {
                 type: 'circle',
                 per: ['key'],
-                tooltip: '[key]: $x,$y'
+                tooltip: '[key]: $x,$y',
             }
         ],
         resizable: false,

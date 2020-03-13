@@ -7,7 +7,11 @@ export default function defineParticipantLevelData({
         .key(d => d.id)
         .key(d => d.measure)
         .rollup(data => {
-            const baseline = data.find(d => settings.baseline.values.includes(d.baseline));
+            const baseline = data.find(d => (
+                Array.isArray(settings.baseline_value)
+                    ? settings.baseline_value.includes(d.baseline)
+                    : settings.baseline_value === d.baseline
+            ));
 
             data.forEach(d => {
                 d.chg = baseline ? d.result - baseline.result : null;

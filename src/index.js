@@ -1,87 +1,71 @@
 import './util/polyfills';
 import './util/moveTo';
-import configuration from './configuration/index';
-import { createChart, createControls, createTable } from 'webcharts';
-import callbacks from './callbacks/index';
 
-import chart2settings from './resultsOverTime/settings';
-
-// layout and styles
 import layout from './layout';
 import styles from './styles';
 import init from './init';
 import destroy from './destroy';
 
+import configuration from './configuration/index';
+
+import { createChart } from 'webcharts';
+import kdigoScatterPlotCallbacks from './kdigoScatterPlot/index';
+import timeSeriesCallbacks from './timeSeries/index';
+
 export default function nepExplorer(element = 'body', settings = {}) {
-    // layout and styles
-    const containers = layout(element);
-    styles();
-
-    //Define chart.
-    const mergedSettings = Object.assign(
-        {},
-        JSON.parse(JSON.stringify(configuration.settings)),
-        settings
-    );
-    const syncedSettings = configuration.syncSettings(mergedSettings);
-
-    // controls
-    const syncedControlInputs = configuration.syncControlInputs(
-        configuration.controlInputs(),
-        syncedSettings
-    );
-    const controls = createControls(document.querySelector(element).querySelector('#wc-controls'), {
-        location: 'top',
-        inputs: syncedControlInputs
-    });
-
-    // chart
-    const chart = createChart(containers.chart1.node(), syncedSettings, controls);
-
-    for (const callback in callbacks)
-        chart.on(callback.substring(2).toLowerCase(), callbacks[callback]);
-
-    const chart2 = createChart(containers.chart2.node(), chart2settings());
-
-    chart2.on('layout', function() {
-        this.participantLabel = this.wrap.insert('span', ':first-child');
-    });
-
-    chart2.on('draw', function() {
-        this.participantLabel.text(d => `Participant ID: ${this.raw_data[0].id}`);
-    });
-
-    chart.chart2 = chart2;
-
-    const chart3settings = chart2settings();
-    chart3settings.y.column = 'xuln';
-    chart3settings.y.label = 'Standardized Result [xULN]';
-    const chart3 = createChart(containers.chart3.node(), chart3settings);
-
-    chart3.on('layout', function() {
-        this.participantLabel = this.wrap.insert('span', ':first-child');
-    });
-
-    chart3.on('draw', function() {
-        this.participantLabel.text(d => `Participant ID: ${this.raw_data[0].id}`);
-    });
-
-    chart.chart3 = chart3;
-
     const nepExplorer = {
         element,
+        containers: layout(element),
+        styles: styles(),
         settings: {
             user: settings,
-            merged: mergedSettings,
-            synced: syncedSettings,
-            controlInputs: syncedControlInputs
         },
-        chart,
-        chart2,
-        chart3,
+        charts: {},
         init,
         destroy
     };
+
+    // KDIGO scatter plot
+    nepExplorer.settings.merged = Object.assign(
+        {},
+        configuration.renderer(),
+        configuration.kdigoScatterPlot(),
+        nepExplorer.settings.user
+    );
+    nepExplorer.settings.synced = configuration.syncKdigoScatterPlot(nepExplorer.settings.merged);
+    nepExplorer.kdigoScatterPlot = createChart(
+        nepExplorer.containers.kdigoScatterPlot.node(),
+        nepExplorer.settings.synced,
+    );
+
+    for (const callback in kdigoScatterPlotCallbacks)
+        nepExplorer.kdigoScatterPlot
+            .on(callback.substring(2).toLowerCase(), kdigoScatterPlotCallbacks[callback]);
+
+    // time series
+    ['creat_cystatc', 'egfr', 'uln', 'bp', 'albcreat'].forEach(chart => {
+        nepExplorer.containers[chart] = nepExplorer.containers.timeSeries
+            .append('div')
+            .classed(`wc-component wc-component--chart wc-component--time-series-chart wc-component--${chart}`, true);
+
+        const mergedSettings = Object.assign(
+            {},
+            configuration.renderer(),
+            configuration.timeSeries(chart),
+            nepExplorer.settings.user
+        );
+        const syncedSettings = configuration.syncTimeSeries(mergedSettings);
+
+        const timeSeries = createChart(
+            nepExplorer.containers[chart].node(),
+            syncedSettings
+        );
+
+        for (const callback in timeSeriesCallbacks)
+            timeSeries.on(callback.substring(2).toLowerCase(), timeSeriesCallbacks[callback]);
+
+        nepExplorer.charts[chart] = timeSeries;
+    });
 
     return nepExplorer;
 }
