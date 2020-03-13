@@ -42,36 +42,45 @@ export default function renderer() {
 
         // renderer settings
         filters: [],
+        groups: [],
+        details: [
+            {value_col: 'AGE', label: 'Age'},
+            {value_col: 'SEX', label: 'Sex'},
+            {value_col: 'RACE', label: 'Race'},
+        ],
         baseline_value: 'Y',
         kdigo_criteria: {
             stage_1: {
                 creat_fchg: 1.5,
-                egfr_creat_fchg: 25,
+                egfr_creat_chg: 25,
                 color: 'yellow'
             },
             stage_2: {
                 creat_fchg: 2,
-                egfr_creat_fchg: 50,
+                egfr_creat_chg: 50,
                 color: 'orange'
             },
             stage_3: {
                 creat_fchg: 3,
-                egfr_creat_fchg: 75,
+                egfr_creat_chg: 75,
                 color: 'red'
             }
         },
         kdigo_dc_criteria: {
             stage_1: {
                 creat: 0.3,
-                egfr: 25
+                egfr: 25,
+                color: 'yellow'
             },
             stage_2: {
                 creat: 0.7,
-                egfr: 50
+                egfr: 50,
+                color: 'orange'
             },
             stage_3: {
                 creat: 1.2,
-                egfr: 75
+                egfr: 75,
+                color: 'red'
             }
         },
     };

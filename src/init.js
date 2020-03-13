@@ -1,6 +1,5 @@
 import addVariables from './init/addVariables';
 import defineParticipantLevelData from './init/defineParticipantLevelData';
-import drawTimeSeries from './init/drawTimeSeries';
 
 export default function init(data) {
     this.data = {

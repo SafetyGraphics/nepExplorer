@@ -38,19 +38,38 @@ export default function defineParticipantLevelData({
         })
         .entries(data);
 
+    // Capture measure-level results at participant level.
     participantLevel.forEach(d => {
-        const egfr_creat = d.values.find(di => di.key === settings.measure_values.egfr_creat);
+        const datum = data.find(di => di[settings.id_col] === d.key);
+
+        // participant details
+        settings.details.forEach(detail => {
+            d[detail.value_col] = datum[detail.value_col];
+        });
+
+        // x-axis
         const creat = d.values.find(di => di.key === settings.measure_values.creat);
-
-        d.egfr_creat_chg = egfr_creat ? (egfr_creat.values.max_fchg - 1) * 100 : null;
         d.creat_fchg = creat ? creat.values.max_fchg : null;
-        d.creat_fn = d.creat_chg >= 0.3 ? 1 : 0;
-
-        const egfr_cystatc = d.values.find(di => di.key === settings.measure_values.egfr_cystatc);
         const cystatc = d.values.find(di => di.key === settings.measure_values.cystatc);
-
-        d.egfr_cystatc_chg = egfr_cystatc ? egfr_cystatc.values.max_chg : null;
         d.cystatc_fchg = cystatc ? cystatc.values.max_fchg : null;
+
+        // y-axis
+        const egfr_creat = d.values.find(di => di.key === settings.measure_values.egfr_creat);
+        d.egfr_creat_chg = egfr_creat ? (egfr_creat.values.max_fchg - 1) * 100 : null;
+        const egfr_cystatc = d.values.find(di => di.key === settings.measure_values.egfr_cystatc);
+        d.egfr_cystatc_chg = egfr_cystatc ? egfr_cystatc.values.max_chg : null;
+
+        // KDIGO stage
+        const kdigo = Object.keys(settings.kdigo_criteria)
+            .sort(d3.descending)
+            .find(key => {
+                const criterion = settings.kdigo_criteria[key];
+                return criterion.creat_fchg <= d.creat_fchg || criterion.egfr_creat_chg <= d.egfr_creat_chg;
+            });
+        d.kdigo = kdigo ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI') : 'No AKI';
+
+        // color
+        d.creat_fn = d.creat_chg >= 0.3 ? 1 : 0;
         d.cystatc_fn = d.cystatc_chg >= 0.3 ? 1 : 0;
     });
 

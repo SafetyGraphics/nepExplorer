@@ -22,6 +22,7 @@ export default function kdigoScatterPlot() {
             }
         ],
         resizable: false,
-        aspect: 2
+        aspect: 2,
+        gridlines: 'xy',
     };
 }

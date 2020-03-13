@@ -1,6 +1,9 @@
-export default function drawTimeSeries(id) {
+export default function drawTimeSeriesCharts(id) {
     const participant = this.data.participants
         .find(d => d.key === id);
+
+    this.containers.timeSeries
+        .classed('wc-hidden', false)
 
     for (const name in this.charts) {
         const chart = this.charts[name];
@@ -24,6 +27,4 @@ export default function drawTimeSeries(id) {
             console.warn(`[ ${measures.join(', ')} ] do not exist in the data. The associated chart will not be displayed.`);
         }
     }
-
-    this.containers.timeSeriesNote.text(`Viewing charts for participant ${id}.`);
 }

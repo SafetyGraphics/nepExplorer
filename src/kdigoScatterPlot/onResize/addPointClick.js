@@ -1,5 +1,7 @@
 import { select } from 'd3';
-import drawTimeSeries from '../../init/drawTimeSeries';
+import addClearFunctionality from './addPointClick/addClearFunctionality';
+import displayParticipantDetails from './addPointClick/displayParticipantDetails';
+import drawTimeSeriesCharts from './addPointClick/drawTimeSeriesCharts';
 
 export default function addPointClick() {
     const chart = this;
@@ -15,6 +17,9 @@ export default function addPointClick() {
         .on('click', function(d) {
             points.classed('selected', false);
             select(this).classed('selected', true);
-            drawTimeSeries.call(chart.nepExplorer, d.key);
+            chart.nepExplorer.containers.detailsHeader.text('Participant Details');
+            addClearFunctionality.call(chart.nepExplorer);
+            displayParticipantDetails.call(chart.nepExplorer, d.key);
+            drawTimeSeriesCharts.call(chart.nepExplorer, d.key);
         });
 }

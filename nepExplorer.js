@@ -144,24 +144,35 @@
       var containers = {
         main: d3$1.select(element).append('div').classed('wc-framework', true)
       };
-      containers.controls = containers.main.append('div').classed('wc-component wc-component--controls', true);
-      containers.kdigoScatterPlot = containers.main.append('div').classed('wc-component wc-component--chart wc-component--kdigo-scatter-plot', true);
-      containers.timeSeries = containers.main.append('div').classed('wc-component wc-component--time-series', true);
-      containers.timeSeriesNote = containers.timeSeries.append('div').classed('wc-note wc-component--time-series__note', true).text('Click a point to view associated charts.');
+      containers.controls = containers.main.append('div').classed('wc-component wc-component--controls', true); // population section - KDIGO scatter plot, KDIGO legend/frequency table
+
+      containers.population = containers.main.append('div').classed('wc-section wc-section--population', true);
+      containers.kdigoScatterPlot = containers.population.append('div').classed('wc-component wc-component--kdigo-scatter-plot', true);
+      containers.kdigoLegend = containers.population.append('div').classed('wc-component wc-component--kdigo-legend', true); // participant section - participant details, time series charts
+
+      containers.participant = containers.main.append('div').classed('wc-section wc-section--participant', true);
+      containers.detailsContainer = containers.participant.append('div').classed('wc-component wc-component--details-container', true);
+      containers.detailsHeader = containers.detailsContainer.append('div').classed('wc-component__details-header', true).text('Click a point to view participant details.');
+      containers.detailsClear = containers.detailsContainer.append('button').classed('wc-component__details-clear wc-hidden', true).text('Clear');
+      containers.detailsParticipant = containers.detailsContainer.append('ul').classed('wc-component__details-participant wc-hidden', true);
+      containers.timeSeries = containers.participant.append('div').classed('wc-component wc-component--time-series wc-hidden', true);
       return containers;
     }
 
     function styles() {
-      var styles = ['.wc-framework {', '    width: 100%;', '    display: inline-block;', '}', '.wc-hidden {', '    display: none !important;', '}', '.wc-invisible {', '    visibility: hidden;', '}', '.wc-header {', '    font-size: 20px;', '    font-weight: bold;', '}', '.wc-row {', '    width: 100%;', '    display: inline-block;', '}', '.wc-component--chart {', '    display: inline-block;', '}', '.wc-component--kdigo-scatter-plot {', '    width: 48%;', '    float: left;', '}', '.wc-component--time-series {', '    width: 48%;', '    float: right;', '}', '.wc-component--time-series-chart {', '    width: 100%;', '}', '.kdigo-stage {', '    stroke: black;', '}', '.wc-component--kdigo-scatter-plot circle.wc-data-mark {', '    cursor: pointer;', '    stroke: black;', '    fill-opacity: 1;', '    stroke-width: 1;', '}', '.wc-component--kdigo-scatter-plot circle.wc-data-mark:hover {', '    stroke-width: 3;', '}' //'.wc-framework .wc-component--chart:nth-child(3n-2) {',
-      //'    float: left;',
-      //'}',
-      //'.wc-framework .wc-component--chart:nth-child(3n-1) {',
-      //'    margin: 0 2%;',
-      //'}',
-      //'.wc-framework .wc-component--chart:nth-child(3n) {',
-      //'    float: right;',
-      //'}',
-      ];
+      var styles = [
+      /***--------------------------------------------------------------------------------------\
+      universal styles
+      \--------------------------------------------------------------------------------------***/
+      '.wc-framework {', '    width: 100%;', '    display: inline-block;', '}', '.wc-hidden {', '    display: none !important;', '}', '.wc-invisible {', '    visibility: hidden;', '}', '.wc-section {', '    display: inline-block;', '}', '.wc-component {', '    display: inline-block;', '    width: 100%;', '}',
+      /***--------------------------------------------------------------------------------------\
+      left side
+      \--------------------------------------------------------------------------------------***/
+      '.wc-section--population {', '    width: 48%;', '    float: left;', '}', '.wc-component--kdigo-scatter-plot circle.wc-data-mark {', '    cursor: pointer;', '    stroke: black;', '    fill-opacity: 1;', '    stroke-width: 1;', '}', '.wc-component--kdigo-scatter-plot circle.wc-data-mark:hover {', '    stroke-width: 3;', '}', '.kdigo-stage {', '    stroke: black;', '}', '.wc-component--kdigo-scatter-plot .tick line {', '    stroke-opacity: .4;', '}',
+      /***--------------------------------------------------------------------------------------\
+      right side
+      \--------------------------------------------------------------------------------------***/
+      '.wc-section--participant {', '    width: 48%;', '    float: right;', '}', '.wc-component__details-header {', '    border-top: 2px solid black;', '    border-bottom: 2px solid black;', '    padding: 0.2em;', '}', '.wc-component__details-clear {', '    float: right;', '    margin: 0.5em;', '}', '.wc-component__details-participant {', '    list-style: none;', '    padding: 0;', '    border-bottom: 2px solid black;', '}', '.wc-details__li {', '    display: inline-block;', '    text-align: center;', '    padding: 0.5em;', '}', '.wc-details__label {', '    font-size: 0.8em;', '}', '.wc-details__value {', '}', '.wc-component--time-series-chart {', '    width: 100%;', '}'];
       var style = document.createElement('style');
       style.type = 'text/css';
       style.innerHTML = styles.join('\n');
@@ -232,61 +243,45 @@
           return d.pchg;
         });
         return datum;
-      }).entries(data);
+      }).entries(data); // Capture measure-level results at participant level.
+
       participantLevel.forEach(function (d) {
-        var egfr_creat = d.values.find(function (di) {
-          return di.key === settings.measure_values.egfr_creat;
-        });
+        var datum = data.find(function (di) {
+          return di[settings.id_col] === d.key;
+        }); // participant details
+
+        settings.details.forEach(function (detail) {
+          d[detail.value_col] = datum[detail.value_col];
+        }); // x-axis
+
         var creat = d.values.find(function (di) {
           return di.key === settings.measure_values.creat;
         });
-        d.egfr_creat_chg = egfr_creat ? (egfr_creat.values.max_fchg - 1) * 100 : null;
         d.creat_fchg = creat ? creat.values.max_fchg : null;
-        d.creat_fn = d.creat_chg >= 0.3 ? 1 : 0;
-        var egfr_cystatc = d.values.find(function (di) {
-          return di.key === settings.measure_values.egfr_cystatc;
-        });
         var cystatc = d.values.find(function (di) {
           return di.key === settings.measure_values.cystatc;
         });
-        d.egfr_cystatc_chg = egfr_cystatc ? egfr_cystatc.values.max_chg : null;
-        d.cystatc_fchg = cystatc ? cystatc.values.max_fchg : null;
+        d.cystatc_fchg = cystatc ? cystatc.values.max_fchg : null; // y-axis
+
+        var egfr_creat = d.values.find(function (di) {
+          return di.key === settings.measure_values.egfr_creat;
+        });
+        d.egfr_creat_chg = egfr_creat ? (egfr_creat.values.max_fchg - 1) * 100 : null;
+        var egfr_cystatc = d.values.find(function (di) {
+          return di.key === settings.measure_values.egfr_cystatc;
+        });
+        d.egfr_cystatc_chg = egfr_cystatc ? egfr_cystatc.values.max_chg : null; // KDIGO stage
+
+        var kdigo = Object.keys(settings.kdigo_criteria).sort(d3.descending).find(function (key) {
+          var criterion = settings.kdigo_criteria[key];
+          return criterion.creat_fchg <= d.creat_fchg || criterion.egfr_creat_chg <= d.egfr_creat_chg;
+        });
+        d.kdigo = kdigo ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI') : 'No AKI'; // color
+
+        d.creat_fn = d.creat_chg >= 0.3 ? 1 : 0;
         d.cystatc_fn = d.cystatc_chg >= 0.3 ? 1 : 0;
       });
       return participantLevel;
-    }
-
-    function drawTimeSeries(id) {
-      var _this = this;
-
-      var participant = this.data.participants.find(function (d) {
-        return d.key === id;
-      });
-
-      var _loop = function _loop(name) {
-        var chart = _this.charts[name];
-        var chartMeasures = chart.config.measures.map(function (measure) {
-          return _this.settings.synced.measure_values[measure];
-        });
-        var chartData = d3.merge(participant.values.filter(function (d) {
-          return chartMeasures.includes(d.key);
-        }).map(function (d) {
-          return d.values.data;
-        }));
-
-        if (chartData.length) {
-          if (chart.initialized) chart.draw(chartData);else chart.init(chartData);
-        } else {
-          delete _this.charts[chart];
-          console.warn("[ ".concat(measures.join(', '), " ] do not exist in the data. The associated chart will not be displayed."));
-        }
-      };
-
-      for (var name in this.charts) {
-        _loop(name);
-      }
-
-      this.containers.timeSeriesNote.text("Viewing charts for participant ".concat(id, "."));
     }
 
     function init(data) {
@@ -339,36 +334,50 @@
         },
         // renderer settings
         filters: [],
+        groups: [],
+        details: [{
+          value_col: 'AGE',
+          label: 'Age'
+        }, {
+          value_col: 'SEX',
+          label: 'Sex'
+        }, {
+          value_col: 'RACE',
+          label: 'Race'
+        }],
         baseline_value: 'Y',
         kdigo_criteria: {
           stage_1: {
             creat_fchg: 1.5,
-            egfr_creat_fchg: 25,
+            egfr_creat_chg: 25,
             color: 'yellow'
           },
           stage_2: {
             creat_fchg: 2,
-            egfr_creat_fchg: 50,
+            egfr_creat_chg: 50,
             color: 'orange'
           },
           stage_3: {
             creat_fchg: 3,
-            egfr_creat_fchg: 75,
+            egfr_creat_chg: 75,
             color: 'red'
           }
         },
         kdigo_dc_criteria: {
           stage_1: {
             creat: 0.3,
-            egfr: 25
+            egfr: 25,
+            color: 'yellow'
           },
           stage_2: {
             creat: 0.7,
-            egfr: 50
+            egfr: 50,
+            color: 'orange'
           },
           stage_3: {
             creat: 1.2,
-            egfr: 75
+            egfr: 75,
+            color: 'red'
           }
         }
       };
@@ -396,12 +405,9 @@
           tooltip: '[key]: $x,$y'
         }],
         resizable: false,
-        aspect: 2
+        aspect: 2,
+        gridlines: 'xy'
       };
-    }
-
-    function syncSettings(settings) {
-      return settings;
     }
 
     function _defineProperty(obj, key, value) {
@@ -451,6 +457,121 @@
       }
 
       return target;
+    }
+
+    function _slicedToArray(arr, i) {
+      return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+    }
+
+    function _arrayWithHoles(arr) {
+      if (Array.isArray(arr)) return arr;
+    }
+
+    function _iterableToArrayLimit(arr, i) {
+      if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
+        return;
+      }
+
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"] != null) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    function _nonIterableRest() {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+
+    function baseline(settings) {
+      // Map settings.baseline (an object with properties [ value_col  ] and [ values ]) to settings.baseline_col and settings.baseline_value.
+      if (settings.baseline) {
+        if (settings.baseline.value_col && settings.baseline.value_col !== settings.baseline_col) settings.baseline_col = settings.baseline.value_col;
+        if (settings.baseline.values && settings.baseline.values !== settings.baseline_value) settings.baseline_value = settings.baseline.values;
+      }
+
+      return [settings.baseline_col, settings.baseline_value];
+    }
+
+    function details(settings) {
+      // Define default details.
+      var details = [{
+        value_col: settings.id_col,
+        label: 'Subject Identifier'
+      }]; // Add filters to default details.
+
+      if (settings.filters) settings.filters.forEach(function (filter) {
+        var obj = {
+          value_col: filter.value_col ? filter.value_col : filter,
+          label: filter.label ? filter.label : filter.value_col ? filter.value_col : filter
+        };
+        if (details.find(function (detail) {
+          return detail.value_col === detail.value_col;
+        }) === undefined) details.push(obj);
+      }); // Add groups to default details.
+
+      if (settings.groups) settings.groups.filter(function (group) {
+        return group.value_col !== 'NONE';
+      }).forEach(function (group) {
+        var obj = {
+          value_col: group.value_col ? group.value_col : filter,
+          label: group.label ? group.label : group.value_col ? group.value_col : filter
+        };
+        if (details.find(function (detail) {
+          return detail.value_col === obj.value_col;
+        }) === undefined) details.push(obj);
+      }); // Convert details to array to array if needed
+
+      if (!(settings.details instanceof Array)) settings.details = typeof settings.details == 'string' ? [settings.details] : []; // Use default details if detailsIf [settings.details] is not specified:
+
+      if (!settings.details) settings.details = details;else {
+        //If [settings.details] is specified:
+        //Allow user to specify an array of columns or an array of objects with a column property
+        //and optionally a column label.
+        settings.details.forEach(function (detail) {
+          if (details.map(function (d) {
+            return d.value_col;
+          }).indexOf(detail.value_col ? detail.value_col : detail) === -1) details.push({
+            value_col: detail.value_col ? detail.value_col : detail,
+            label: detail.label ? detail.label : detail.value_col ? detail.value_col : detail
+          });
+        });
+        settings.details = details;
+      }
+      details.push({
+        value_col: 'kdigo',
+        label: 'KDIGO Stage'
+      });
+      return details;
+    }
+
+    function syncKdigoScatterPlot(settings) {
+      var _syncBaseline = baseline(settings);
+
+      var _syncBaseline2 = _slicedToArray(_syncBaseline, 2);
+
+      settings.baseline_col = _syncBaseline2[0];
+      settings.baseline_value = _syncBaseline2[1];
+      settings.details = details(settings);
+      return settings;
     }
 
     function albcreat() {
@@ -546,7 +667,7 @@
       return settings;
     }
 
-    function syncSettings$1(settings) {
+    function syncSettings(settings) {
       return settings;
     }
 
@@ -573,9 +694,9 @@
     var configuration = {
       renderer: renderer,
       kdigoScatterPlot: kdigoScatterPlot,
-      syncKdigoScatterPlot: syncSettings,
+      syncKdigoScatterPlot: syncKdigoScatterPlot,
       timeSeries: timeSeries,
-      syncTimeSeries: syncSettings$1,
+      syncTimeSeries: syncSettings,
       controlInputs: controlInputs,
       syncControlInputs: syncControlInputs
     };
@@ -593,83 +714,10 @@
       this.y_dom[1] = Math.max(this.y_dom[1], 75);
     }
 
-    function drawKdigoStages() {
-      var _this = this;
-
-      this.svg.selectAll('.kdigo-stages').remove(); //this.svg.append('rect')
-      //    .attr('x', 0)
-      //    .attr('y', this.plot_height - this.plot_height)
-      //    .attr('width', this.plot_width)
-      //    .attr('height', this.plot_height)
-      //    .attr('fill', 'red');
-      //this.svg.append('rect')
-      //    .attr('x', 0)
-      //    .attr('y', this.plot_height - this.plot_height/2)
-      //    .attr('width', this.plot_width/2)
-      //    .attr('height', this.plot_height/2)
-      //    .attr('fill', 'orange');
-      //this.svg.append('rect')
-      //    .attr('x', 0)
-      //    .attr('y', this.plot_height - this.plot_height/3)
-      //    .attr('width', this.plot_width/3)
-      //    .attr('height', this.plot_height/3)
-      //    .attr('fill', 'yellow');
-      //this.svg.append('rect')
-      //    .attr('x', 0)
-      //    .attr('y', this.plot_height - this.plot_height/4)
-      //    .attr('width', this.plot_width/4)
-      //    .attr('height', this.plot_height/4)
-      //    .attr('fill', 'white');
-      //const kdigo_criteria = Object.keys(this.config.kdigo_criteria)
-      //    .map(key => this.config.kdigo_criteria[key]);
-      //kdigo_criteria.unshift({
-      //    creat_fchg: 1,
-      //    egfr_creat_fchg: 0,
-      //    color: 'white',
-      //});
-      //kdigo_criteria.push({
-      //    creat_fchg: this.x_dom[1],
-      //    egfr_creat_fchg: this.y_dom[1],
-      //    color: this.config.kdigo_criteria.stage_3.color,
-      //});
-      //console.table(kdigo_criteria);
-      //const d = kdigo_criteria[2];
-      //console.log(this.y(d.egfr_creat_fchg));
-      //this.svg.append('rect')
-      //    .attr('x', 0)
-      //    .attr('y', this.y(d.egfr_creat_fchg))
-      //    .attr('width', this.x(d.creat_fchg))
-      //    .attr('height', this.plot_height - this.y(d.egfr_creat_fchg))
-      //    .attr('fill', d.color);
-      //const kdigo_pairs = d3.pairs(kdigo_criteria.reverse());
-      //kdigo_pairs.forEach(d => {
-      //    d.x = 0; // x starts at the left side of the chart
-      //    d.y = this.plot_height - this.y(d[1].egfr_creat_fchg);
-      //    d.width = this.x(d[0].creat_fchg) - d.x;
-      //    d.height = this.y(d[1].egfr_creat_fchg);
-      //    d.fill = d[1].color;
-      //    console.log(d);
-      //});
-      //const kdigoStages = this.svg
-      //    .insert('g', '.overlay')
-      //    .classed('kdigo-stages', true);
-      //kdigoStages
-      //    .selectAll('rect.kdigo-stage')
-      //    .data(kdigo_criteria.reverse())
-      //    .enter()
-      //    .append('rect')
-      //    .classed('kdigo-stage', true)
-      //    .attr({
-      //        x: d => 0,
-      //        y: d => this.y(d.egfr_creat_fchg),
-      //        width: d => this.x(d.creat_fchg),
-      //        height: d => this.plot_height - this.y(d.egfr_creat_fchg),
-      //        fill: d => d.color,
-      //    });
-
-      this.svg.select('.kdigo-stages').remove();
-      var g = this.svg.insert('g', '.overlay').classed('kdigo-stages', true);
-      var rects = g.selectAll('rect').data([{
+    // TODO: use settings to define KDIGO dimensions
+    function metadata() {
+      //console.log(this.config.kdigo_criteria);
+      return [{
         label: 'KDIGO Stage 3',
         dimensions: [[1, this.x_dom[1]], [0, this.y_dom[1]]],
         color: 'red'
@@ -685,7 +733,18 @@
         label: '',
         dimensions: [[1, 1.5], [0, 25]],
         color: 'white'
-      }]).enter().append('rect').classed('kdigo-stage', true).attr({
+      }];
+    }
+
+    // TODO: add table by KDIGO stage
+
+    function drawKdigoStages() {
+      var _this = this;
+
+      this.svg.selectAll('.kdigo-stages').remove();
+      var g = this.svg.insert('g', '.axis').classed('kdigo-stages', true);
+      var metadata$1 = metadata.call(this);
+      var rects = g.selectAll('rect').data(metadata$1).enter().append('rect').classed('kdigo-stage', true).attr({
         x: function x(d) {
           return _this.x(d.dimensions[0][0]);
         },
@@ -708,6 +767,66 @@
       });
     }
 
+    function addClearFunctionality() {
+      var _this = this;
+
+      this.containers.detailsClear.classed('wc-hidden', false).on('click', function () {
+        _this.containers.detailsHeader.text('Click a point to view participant details.');
+
+        _this.containers.detailsClear.classed('wc-hidden', true);
+
+        _this.containers.detailsParticipant.classed('wc-hidden', true).selectAll('*').remove();
+
+        _this.containers.timeSeries.classed('wc-hidden', true);
+      });
+    }
+
+    function displayParticipantDetails(id) {
+      var participant = this.data.participants.find(function (d) {
+        return d.key === id;
+      });
+      this.containers.detailsParticipant.classed('wc-hidden', false).selectAll('li').remove();
+      var lis = this.containers.detailsParticipant.selectAll('li').data(this.settings.synced.details).enter().append('li').classed('wc-details__li', true);
+      lis.append('div').classed('wc-details__label', true).text(function (d) {
+        return d.label;
+      });
+      lis.append('div').classed('wc-details__value', true).text(function (d) {
+        return participant[d.value_col];
+      });
+    }
+
+    function drawTimeSeriesCharts(id) {
+      var _this = this;
+
+      var participant = this.data.participants.find(function (d) {
+        return d.key === id;
+      });
+      this.containers.timeSeries.classed('wc-hidden', false);
+
+      var _loop = function _loop(name) {
+        var chart = _this.charts[name];
+        var chartMeasures = chart.config.measures.map(function (measure) {
+          return _this.settings.synced.measure_values[measure];
+        });
+        var chartData = d3.merge(participant.values.filter(function (d) {
+          return chartMeasures.includes(d.key);
+        }).map(function (d) {
+          return d.values.data;
+        }));
+
+        if (chartData.length) {
+          if (chart.initialized) chart.draw(chartData);else chart.init(chartData);
+        } else {
+          delete _this.charts[chart];
+          console.warn("[ ".concat(measures.join(', '), " ] do not exist in the data. The associated chart will not be displayed."));
+        }
+      };
+
+      for (var name in this.charts) {
+        _loop(name);
+      }
+    }
+
     function addPointClick() {
       var chart = this;
       var points = this.marks.find(function (mark) {
@@ -720,7 +839,10 @@
       }).on('click', function (d) {
         points.classed('selected', false);
         d3$1.select(this).classed('selected', true);
-        drawTimeSeries.call(chart.nepExplorer, d.key);
+        chart.nepExplorer.containers.detailsHeader.text('Participant Details');
+        addClearFunctionality.call(chart.nepExplorer);
+        displayParticipantDetails.call(chart.nepExplorer, d.key);
+        drawTimeSeriesCharts.call(chart.nepExplorer, d.key);
       });
     }
 
