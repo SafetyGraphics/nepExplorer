@@ -45,14 +45,13 @@ export default function nepExplorer(element = 'body', settings = {}) {
         );
 
     // time series
-    ['creat_cystatc', 'egfr', 'uln', 'bp', 'albcreat'].forEach(chart => {
-        nepExplorer.containers[chart] = nepExplorer.containers.timeSeries
+    Object.keys(configuration.timeSeriesCharts).forEach(chart => {
+        const container = nepExplorer.containers.timeSeries
             .append('div')
             .classed(
-                `wc-component wc-component--chart wc-component--time-series-chart wc-component--${chart}`,
+                `wc-subcomponent wc-subcomponent--chart wc-subcomponent--time-series-chart wc-subcomponent--${chart}`,
                 true
             );
-
         const mergedSettings = Object.assign(
             {},
             configuration.renderer(),
@@ -60,6 +59,15 @@ export default function nepExplorer(element = 'body', settings = {}) {
             nepExplorer.settings.user
         );
         const syncedSettings = configuration.syncTimeSeries(mergedSettings);
+
+        nepExplorer.containers[`${chart}Container`] = container;
+        nepExplorer.containers[`${chart}Header`] = nepExplorer.containers[`${chart}Container`]
+            .append('div')
+            .classed(`wc-header wc-header--${chart}`, true)
+            .text(syncedSettings.title);
+        nepExplorer.containers[chart] = container
+            .append('div')
+            .classed(`wc-chart-container wc-chart-container--${chart}`, true);
 
         const timeSeries = createChart(nepExplorer.containers[chart].node(), syncedSettings);
 

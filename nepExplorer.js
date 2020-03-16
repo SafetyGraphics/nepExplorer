@@ -152,6 +152,10 @@
         containers.population = containers.main
             .append('div')
             .classed('wc-section wc-section--population', true);
+        containers.kdigoHeader = containers.population
+            .append('div')
+            .classed('wc-header wc-header--kdigo-scatter-plot', true)
+            .text('KDIGO Scatter Plot');
         containers.kdigoScatterPlot = containers.population
             .append('div')
             .classed('wc-component wc-component--kdigo-scatter-plot', true);
@@ -167,7 +171,7 @@
             .classed('wc-component wc-component--details-container', true);
         containers.detailsHeader = containers.detailsContainer
             .append('div')
-            .classed('wc-component__details-header', true)
+            .classed('wc-header wc-header--details', true)
             .text('Click a point to view participant details.');
         containers.detailsClear = containers.detailsContainer
             .append('button')
@@ -208,7 +212,7 @@
       left side
       \--------------------------------------------------------------------------------------***/
             '.wc-section--population {',
-            '    width: 48%;',
+            '    width: 59%;',
             '    float: left;',
             '}',
             '.wc-component--kdigo-scatter-plot circle.wc-data-mark {',
@@ -260,13 +264,14 @@
       right side
       \--------------------------------------------------------------------------------------***/
             '.wc-section--participant {',
-            '    width: 48%;',
+            '    width: 39%;',
             '    float: right;',
             '}',
-            '.wc-component__details-header {',
+            '.wc-header {',
             '    border-top: 2px solid black;',
             '    border-bottom: 2px solid black;',
             '    padding: 0.2em;',
+            '    font-weight: bold;',
             '}',
             '.wc-component__details-clear {',
             '    float: right;',
@@ -275,7 +280,6 @@
             '.wc-component__details-participant {',
             '    list-style: none;',
             '    padding: 0;',
-            '    border-bottom: 2px solid black;',
             '}',
             '.wc-details__li {',
             '    display: inline-block;',
@@ -287,8 +291,65 @@
             '}',
             '.wc-details__value {',
             '}',
+            '.wc-subcomponent {',
+            '    display: inline-block;',
+            '    width: 100%;',
+            '}',
             '.wc-component--time-series-chart {',
             '    width: 100%;',
+            '}',
+            '.wc-diff .wc-hover-line {',
+            '    stroke: #fff;',
+            '    stroke-width: 16;',
+            '    stroke-opacity: 0;',
+            '}',
+            '.wc-diff .wc-visible-line {',
+            '    stroke: #999;',
+            '    stroke-dasharray: 3 3;',
+            '}',
+            '.wc-diff .wc-visible-line.wc-hovered {',
+            '    stroke: #777;',
+            '    stroke-width: 4;',
+            '}',
+            '.wc-component--time-series .wc-chart {',
+            '    width: 80%;',
+            '    display: inline-block;',
+            '}',
+            '.wc-component--time-series .axis-title {',
+            '    font-size: 14px;',
+            '    font-weight: bold;',
+            '}',
+            '.legend {',
+            '    width: 20% !important;',
+            '    display: inline-block;',
+            '    float: right;',
+            '}',
+            '.legend-item {',
+            '    float: left;',
+            '    clear: left;',
+            '    margin-right: 0 !important;',
+            '}',
+            '.legend-mark-text {',
+            '    display: none;',
+            '}',
+            '.legend-label {',
+            '    margin-right: .55em;',
+            '    font-size: 12px;',
+            '}',
+            '.legend-color-block {',
+            '}',
+            '.wc-reference-lines {',
+            '    cursor: help;',
+            '}',
+            '.wc-reference-line {',
+            '    x1: 0;',
+            '    stroke: #999;',
+            '    stroke-dasharray: 3 3;',
+            '}',
+            '.wc-reference-label {',
+            '    text-anchor: end;',
+            '    alignment-baseline: baseline;',
+            '    fill: #999;',
             '}'
         ];
         var style = document.createElement('style');
@@ -425,6 +486,27 @@
         return participantLevel;
     }
 
+    function _typeof(obj) {
+        '@babel/helpers - typeof';
+
+        if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
+            _typeof = function(obj) {
+                return typeof obj;
+            };
+        } else {
+            _typeof = function(obj) {
+                return obj &&
+                    typeof Symbol === 'function' &&
+                    obj.constructor === Symbol &&
+                    obj !== Symbol.prototype
+                    ? 'symbol'
+                    : typeof obj;
+            };
+        }
+
+        return _typeof(obj);
+    }
+
     function _defineProperty(obj, key, value) {
         if (key in obj) {
             Object.defineProperty(obj, key, {
@@ -483,8 +565,28 @@
         return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
     }
 
+    function _toConsumableArray(arr) {
+        return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+    }
+
+    function _arrayWithoutHoles(arr) {
+        if (Array.isArray(arr)) {
+            for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+            return arr2;
+        }
+    }
+
     function _arrayWithHoles(arr) {
         if (Array.isArray(arr)) return arr;
+    }
+
+    function _iterableToArray(iter) {
+        if (
+            Symbol.iterator in Object(iter) ||
+            Object.prototype.toString.call(iter) === '[object Arguments]'
+        )
+            return Array.from(iter);
     }
 
     function _iterableToArrayLimit(arr, i) {
@@ -520,6 +622,10 @@
         }
 
         return _arr;
+    }
+
+    function _nonIterableSpread() {
+        throw new TypeError('Invalid attempt to spread non-iterable instance');
     }
 
     function _nonIterableRest() {
@@ -812,7 +918,7 @@
                     tooltip: '[key]: $x,$y'
                 }
             ],
-            resizable: false,
+            //resizable: false,
             aspect: 2,
             gridlines: 'xy'
         };
@@ -927,78 +1033,221 @@
         return settings;
     }
 
-    function albcreat() {
+    function merge(value, replacement) {
+        if (value === undefined) return replacement;
+        if (replacement === undefined) return value;
+
+        if (_typeof(value) !== _typeof(replacement)) {
+            console.warn(
+                'Type difference in merge():\nValue: [ '
+                    .concat(JSON.stringify(value), ' ]\nReplacement: [ ')
+                    .concat(JSON.stringify(replacement), ' ]')
+            );
+            return value || replacement;
+        }
+
+        if (_typeof(replacement) !== 'object') return replacement;
+
+        if (Array.isArray(value)) {
+            var array = [];
+
+            for (var i = 0; i < Math.max(value.length, replacement.length); i++) {
+                array[i] = merge(value[i], replacement[i]);
+            }
+
+            return array;
+        }
+
+        var obj = {};
+
+        for (
+            var _i = 0,
+                _arr = [].concat(
+                    _toConsumableArray(Object.keys(value)),
+                    _toConsumableArray(Object.keys(replacement))
+                );
+            _i < _arr.length;
+            _i++
+        ) {
+            var property = _arr[_i];
+            obj[property] = merge(value[property], replacement[property]);
+        }
+
+        return obj;
+    }
+
+    function creat_cystatc() {
         return {
+            title: 'Percent Change from Baseline',
             measures: ['creat', 'cystatc'],
+            reference_lines: [
+                {
+                    y: 0,
+                    label: 'Baseline',
+                    tooltip: function tooltip(chart) {
+                        return chart.filtered_data
+                            .filter(function(d) {
+                                return Array.isArray(chart.config.baseline_value)
+                                    ? chart.config.baseline_value.includes(d.baseline)
+                                    : chart.config.baseline_value === d.baseline;
+                            })
+                            .map(function(d) {
+                                return ''.concat(d.measure, ': ').concat(d.result);
+                            })
+                            .join('\n');
+                    }
+                }
+            ],
             y: {
                 column: 'pchg',
-                label: 'Change from Baseline (%)'
-            }
+                label: '%'
+            },
+            diff: true
         };
     }
 
-    function albcreat$1() {
+    function egfr() {
         return {
+            title: 'Change from Baseline',
             measures: ['egfr_creat', 'egfr_cystatc'],
+            reference_lines: [
+                {
+                    y: 0,
+                    label: 'Baseline',
+                    tooltip: function tooltip(chart) {
+                        return chart.filtered_data
+                            .filter(function(d) {
+                                return Array.isArray(chart.config.baseline_value)
+                                    ? chart.config.baseline_value.includes(d.baseline)
+                                    : chart.config.baseline_value === d.baseline;
+                            })
+                            .map(function(d) {
+                                return ''.concat(d.measure, ': ').concat(d.result);
+                            })
+                            .join('\n');
+                    }
+                }
+            ],
             y: {
                 column: 'chg',
-                label: 'Change from Baseline'
-            }
+                label: 'mL/min/1.73m²'
+            },
+            diff: true
         };
     }
 
-    function albcreat$2() {
+    function uln() {
         return {
+            title: 'Standardized Lab Values',
             measures: ['bun', 'sodium', 'k', 'bicarb', 'cl', 'phos', 'ca'],
+            reference_lines: [
+                {
+                    y: 1,
+                    label: 'ULN',
+                    tooltip: function tooltip(chart) {
+                        return d3
+                            .nest()
+                            .key(function(d) {
+                                return d.measure;
+                            })
+                            .rollup(function(data) {
+                                return d3.median(data, function(d) {
+                                    return d.uln;
+                                });
+                            })
+                            .entries(chart.filtered_data)
+                            .map(function(d) {
+                                return ''.concat(d.key, ': ').concat(d.values);
+                            })
+                            .join('\n');
+                    }
+                }
+            ],
             y: {
                 column: 'xuln',
-                label: 'Standardized Result (xULN)'
+                label: '[xULN]',
+                domain: [0, 3]
             }
         };
     }
 
-    function albcreat$3() {
+    function bp() {
         return {
+            title: 'Blood Pressure',
             measures: ['sysbp', 'diabp'],
+            reference_lines: [
+                {
+                    y: 80,
+                    label: 'Ideal Diastolic BP',
+                    tooltip: '80 mmHg'
+                },
+                {
+                    y: 120,
+                    label: 'Ideal Systolic BP',
+                    tooltip: '120 mmHg'
+                }
+            ],
             y: {
                 column: 'result',
-                label: 'Blood Pressure (mmHg)'
+                label: 'mmHg',
+                domain: [80, 120]
             }
         };
     }
 
-    function albcreat$4() {
+    function albcreat() {
         return {
+            title: 'Albumin/Creatinine Ratio',
             measures: ['albcreat'],
+            reference_lines: [
+                {
+                    y: 0,
+                    label: 'A1 Albuminuria',
+                    tooltip: '0-<30 mg/g'
+                },
+                {
+                    y: 30,
+                    label: 'A2 Albuminuria',
+                    tooltip: '30-<300 mg/g'
+                },
+                {
+                    y: 300,
+                    label: 'A3 Albuminuria',
+                    tooltip: '>=300 mg/g'
+                }
+            ],
             y: {
                 column: 'result',
-                label: 'Albumin/Creatinine Ratio (mg/g)'
+                label: 'mg/g',
+                domain: [0, 30]
+            },
+            margin: {
+                top: 14
             }
         };
     }
 
-    var customSettings = {
-        creat_cystatc: albcreat,
-        egfr: albcreat$1,
-        uln: albcreat$2,
-        bp: albcreat$3,
-        albcreat: albcreat$4
+    var timeSeriesCharts = {
+        creat_cystatc: creat_cystatc,
+        egfr: egfr,
+        uln: uln,
+        bp: bp,
+        albcreat: albcreat
     };
 
     function timeSeries(chart) {
-        var chartSettings = customSettings[chart]();
-        var settings = {
-            measures: chartSettings.measures,
+        var customSettings = timeSeriesCharts[chart]();
+        var commonSettings = {
             x: {
                 column: 'studyday',
                 type: 'linear',
                 label: 'Study Day',
                 format: ',1d'
             },
-            y: _objectSpread2({}, chartSettings.y, {
+            y: {
                 type: 'linear',
                 format: '.1f'
-            }),
+            },
             marks: [
                 {
                     type: 'line',
@@ -1012,14 +1261,19 @@
                 }
             ],
             color_by: 'measure',
+            colors: ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#a65628', '#f781bf'],
             legend: {
-                label: 'Measure',
-                location: 'top'
+                label: '',
+                location: 'right',
+                mark: 'circle'
             },
             gridlines: 'xy',
-            resizable: false,
-            aspect: 4
+            //resizable: false,
+            aspect: 3,
+            margin: {}
         };
+        var settings = merge(commonSettings, customSettings);
+        settings.chart = chart;
         return settings;
     }
 
@@ -1052,6 +1306,7 @@
         kdigoScatterPlot: kdigoScatterPlot,
         syncKdigoScatterPlot: syncKdigoScatterPlot,
         timeSeries: timeSeries,
+        timeSeriesCharts: timeSeriesCharts,
         syncTimeSeries: syncSettings,
         controlInputs: controlInputs,
         syncControlInputs: syncControlInputs
@@ -1196,9 +1451,209 @@
 
     function onDatatransform$1() {}
 
-    function onDraw$1() {}
+    function setYDomain() {
+        var _this = this;
 
-    function onResize$1() {}
+        if (this.config.chart === 'uln')
+            this.y_dom[1] = Math.max(
+                this.config.y.domain[1],
+                d3.max(this.filtered_data, function(d) {
+                    return d[_this.config.y.column];
+                })
+            );
+
+        if (this.config.chart === 'bp') {
+            this.y_dom[0] = Math.min(
+                this.config.y.domain[0],
+                d3.min(this.filtered_data, function(d) {
+                    return d[_this.config.y.column];
+                })
+            );
+            this.y_dom[1] = Math.max(
+                this.config.y.domain[1],
+                d3.max(this.filtered_data, function(d) {
+                    return d[_this.config.y.column];
+                })
+            );
+        }
+
+        if (this.config.chart === 'albcreat')
+            this.y_dom[1] = Math.max(
+                this.config.y.domain[1],
+                d3.max(this.filtered_data, function(d) {
+                    return d[_this.config.y.column];
+                })
+            );
+    }
+
+    function onDraw$1() {
+        setYDomain.call(this);
+    }
+
+    function drawReferenceLine() {
+        var _this = this;
+
+        this.svg.selectAll('.wc-reference-lines').remove();
+
+        if (this.config.reference_lines) {
+            var g = this.svg.insert('g', '.point-supergroup').classed('wc-reference-lines', true);
+            var reference_lines = this.config.reference_lines.filter(function(reference_line) {
+                return _this.y_dom[0] <= reference_line.y && reference_line.y <= _this.y_dom[1];
+            }); // lines
+
+            g.selectAll('line')
+                .data(reference_lines)
+                .enter()
+                .append('line')
+                .classed('wc-reference-line', true)
+                .attr({
+                    x2: this.plot_width,
+                    y1: function y1(d) {
+                        return _this.y(d.y);
+                    },
+                    y2: function y2(d) {
+                        return _this.y(d.y);
+                    }
+                })
+                .append('title')
+                .classed('wc-reference-tooltip', true)
+                .text(function(d) {
+                    return typeof d.tooltip === 'string' ? d.tooltip : d.tooltip(_this);
+                }); // labels
+
+            g.selectAll('text')
+                .data(reference_lines)
+                .enter()
+                .append('text')
+                .classed('wc-reference-label', true)
+                .attr({
+                    x: this.plot_width,
+                    y: function y(d) {
+                        return _this.y(d.y);
+                    },
+                    dy: -4
+                })
+                .text(function(d) {
+                    return d.label;
+                })
+                .append('title')
+                .classed('wc-reference-tooltip', true)
+                .text(function(d) {
+                    return typeof d.tooltip === 'string' ? d.tooltip : d.tooltip(_this);
+                });
+        }
+    }
+
+    function drawDifference() {
+        var _this = this;
+
+        this.svg.selectAll('.wc-diffs').remove();
+
+        if (this.config.diff) {
+            var g = this.svg.insert('g', '.point-supergroup').classed('wc-diffs', true);
+            var mark = this.marks.find(function(mark) {
+                return mark.type === 'circle';
+            });
+            var matches = d3
+                .nest()
+                .key(function(d) {
+                    return d.total;
+                })
+                .rollup(function(data) {
+                    var datum = {
+                        n: data.length
+                    };
+
+                    if (data.length > 1) {
+                        datum.measure1 = data[0].values.raw[0].measure;
+                        datum.y1 = data[0].values.y;
+                        datum.result1 = data[0].values.raw[0].result;
+                        datum.measure2 = data[1].values.raw[0].measure;
+                        datum.y2 = data[1].values.y;
+                        datum.result2 = data[1].values.raw[0].result;
+                        datum.diff = datum.y2 - datum.y1;
+                    }
+
+                    return datum;
+                })
+                .entries(mark.data)
+                .filter(function(d) {
+                    return d.values.n > 1;
+                });
+            var diffs = g
+                .selectAll('g')
+                .data(matches)
+                .enter()
+                .append('g')
+                .classed('wc-diff', true);
+            diffs
+                .append('line')
+                .classed('wc-visible-line', true)
+                .attr({
+                    x1: function x1(d) {
+                        return _this.x(+d.key);
+                    },
+                    x2: function x2(d) {
+                        return _this.x(+d.key);
+                    },
+                    y1: function y1(d) {
+                        return _this.y(d.values.y1);
+                    },
+                    y2: function y2(d) {
+                        return _this.y(d.values.y2);
+                    }
+                });
+            var hoverLines = diffs
+                .append('line')
+                .classed('wc-hover-line', true)
+                .attr({
+                    x1: function x1(d) {
+                        return _this.x(+d.key);
+                    },
+                    x2: function x2(d) {
+                        return _this.x(+d.key);
+                    },
+                    y1: function y1(d) {
+                        return _this.y(d.values.y1);
+                    },
+                    y2: function y2(d) {
+                        return _this.y(d.values.y2);
+                    }
+                });
+            hoverLines.append('title').text(function(d) {
+                return 'Study day '
+                    .concat(d.key, '\n')
+                    .concat(d.values.measure1, ': ')
+                    .concat(d.values.y1, ' (')
+                    .concat(d.values.result1, ')\n')
+                    .concat(d.values.measure2, ': ')
+                    .concat(d.values.y2, ' (')
+                    .concat(d.values.result2, ')\nDifference: ')
+                    .concat(d.values.diff);
+            });
+            hoverLines
+                .on('mouseover', function(d) {
+                    d3.select(this.parentNode)
+                        .select('.wc-visible-line')
+                        .classed('wc-hovered', true);
+                })
+                .on('mouseout', function(d) {
+                    d3.select(this.parentNode)
+                        .select('.wc-visible-line')
+                        .classed('wc-hovered', false);
+                });
+        }
+    }
+
+    function moveLegend() {
+        this.div.appendChild(this.legend.node());
+    }
+
+    function onResize$1() {
+        drawReferenceLine.call(this);
+        drawDifference.call(this);
+        moveLegend.call(this);
+    }
 
     function onDestroy$1() {}
 
@@ -1248,11 +1703,11 @@
             );
         } // time series
 
-        ['creat_cystatc', 'egfr', 'uln', 'bp', 'albcreat'].forEach(function(chart) {
-            nepExplorer.containers[chart] = nepExplorer.containers.timeSeries
+        Object.keys(configuration.timeSeriesCharts).forEach(function(chart) {
+            var container = nepExplorer.containers.timeSeries
                 .append('div')
                 .classed(
-                    'wc-component wc-component--chart wc-component--time-series-chart wc-component--'.concat(
+                    'wc-subcomponent wc-subcomponent--chart wc-subcomponent--time-series-chart wc-subcomponent--'.concat(
                         chart
                     ),
                     true
@@ -1264,6 +1719,16 @@
                 nepExplorer.settings.user
             );
             var syncedSettings = configuration.syncTimeSeries(mergedSettings);
+            nepExplorer.containers[''.concat(chart, 'Container')] = container;
+            nepExplorer.containers[''.concat(chart, 'Header')] = nepExplorer.containers[
+                ''.concat(chart, 'Container')
+            ]
+                .append('div')
+                .classed('wc-header wc-header--'.concat(chart), true)
+                .text(syncedSettings.title);
+            nepExplorer.containers[chart] = container
+                .append('div')
+                .classed('wc-chart-container wc-chart-container--'.concat(chart), true);
             var timeSeries = webcharts.createChart(
                 nepExplorer.containers[chart].node(),
                 syncedSettings

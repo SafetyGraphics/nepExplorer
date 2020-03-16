@@ -1,10 +1,12 @@
-import customSettings from './timeSeries/index';
+import merge from '../util/merge';
+import timeSeriesSettings from './timeSeries/index';
 
+// TODO: add deep merge
 export default function timeSeries(chart) {
-    const chartSettings = customSettings[chart]();
+    const customSettings = timeSeriesSettings[chart]();
+    const customKeys = Object.keys(customSettings);
 
-    const settings = {
-        measures: chartSettings.measures,
+    const commonSettings = {
         x: {
             column: 'studyday',
             type: 'linear',
@@ -12,7 +14,6 @@ export default function timeSeries(chart) {
             format: ',1d'
         },
         y: {
-            ...chartSettings.y,
             type: 'linear',
             format: '.1f'
         },
@@ -29,14 +30,21 @@ export default function timeSeries(chart) {
             }
         ],
         color_by: 'measure',
+        colors: ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#a65628', '#f781bf'],
         legend: {
-            label: 'Measure',
-            location: 'top'
+            label: '',
+            location: 'right',
+            mark: 'circle'
         },
         gridlines: 'xy',
-        resizable: false,
-        aspect: 4
+        //resizable: false,
+        aspect: 3,
+        margin: {}
     };
+    const commonKeys = Object.keys(commonSettings);
+
+    const settings = merge(commonSettings, customSettings);
+    settings.chart = chart;
 
     return settings;
 }

@@ -14,6 +14,10 @@ export default function layout(element) {
     containers.population = containers.main
         .append('div')
         .classed('wc-section wc-section--population', true);
+    containers.kdigoHeader = containers.population
+        .append('div')
+        .classed('wc-header wc-header--kdigo-scatter-plot', true)
+        .text('KDIGO Scatter Plot');
     containers.kdigoScatterPlot = containers.population
         .append('div')
         .classed('wc-component wc-component--kdigo-scatter-plot', true);
@@ -30,7 +34,7 @@ export default function layout(element) {
         .classed('wc-component wc-component--details-container', true);
     containers.detailsHeader = containers.detailsContainer
         .append('div')
-        .classed('wc-component__details-header', true)
+        .classed('wc-header wc-header--details', true)
         .text('Click a point to view participant details.');
     containers.detailsClear = containers.detailsContainer
         .append('button')
