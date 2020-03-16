@@ -5,6 +5,7 @@ export default function timeSeries(chart) {
     const chartSettings = customSettings[chart]();
 
     const settings = {
+        title: chartSettings.title,
         diff: !!chartSettings.diff,
         measures: chartSettings.measures,
         x: {
@@ -31,13 +32,15 @@ export default function timeSeries(chart) {
             }
         ],
         color_by: 'measure',
+        colors: ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#a65628', '#f781bf'],
         legend: {
-            label: 'Measure',
-            location: 'top'
+            label: '',
+            location: 'right',
+            mark: 'circle'
         },
         gridlines: 'xy',
-        resizable: false,
-        aspect: 4
+        //resizable: false,
+        aspect: 3
     };
 
     return settings;

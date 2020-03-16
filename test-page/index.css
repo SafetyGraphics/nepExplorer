@@ -4,33 +4,68 @@
     margin: 0;
     font-family: 'Open Sans';
 }
-#title {
+body > * {
     width: 96%;
+    margin: 12px 2% 12px;
+}
+#title {
     padding: 0 0 12px 0;
     border-bottom: 2px solid lightgray;
-    margin: 24px 2% 12px 2%;
     font-size: 32px;
     font-weight: normal;
 }
 #subtitle {
-    width: 96%;
-    margin: 0 2% 12px 2%;
     font-size: 24px;
     font-weight: lighter;
 }
-
 #info {
     text-align: center;
     color: #004085;
     background-color: #cce5ff;
     border:1px solid #b8daff;
-    padding: 0.5em;
-    margin: 0 2% 12px 2%;
+    padding: 0.5em 0;
     border-radius:0.2em
 }
-
 #container {
-    width: 96%;
-    margin: 12px 2%;
     display: inline-block;
+}
+
+.wc-section--population {
+    width: 59%;
+    float: left;
+}
+.wc-section--participant {
+    width: 39%;
+    float: right;
+}
+.wc-subcomponent {
+    display: inline-block;
+    width: 100%;
+}
+.wc-component--time-series .wc-chart {
+    width: 80%;
+    display: inline-block;
+}
+.wc-component--time-series .axis-title {
+    font-size: 14px;
+    font-weight: bold;
+}
+.legend {
+    width: 20% !important;
+    display: inline-block;
+    float: right;
+}
+.legend-item {
+    float: left;
+    clear: left;
+    margin-right: 0 !important;
+}
+.legend-mark-text {
+    display: none;
+}
+.legend-label {
+    margin-right: .55em;
+    font-size: 12px;
+}
+.legend-color-block {
 }

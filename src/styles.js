@@ -27,10 +27,10 @@ export default function styles() {
 		  left side
         \--------------------------------------------------------------------------------------***/
 
-        '.wc-section--population {',
-        '    width: 48%;',
-        '    float: left;',
-        '}',
+        //'.wc-section--population {',
+        //'    width: 48%;',
+        //'    float: left;',
+        //'}',
         '.wc-component--kdigo-scatter-plot circle.wc-data-mark {',
         '    cursor: pointer;',
         '    stroke: black;',
@@ -81,14 +81,15 @@ export default function styles() {
 		  right side
         \--------------------------------------------------------------------------------------***/
 
-        '.wc-section--participant {',
-        '    width: 48%;',
-        '    float: right;',
-        '}',
-        '.wc-component__details-header {',
+        //'.wc-section--participant {',
+        //'    width: 48%;',
+        //'    float: right;',
+        //'}',
+        '.wc-header {',
         '    border-top: 2px solid black;',
         '    border-bottom: 2px solid black;',
         '    padding: 0.2em;',
+        '    font-weight: bold;',
         '}',
         '.wc-component__details-clear {',
         '    float: right;',
@@ -97,7 +98,6 @@ export default function styles() {
         '.wc-component__details-participant {',
         '    list-style: none;',
         '    padding: 0;',
-        '    border-bottom: 2px solid black;',
         '}',
         '.wc-details__li {',
         '    display: inline-block;',

@@ -152,6 +152,10 @@
         containers.population = containers.main
             .append('div')
             .classed('wc-section wc-section--population', true);
+        containers.kdigoHeader = containers.population
+            .append('div')
+            .classed('wc-header wc-header--kdigo-scatter-plot', true)
+            .text('KDIGO Scatter Plot');
         containers.kdigoScatterPlot = containers.population
             .append('div')
             .classed('wc-component wc-component--kdigo-scatter-plot', true);
@@ -167,7 +171,7 @@
             .classed('wc-component wc-component--details-container', true);
         containers.detailsHeader = containers.detailsContainer
             .append('div')
-            .classed('wc-component__details-header', true)
+            .classed('wc-header wc-header--details', true)
             .text('Click a point to view participant details.');
         containers.detailsClear = containers.detailsContainer
             .append('button')
@@ -207,10 +211,10 @@
             /***--------------------------------------------------------------------------------------\
       left side
       \--------------------------------------------------------------------------------------***/
-            '.wc-section--population {',
-            '    width: 48%;',
-            '    float: left;',
-            '}',
+            //'.wc-section--population {',
+            //'    width: 48%;',
+            //'    float: left;',
+            //'}',
             '.wc-component--kdigo-scatter-plot circle.wc-data-mark {',
             '    cursor: pointer;',
             '    stroke: black;',
@@ -259,14 +263,15 @@
             /***--------------------------------------------------------------------------------------\
       right side
       \--------------------------------------------------------------------------------------***/
-            '.wc-section--participant {',
-            '    width: 48%;',
-            '    float: right;',
-            '}',
-            '.wc-component__details-header {',
+            //'.wc-section--participant {',
+            //'    width: 48%;',
+            //'    float: right;',
+            //'}',
+            '.wc-header {',
             '    border-top: 2px solid black;',
             '    border-bottom: 2px solid black;',
             '    padding: 0.2em;',
+            '    font-weight: bold;',
             '}',
             '.wc-component__details-clear {',
             '    float: right;',
@@ -275,7 +280,6 @@
             '.wc-component__details-participant {',
             '    list-style: none;',
             '    padding: 0;',
-            '    border-bottom: 2px solid black;',
             '}',
             '.wc-details__li {',
             '    display: inline-block;',
@@ -826,7 +830,7 @@
                     tooltip: '[key]: $x,$y'
                 }
             ],
-            resizable: false,
+            //resizable: false,
             aspect: 2,
             gridlines: 'xy'
         };
@@ -941,69 +945,76 @@
         return settings;
     }
 
-    function albcreat() {
+    function creat_cystatc() {
         return {
-            diff: true,
+            title: 'Percent Change from Baseline',
             measures: ['creat', 'cystatc'],
             y: {
                 column: 'pchg',
-                label: 'Change from Baseline (%)'
-            }
+                label: '%'
+            },
+            diff: true
         };
     }
 
-    function albcreat$1() {
+    function egfr() {
         return {
-            diff: true,
+            title: 'Change from Baseline',
             measures: ['egfr_creat', 'egfr_cystatc'],
             y: {
                 column: 'chg',
-                label: 'Change from Baseline'
-            }
+                label: 'mL/min/1.73m²'
+            },
+            diff: true
         };
     }
 
-    function albcreat$2() {
+    function uln() {
         return {
+            title: 'Standardized Lab Values',
             measures: ['bun', 'sodium', 'k', 'bicarb', 'cl', 'phos', 'ca'],
             y: {
                 column: 'xuln',
-                label: 'Standardized Result (xULN)'
+                label: '[xULN]',
+                domain: [0, 3]
             }
         };
     }
 
-    function albcreat$3() {
+    function bp() {
         return {
+            title: 'Blood Pressure',
             measures: ['sysbp', 'diabp'],
             y: {
                 column: 'result',
-                label: 'Blood Pressure (mmHg)'
+                label: 'mmHg'
             }
         };
     }
 
-    function albcreat$4() {
+    function albcreat() {
         return {
+            title: 'Albumin/Creatinine Ratio',
             measures: ['albcreat'],
             y: {
                 column: 'result',
-                label: 'Albumin/Creatinine Ratio (mg/g)'
+                label: 'mg/g'
             }
         };
     }
 
-    var customSettings = {
-        creat_cystatc: albcreat,
-        egfr: albcreat$1,
-        uln: albcreat$2,
-        bp: albcreat$3,
-        albcreat: albcreat$4
+    var timeSeriesCharts = {
+        creat_cystatc: creat_cystatc,
+        egfr: egfr,
+        uln: uln,
+        bp: bp,
+        albcreat: albcreat
     };
 
     function timeSeries(chart) {
-        var chartSettings = customSettings[chart]();
+        var chartSettings = timeSeriesCharts[chart]();
         var settings = {
+            title: chartSettings.title,
             diff: !!chartSettings.diff,
             measures: chartSettings.measures,
             x: {
@@ -1029,13 +1040,15 @@
                 }
             ],
             color_by: 'measure',
+            colors: ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#a65628', '#f781bf'],
             legend: {
-                label: 'Measure',
-                location: 'top'
+                label: '',
+                location: 'right',
+                mark: 'circle'
             },
             gridlines: 'xy',
-            resizable: false,
-            aspect: 4
+            //resizable: false,
+            aspect: 3
         };
         return settings;
     }
@@ -1069,6 +1082,7 @@
         kdigoScatterPlot: kdigoScatterPlot,
         syncKdigoScatterPlot: syncKdigoScatterPlot,
         timeSeries: timeSeries,
+        timeSeriesCharts: timeSeriesCharts,
         syncTimeSeries: syncSettings,
         controlInputs: controlInputs,
         syncControlInputs: syncControlInputs
@@ -1213,7 +1227,15 @@
 
     function onDatatransform$1() {}
 
-    function onDraw$1() {}
+    function onDraw$1() {
+        if (this.config.y.column === 'xuln')
+            this.y_dom[1] = Math.max(
+                this.config.y.domain[1],
+                d3.max(this.filtered_data, function(d) {
+                    return d.xuln;
+                })
+            );
+    }
 
     function drawDifference() {
         var _this = this;
@@ -1318,6 +1340,7 @@
 
     function onResize$1() {
         drawDifference.call(this);
+        this.div.appendChild(this.legend.node());
     }
 
     function onDestroy$1() {}
@@ -1368,11 +1391,11 @@
             );
         } // time series
 
-        ['creat_cystatc', 'egfr', 'uln', 'bp', 'albcreat'].forEach(function(chart) {
-            nepExplorer.containers[chart] = nepExplorer.containers.timeSeries
+        Object.keys(configuration.timeSeriesCharts).forEach(function(chart) {
+            var container = nepExplorer.containers.timeSeries
                 .append('div')
                 .classed(
-                    'wc-component wc-component--chart wc-component--time-series-chart wc-component--'.concat(
+                    'wc-subcomponent wc-subcomponent--chart wc-subcomponent--time-series-chart wc-subcomponent--'.concat(
                         chart
                     ),
                     true
@@ -1384,6 +1407,17 @@
                 nepExplorer.settings.user
             );
             var syncedSettings = configuration.syncTimeSeries(mergedSettings);
+            console.log(syncedSettings.title);
+            nepExplorer.containers[''.concat(chart, 'Container')] = container;
+            nepExplorer.containers[''.concat(chart, 'Header')] = nepExplorer.containers[
+                ''.concat(chart, 'Container')
+            ]
+                .append('div')
+                .classed('wc-header wc-header--'.concat(chart), true)
+                .text(syncedSettings.title);
+            nepExplorer.containers[chart] = container
+                .append('div')
+                .classed('wc-chart-container wc-chart-container--'.concat(chart), true);
             var timeSeries = webcharts.createChart(
                 nepExplorer.containers[chart].node(),
                 syncedSettings

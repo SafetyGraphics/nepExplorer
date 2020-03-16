@@ -1,9 +1,10 @@
 export default function albcreat() {
     return {
+        title: 'Albumin/Creatinine Ratio',
         measures: ['albcreat'],
         y: {
             column: 'result',
-            label: 'Albumin/Creatinine Ratio (mg/g)'
+            label: 'mg/g'
         }
     };
 }

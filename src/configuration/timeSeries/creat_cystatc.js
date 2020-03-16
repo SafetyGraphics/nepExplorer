@@ -1,10 +1,11 @@
-export default function albcreat() {
+export default function creat_cystatc() {
     return {
-        diff: true,
+        title: 'Percent Change from Baseline',
         measures: ['creat', 'cystatc'],
         y: {
             column: 'pchg',
-            label: 'Change from Baseline (%)'
-        }
+            label: '%'
+        },
+        diff: true
     };
 }

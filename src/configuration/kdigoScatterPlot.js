@@ -21,7 +21,7 @@ export default function kdigoScatterPlot() {
                 tooltip: '[key]: $x,$y'
             }
         ],
-        resizable: false,
+        //resizable: false,
         aspect: 2,
         gridlines: 'xy'
     };
