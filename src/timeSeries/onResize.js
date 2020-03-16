@@ -1,7 +1,9 @@
+import drawReferenceLine from './onResize/drawReferenceLine';
 import drawDifference from './onResize/drawDifference';
+import moveLegend from './onResize/moveLegend';
 
 export default function onResize() {
+    drawReferenceLine.call(this);
     drawDifference.call(this);
-
-    this.div.appendChild(this.legend.node());
+    moveLegend.call(this);
 }

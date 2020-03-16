@@ -59,7 +59,6 @@ export default function nepExplorer(element = 'body', settings = {}) {
             nepExplorer.settings.user
         );
         const syncedSettings = configuration.syncTimeSeries(mergedSettings);
-        console.log(syncedSettings.title);
 
         nepExplorer.containers[`${chart}Container`] = container;
         nepExplorer.containers[`${chart}Header`] = nepExplorer.containers[`${chart}Container`]

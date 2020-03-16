@@ -211,10 +211,10 @@
             /***--------------------------------------------------------------------------------------\
       left side
       \--------------------------------------------------------------------------------------***/
-            //'.wc-section--population {',
-            //'    width: 48%;',
-            //'    float: left;',
-            //'}',
+            '.wc-section--population {',
+            '    width: 59%;',
+            '    float: left;',
+            '}',
             '.wc-component--kdigo-scatter-plot circle.wc-data-mark {',
             '    cursor: pointer;',
             '    stroke: black;',
@@ -263,10 +263,10 @@
             /***--------------------------------------------------------------------------------------\
       right side
       \--------------------------------------------------------------------------------------***/
-            //'.wc-section--participant {',
-            //'    width: 48%;',
-            //'    float: right;',
-            //'}',
+            '.wc-section--participant {',
+            '    width: 39%;',
+            '    float: right;',
+            '}',
             '.wc-header {',
             '    border-top: 2px solid black;',
             '    border-bottom: 2px solid black;',
@@ -291,6 +291,10 @@
             '}',
             '.wc-details__value {',
             '}',
+            '.wc-subcomponent {',
+            '    display: inline-block;',
+            '    width: 100%;',
+            '}',
             '.wc-component--time-series-chart {',
             '    width: 100%;',
             '}',
@@ -300,13 +304,52 @@
             '    stroke-opacity: 0;',
             '}',
             '.wc-diff .wc-visible-line {',
-            '    stroke: #aaa;',
-            '    stroke-width: 2;',
-            '    stroke-dasharray: 2,2;',
+            '    stroke: #999;',
+            '    stroke-dasharray: 3 3;',
             '}',
             '.wc-diff .wc-visible-line.wc-hovered {',
             '    stroke: #777;',
             '    stroke-width: 4;',
+            '}',
+            '.wc-component--time-series .wc-chart {',
+            '    width: 80%;',
+            '    display: inline-block;',
+            '}',
+            '.wc-component--time-series .axis-title {',
+            '    font-size: 14px;',
+            '    font-weight: bold;',
+            '}',
+            '.legend {',
+            '    width: 20% !important;',
+            '    display: inline-block;',
+            '    float: right;',
+            '}',
+            '.legend-item {',
+            '    float: left;',
+            '    clear: left;',
+            '    margin-right: 0 !important;',
+            '}',
+            '.legend-mark-text {',
+            '    display: none;',
+            '}',
+            '.legend-label {',
+            '    margin-right: .55em;',
+            '    font-size: 12px;',
+            '}',
+            '.legend-color-block {',
+            '}',
+            '.wc-reference-lines {',
+            '    cursor: help;',
+            '}',
+            '.wc-reference-line {',
+            '    x1: 0;',
+            '    stroke: #999;',
+            '    stroke-dasharray: 3 3;',
+            '}',
+            '.wc-reference-label {',
+            '    text-anchor: end;',
+            '    alignment-baseline: baseline;',
+            '    fill: #999;',
             '}'
         ];
         var style = document.createElement('style');
@@ -443,6 +486,27 @@
         return participantLevel;
     }
 
+    function _typeof(obj) {
+        '@babel/helpers - typeof';
+
+        if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
+            _typeof = function(obj) {
+                return typeof obj;
+            };
+        } else {
+            _typeof = function(obj) {
+                return obj &&
+                    typeof Symbol === 'function' &&
+                    obj.constructor === Symbol &&
+                    obj !== Symbol.prototype
+                    ? 'symbol'
+                    : typeof obj;
+            };
+        }
+
+        return _typeof(obj);
+    }
+
     function _defineProperty(obj, key, value) {
         if (key in obj) {
             Object.defineProperty(obj, key, {
@@ -501,8 +565,28 @@
         return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
     }
 
+    function _toConsumableArray(arr) {
+        return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+    }
+
+    function _arrayWithoutHoles(arr) {
+        if (Array.isArray(arr)) {
+            for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+            return arr2;
+        }
+    }
+
     function _arrayWithHoles(arr) {
         if (Array.isArray(arr)) return arr;
+    }
+
+    function _iterableToArray(iter) {
+        if (
+            Symbol.iterator in Object(iter) ||
+            Object.prototype.toString.call(iter) === '[object Arguments]'
+        )
+            return Array.from(iter);
     }
 
     function _iterableToArrayLimit(arr, i) {
@@ -538,6 +622,10 @@
         }
 
         return _arr;
+    }
+
+    function _nonIterableSpread() {
+        throw new TypeError('Invalid attempt to spread non-iterable instance');
     }
 
     function _nonIterableRest() {
@@ -945,10 +1033,71 @@
         return settings;
     }
 
+    function merge(value, replacement) {
+        if (value === undefined) return replacement;
+        if (replacement === undefined) return value;
+
+        if (_typeof(value) !== _typeof(replacement)) {
+            console.warn(
+                'Type difference in merge():\nValue: [ '
+                    .concat(JSON.stringify(value), ' ]\nReplacement: [ ')
+                    .concat(JSON.stringify(replacement), ' ]')
+            );
+            return value || replacement;
+        }
+
+        if (_typeof(replacement) !== 'object') return replacement;
+
+        if (Array.isArray(value)) {
+            var array = [];
+
+            for (var i = 0; i < Math.max(value.length, replacement.length); i++) {
+                array[i] = merge(value[i], replacement[i]);
+            }
+
+            return array;
+        }
+
+        var obj = {};
+
+        for (
+            var _i = 0,
+                _arr = [].concat(
+                    _toConsumableArray(Object.keys(value)),
+                    _toConsumableArray(Object.keys(replacement))
+                );
+            _i < _arr.length;
+            _i++
+        ) {
+            var property = _arr[_i];
+            obj[property] = merge(value[property], replacement[property]);
+        }
+
+        return obj;
+    }
+
     function creat_cystatc() {
         return {
             title: 'Percent Change from Baseline',
             measures: ['creat', 'cystatc'],
+            reference_lines: [
+                {
+                    y: 0,
+                    label: 'Baseline',
+                    tooltip: function tooltip(chart) {
+                        return chart.filtered_data
+                            .filter(function(d) {
+                                return Array.isArray(chart.config.baseline_value)
+                                    ? chart.config.baseline_value.includes(d.baseline)
+                                    : chart.config.baseline_value === d.baseline;
+                            })
+                            .map(function(d) {
+                                return ''.concat(d.measure, ': ').concat(d.result);
+                            })
+                            .join('\n');
+                    }
+                }
+            ],
             y: {
                 column: 'pchg',
                 label: '%'
@@ -961,6 +1110,24 @@
         return {
             title: 'Change from Baseline',
             measures: ['egfr_creat', 'egfr_cystatc'],
+            reference_lines: [
+                {
+                    y: 0,
+                    label: 'Baseline',
+                    tooltip: function tooltip(chart) {
+                        return chart.filtered_data
+                            .filter(function(d) {
+                                return Array.isArray(chart.config.baseline_value)
+                                    ? chart.config.baseline_value.includes(d.baseline)
+                                    : chart.config.baseline_value === d.baseline;
+                            })
+                            .map(function(d) {
+                                return ''.concat(d.measure, ': ').concat(d.result);
+                            })
+                            .join('\n');
+                    }
+                }
+            ],
             y: {
                 column: 'chg',
                 label: 'mL/min/1.73m²'
@@ -973,6 +1140,29 @@
         return {
             title: 'Standardized Lab Values',
             measures: ['bun', 'sodium', 'k', 'bicarb', 'cl', 'phos', 'ca'],
+            reference_lines: [
+                {
+                    y: 1,
+                    label: 'ULN',
+                    tooltip: function tooltip(chart) {
+                        return d3
+                            .nest()
+                            .key(function(d) {
+                                return d.measure;
+                            })
+                            .rollup(function(data) {
+                                return d3.median(data, function(d) {
+                                    return d.uln;
+                                });
+                            })
+                            .entries(chart.filtered_data)
+                            .map(function(d) {
+                                return ''.concat(d.key, ': ').concat(d.values);
+                            })
+                            .join('\n');
+                    }
+                }
+            ],
             y: {
                 column: 'xuln',
                 label: '[xULN]',
@@ -985,9 +1175,22 @@
         return {
             title: 'Blood Pressure',
             measures: ['sysbp', 'diabp'],
+            reference_lines: [
+                {
+                    y: 80,
+                    label: 'Ideal Diastolic BP',
+                    tooltip: '80 mmHg'
+                },
+                {
+                    y: 120,
+                    label: 'Ideal Systolic BP',
+                    tooltip: '120 mmHg'
+                }
+            ],
             y: {
                 column: 'result',
-                label: 'mmHg'
+                label: 'mmHg',
+                domain: [80, 120]
             }
         };
     }
@@ -996,9 +1199,30 @@
         return {
             title: 'Albumin/Creatinine Ratio',
             measures: ['albcreat'],
+            reference_lines: [
+                {
+                    y: 0,
+                    label: 'A1 Albuminuria',
+                    tooltip: '0-<30 mg/g'
+                },
+                {
+                    y: 30,
+                    label: 'A2 Albuminuria',
+                    tooltip: '30-<300 mg/g'
+                },
+                {
+                    y: 300,
+                    label: 'A3 Albuminuria',
+                    tooltip: '>=300 mg/g'
+                }
+            ],
             y: {
                 column: 'result',
-                label: 'mg/g'
+                label: 'mg/g',
+                domain: [0, 30]
+            },
+            margin: {
+                top: 14
             }
         };
     }
@@ -1012,21 +1236,18 @@
     };
 
     function timeSeries(chart) {
-        var chartSettings = timeSeriesCharts[chart]();
-        var settings = {
-            title: chartSettings.title,
-            diff: !!chartSettings.diff,
-            measures: chartSettings.measures,
+        var customSettings = timeSeriesCharts[chart]();
+        var commonSettings = {
             x: {
                 column: 'studyday',
                 type: 'linear',
                 label: 'Study Day',
                 format: ',1d'
             },
-            y: _objectSpread2({}, chartSettings.y, {
+            y: {
                 type: 'linear',
                 format: '.1f'
-            }),
+            },
             marks: [
                 {
                     type: 'line',
@@ -1048,8 +1269,11 @@
             },
             gridlines: 'xy',
             //resizable: false,
-            aspect: 3
+            aspect: 3,
+            margin: {}
         };
+        var settings = merge(commonSettings, customSettings);
+        settings.chart = chart;
         return settings;
     }
 
@@ -1227,14 +1451,97 @@
 
     function onDatatransform$1() {}
 
-    function onDraw$1() {
-        if (this.config.y.column === 'xuln')
+    function setYDomain() {
+        var _this = this;
+
+        if (this.config.chart === 'uln')
             this.y_dom[1] = Math.max(
                 this.config.y.domain[1],
                 d3.max(this.filtered_data, function(d) {
-                    return d.xuln;
+                    return d[_this.config.y.column];
                 })
             );
+
+        if (this.config.chart === 'bp') {
+            this.y_dom[0] = Math.min(
+                this.config.y.domain[0],
+                d3.min(this.filtered_data, function(d) {
+                    return d[_this.config.y.column];
+                })
+            );
+            this.y_dom[1] = Math.max(
+                this.config.y.domain[1],
+                d3.max(this.filtered_data, function(d) {
+                    return d[_this.config.y.column];
+                })
+            );
+        }
+
+        if (this.config.chart === 'albcreat')
+            this.y_dom[1] = Math.max(
+                this.config.y.domain[1],
+                d3.max(this.filtered_data, function(d) {
+                    return d[_this.config.y.column];
+                })
+            );
+    }
+
+    function onDraw$1() {
+        setYDomain.call(this);
+    }
+
+    function drawReferenceLine() {
+        var _this = this;
+
+        this.svg.selectAll('.wc-reference-lines').remove();
+
+        if (this.config.reference_lines) {
+            var g = this.svg.insert('g', '.point-supergroup').classed('wc-reference-lines', true);
+            var reference_lines = this.config.reference_lines.filter(function(reference_line) {
+                return _this.y_dom[0] <= reference_line.y && reference_line.y <= _this.y_dom[1];
+            }); // lines
+
+            g.selectAll('line')
+                .data(reference_lines)
+                .enter()
+                .append('line')
+                .classed('wc-reference-line', true)
+                .attr({
+                    x2: this.plot_width,
+                    y1: function y1(d) {
+                        return _this.y(d.y);
+                    },
+                    y2: function y2(d) {
+                        return _this.y(d.y);
+                    }
+                })
+                .append('title')
+                .classed('wc-reference-tooltip', true)
+                .text(function(d) {
+                    return typeof d.tooltip === 'string' ? d.tooltip : d.tooltip(_this);
+                }); // labels
+
+            g.selectAll('text')
+                .data(reference_lines)
+                .enter()
+                .append('text')
+                .classed('wc-reference-label', true)
+                .attr({
+                    x: this.plot_width,
+                    y: function y(d) {
+                        return _this.y(d.y);
+                    },
+                    dy: -4
+                })
+                .text(function(d) {
+                    return d.label;
+                })
+                .append('title')
+                .classed('wc-reference-tooltip', true)
+                .text(function(d) {
+                    return typeof d.tooltip === 'string' ? d.tooltip : d.tooltip(_this);
+                });
+        }
     }
 
     function drawDifference() {
@@ -1338,9 +1645,14 @@
         }
     }
 
-    function onResize$1() {
-        drawDifference.call(this);
+    function moveLegend() {
         this.div.appendChild(this.legend.node());
+    }
+
+    function onResize$1() {
+        drawReferenceLine.call(this);
+        drawDifference.call(this);
+        moveLegend.call(this);
     }
 
     function onDestroy$1() {}
@@ -1407,7 +1719,6 @@
                 nepExplorer.settings.user
             );
             var syncedSettings = configuration.syncTimeSeries(mergedSettings);
-            console.log(syncedSettings.title);
             nepExplorer.containers[''.concat(chart, 'Container')] = container;
             nepExplorer.containers[''.concat(chart, 'Header')] = nepExplorer.containers[
                 ''.concat(chart, 'Container')

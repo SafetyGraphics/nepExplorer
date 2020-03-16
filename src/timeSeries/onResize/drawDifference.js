@@ -1,5 +1,6 @@
 export default function drawDifference() {
     this.svg.selectAll('.wc-diffs').remove();
+
     if (this.config.diff) {
         const g = this.svg.insert('g', '.point-supergroup').classed('wc-diffs', true);
         const mark = this.marks.find(mark => mark.type === 'circle');
