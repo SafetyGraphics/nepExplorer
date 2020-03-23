@@ -1,7 +1,6 @@
 import defineMetadata from './drawKdigoStages/metadata';
 
 // TODO: draw paths instead of rectangles to reduce opacity
-// TODO: add table by KDIGO stage
 export default function drawKdigoStages() {
     this.svg.selectAll('.kdigo-stages').remove();
     const g = this.svg.insert('g', '.axis').classed('kdigo-stages', true);

@@ -49,44 +49,31 @@ export default function renderer() {
             { value_col: 'RACE', label: 'Race' }
         ],
         baseline_value: 'Y',
-        kdigo_criteria: {
-            no_aki: {
-                creat_fchg: 0,
-                egfr_creat_chg: 0,
+        kdigo_criteria: [
+            {
+                label: 'No AKI',
+                x: 0,
+                y: 0,
                 color: 'white'
             },
-            stage_1: {
-                creat_fchg: 1.5,
-                egfr_creat_chg: 25,
-                color: 'yellow'
+            {
+                label: 'Stage 1 AKI',
+                x: 1.5,
+                y: 25,
+                color: '#ffffbf'
             },
-            stage_2: {
-                creat_fchg: 2,
-                egfr_creat_chg: 50,
-                color: 'orange'
+            {
+                label: 'Stage 2 AKI',
+                x: 2,
+                y: 50,
+                color: '#fdae61'
             },
-            stage_3: {
-                creat_fchg: 3,
-                egfr_creat_chg: 75,
-                color: 'red'
+            {
+                label: 'Stage 3 AKI',
+                x: 3,
+                y: 75,
+                color: '#d73027'
             }
-        },
-        kdigo_dc_criteria: {
-            stage_1: {
-                creat: 0.3,
-                egfr: 25,
-                color: 'yellow'
-            },
-            stage_2: {
-                creat: 0.7,
-                egfr: 50,
-                color: 'orange'
-            },
-            stage_3: {
-                creat: 1.2,
-                egfr: 75,
-                color: 'red'
-            }
-        }
+        ],
     };
 }
