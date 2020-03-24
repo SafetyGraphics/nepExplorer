@@ -26,6 +26,7 @@ export default function drawDifference() {
             })
             .entries(mark.data)
             .filter(d => d.values.n > 1);
+
         const diffs = g
             .selectAll('g')
             .data(matches)

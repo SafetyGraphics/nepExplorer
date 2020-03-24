@@ -143,15 +143,20 @@
     function layout(element) {
       var containers = {
         main: d3$1.select(element).append('div').classed('wc-framework', true)
-      };
-      containers.controls = containers.main.append('div').classed('wc-component wc-component--controls', true); // population section - KDIGO scatter plot, KDIGO legend/frequency table
+      }; // left column
 
-      containers.population = containers.main.append('div').classed('wc-section wc-section--population', true);
+      containers.leftColumn = containers.main.append('div').classed('wc-column wc-column--left', true); // controls section
+
+      containers.controls = containers.leftColumn.append('div').classed('wc-section wc-section--controls', true); // right column
+
+      containers.rightColumn = containers.main.append('div').classed('wc-column wc-column--right', true); // population section - KDIGO scatter plot, KDIGO legend/frequency table
+
+      containers.population = containers.rightColumn.append('div').classed('wc-section wc-section--population', true);
       containers.kdigoHeader = containers.population.append('div').classed('wc-header wc-header--kdigo-scatter-plot', true).text('KDIGO Scatter Plot');
       containers.kdigoScatterPlot = containers.population.append('div').classed('wc-component wc-component--kdigo-scatter-plot', true);
-      containers.kdigoLegend = containers.population.append('div').classed('wc-component wc-component--kdigo-legend', true); // participant section - participant details, time series charts
+      containers.kdigoLegend = containers.rightColumn.append('div').classed('wc-component wc-component--kdigo-legend', true); // participant section - participant details, time series charts
 
-      containers.participant = containers.main.append('div').classed('wc-section wc-section--participant', true);
+      containers.participant = containers.rightColumn.append('div').classed('wc-section wc-section--participant', true);
       containers.detailsContainer = containers.participant.append('div').classed('wc-component wc-component--details-container', true);
       containers.detailsHeader = containers.detailsContainer.append('div').classed('wc-header wc-header--details', true).text('Click a point to view participant details.');
       containers.detailsClear = containers.detailsContainer.append('button').classed('wc-component__details-clear wc-hidden', true).text('Clear');
@@ -161,19 +166,27 @@
     }
 
     function styles() {
-      var styles = [
+      var styles = ['.wc-framework {', '    width: 100%;', '    display: inline-block;', '}', '.wc-hidden {', '    display: none !important;', '}', '.wc-invisible {', '    visibility: hidden;', '}', '.wc-column {', '    display: inline-block;', '}', '.wc-section {', '    display: inline-block;', '    width: 100%;', '}', '.wc-component {', '    display: inline-block;', '    width: 100%;', '}',
       /***--------------------------------------------------------------------------------------\
-      universal styles
+      left column
       \--------------------------------------------------------------------------------------***/
-      '.wc-framework {', '    width: 100%;', '    display: inline-block;', '}', '.wc-hidden {', '    display: none !important;', '}', '.wc-invisible {', '    visibility: hidden;', '}', '.wc-section {', '    display: inline-block;', '}', '.wc-component {', '    display: inline-block;', '    width: 100%;', '}',
+      '.wc-column--left {', '    width: 20%;', '}',
+      /****---------------------------------------------------------------------------------\
+        controls
+      \---------------------------------------------------------------------------------****/
+      '.wc-section--controls {', '}',
       /***--------------------------------------------------------------------------------------\
-      left side
+      right column
       \--------------------------------------------------------------------------------------***/
-      '.wc-section--population {', '    width: 59%;', '    float: left;', '}', '.wc-component--kdigo-scatter-plot circle.wc-data-mark {', '    cursor: pointer;', '    stroke: black;', '    fill-opacity: 1;', '    stroke-width: 1;', '}', '.wc-component--kdigo-scatter-plot circle.wc-data-mark:hover {', '    stroke-width: 3;', '}', '.wc-component--kdigo-scatter-plot circle.wc-data-mark.wc-selected {', '    stroke-width: 3;', '}', '.kdigo-stage {', '    stroke: black;', '}', '.wc-component--kdigo-scatter-plot .tick line {', '    stroke-opacity: .4;', '}', '.wc-component--kdigo-legend .interactivity {', '    display: none;', '}', '.wc-component--kdigo-legend table {', '    border-collapse: collapse;', '}', '.wc-component--kdigo-legend thead {', '    border-top: 2px solid #999;', '    border-bottom: 2px solid #999;', '}', '.wc-component--kdigo-legend thead tr {', '    padding: 0.1em;', '}', '.wc-component--kdigo-legend tbody {', '    border-bottom: 2px solid #999;', '}', '.wc-component--kdigo-legend tbody {', '    border-bottom: 2px solid #999;', '}', '.wc-component--kdigo-legend tbody tr {', '    padding: 0.1em;', '}', '.wc-component--kdigo-legend tbody td {', '    text-align: center;', '    font-size: 0.9em;', '    padding: 0 0.5em 0 0.5em;', '}',
-      /***--------------------------------------------------------------------------------------\
-      right side
-      \--------------------------------------------------------------------------------------***/
-      '.wc-section--participant {', '    width: 39%;', '    float: right;', '}', '.wc-header {', '    border-top: 2px solid black;', '    border-bottom: 2px solid black;', '    padding: 0.2em;', '    font-weight: bold;', '}', '.wc-component__details-clear {', '    float: right;', '    margin: 0.5em;', '}', '.wc-component__details-participant {', '    list-style: none;', '    padding: 0;', '}', '.wc-details__li {', '    display: inline-block;', '    text-align: center;', '    padding: 0.5em;', '}', '.wc-details__label {', '    font-size: 0.8em;', '}', '.wc-details__value {', '}', '.wc-subcomponent {', '    display: inline-block;', '    width: 100%;', '}', '.wc-component--time-series-chart {', '    width: 100%;', '}', '.wc-diff .wc-hover-line {', '    stroke: #fff;', '    stroke-width: 16;', '    stroke-opacity: 0;', '}', '.wc-diff .wc-visible-line {', '    stroke: #999;', '    stroke-dasharray: 3 3;', '}', '.wc-diff .wc-visible-line.wc-hovered {', '    stroke: #777;', '    stroke-width: 4;', '}', '.wc-component--time-series .wc-chart {', '    width: 80%;', '    display: inline-block;', '}', '.wc-component--time-series .axis-title {', '    font-size: 14px;', '    font-weight: bold;', '}', '.legend {', '    width: 20% !important;', '    display: inline-block;', '    float: right;', '}', '.legend-item {', '    float: left;', '    clear: left;', '    margin-right: 0 !important;', '}', '.legend-mark-text {', '    display: none;', '}', '.legend-label {', '    margin-right: .55em;', '    font-size: 12px;', '}', '.legend-color-block {', '}', '.wc-reference-lines {', '    cursor: help;', '}', '.wc-reference-line {', '    x1: 0;', '    stroke: #999;', '    stroke-dasharray: 3 3;', '}', '.wc-reference-label {', '    text-anchor: end;', '    alignment-baseline: baseline;', '    fill: #999;', '}'];
+      '.wc-column--right {', '    width: 79%;', '}',
+      /****---------------------------------------------------------------------------------\
+        KDIGO scatter plot
+      \---------------------------------------------------------------------------------****/
+      '.wc-section--population {', '    width: 79%;', '}', '.wc-component--kdigo-scatter-plot circle.wc-data-mark {', '    cursor: pointer;', '    stroke: black;', '    fill-opacity: 1;', '    stroke-width: 1;', '}', '.wc-component--kdigo-scatter-plot circle.wc-data-mark:hover {', '    stroke-width: 3;', '}', '.wc-component--kdigo-scatter-plot circle.wc-data-mark.wc-selected {', '    stroke-width: 3;', '}', '.kdigo-stage {', '    stroke: black;', '}', '.wc-component--kdigo-scatter-plot .tick line {', '    stroke-opacity: .4;', '}', '.wc-component--kdigo-legend {', '    width: 20%;', '    float: right;', '}', '.wc-component--kdigo-legend .interactivity {', '    display: none;', '}', '.wc-component--kdigo-legend table {', '    border-collapse: collapse;', '}', '.wc-component--kdigo-legend thead {', '    border-top: 2px solid #999;', '    border-bottom: 2px solid #999;', '}', '.wc-component--kdigo-legend thead tr {', '    padding: 0.1em;', '}', '.wc-component--kdigo-legend tbody {', '    border-bottom: 2px solid #999;', '}', '.wc-component--kdigo-legend tbody {', '    border-bottom: 2px solid #999;', '}', '.wc-component--kdigo-legend tbody tr {', '    padding: 0.1em;', '}', '.wc-component--kdigo-legend tbody td {', '    text-align: center;', '    font-size: 0.9em;', '    padding: 0 0.5em 0 0.5em;', '}',
+      /****---------------------------------------------------------------------------------\
+        participant details
+      \---------------------------------------------------------------------------------****/
+      '.wc-section--participant {', '}', '.wc-header {', '    border-top: 2px solid black;', '    border-bottom: 2px solid black;', '    padding: 0.2em;', '    font-weight: bold;', '}', '.wc-component__details-clear {', '    float: right;', '    margin: 0.5em;', '}', '.wc-component__details-participant {', '    list-style: none;', '    padding: 0;', '}', '.wc-details__li {', '    display: inline-block;', '    text-align: center;', '    padding: 0.5em;', '}', '.wc-details__label {', '    font-size: 0.8em;', '}', '.wc-details__value {', '}', '.wc-subcomponent {', '    display: inline-block;', '    width: 100%;', '}', '.wc-component--time-series-chart {', '    width: 100%;', '}', '.wc-diff .wc-hover-line {', '    stroke: #fff;', '    stroke-width: 16;', '    stroke-opacity: 0;', '}', '.wc-diff .wc-visible-line {', '    stroke-width: 2;', '    stroke: #8E4C6A;', '    stroke-dasharray: 3 3;', '}', '.wc-diff .wc-visible-line.wc-hovered {', '    stroke-dasharray: 0;', '}', '.wc-component--time-series .wc-chart {', '    width: 80%;', '    display: inline-block;', '}', '.wc-component--time-series .axis-title {', '    font-size: 14px;', '    font-weight: bold;', '}', '.legend {', '    width: 20% !important;', '    display: inline-block;', '    float: right;', '}', '.legend-item {', '    float: left;', '    clear: left;', '    margin-right: 0 !important;', '}', '.legend-mark-text {', '    display: none;', '}', '.legend-label {', '    margin-right: .55em;', '    font-size: 12px;', '}', '.legend-color-block {', '}', '.wc-reference-lines {', '    cursor: help;', '}', '.wc-reference-line {', '    x1: 0;', '    stroke: #999;', '    stroke-dasharray: 3 3;', '}', '.wc-reference-label {', '    text-anchor: end;', '    alignment-baseline: baseline;', '    fill: #999;', '}'];
       var style = document.createElement('style');
       style.type = 'text/css';
       style.innerHTML = styles.join('\n');
@@ -273,10 +286,11 @@
         });
         d.egfr_cystatc_chg = egfr_cystatc ? egfr_cystatc.values.max_chg : null; // KDIGO stage
 
-        var kdigo = Object.keys(settings.kdigo_criteria).sort(d3.descending).find(function (key) {
-          var criterion = settings.kdigo_criteria[key];
-          return criterion.creat_fchg <= d.creat_fchg || criterion.egfr_creat_chg <= d.egfr_creat_chg;
-        });
+        var kdigo = settings.kdigo_criteria.slice().sort(function (a, b) {
+          return b.x - a.x;
+        }).find(function (criterion) {
+          return criterion.x <= d.creat_fchg || criterion.y <= d.egfr_creat_chg;
+        }).label;
         d.kdigo = kdigo ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI') : '???'; // color
 
         d.creat_fn = d.creat_chg >= 0.3 ? 1 : 0;
@@ -415,10 +429,9 @@
     function addKdigoLegend() {
       var _this = this;
 
-      this.data.kdigoSummary = Object.keys(this.settings.synced.kdigo_criteria).map(function (stage) {
-        var datum = _objectSpread2({}, _this.settings.synced.kdigo_criteria[stage]);
+      this.data.kdigoSummary = this.settings.synced.kdigo_criteria.map(function (stage) {
+        var datum = _objectSpread2({}, stage);
 
-        datum.label = stage.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI');
         datum.n = _this.data.participants.filter(function (d) {
           return d.kdigo === datum.label;
         }).length;

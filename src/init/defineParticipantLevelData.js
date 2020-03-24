@@ -66,15 +66,16 @@ export default function defineParticipantLevelData({
         d.egfr_cystatc_chg = egfr_cystatc ? egfr_cystatc.values.max_chg : null;
 
         // KDIGO stage
-        const kdigo = Object.keys(settings.kdigo_criteria)
-            .sort(d3.descending)
-            .find(key => {
-                const criterion = settings.kdigo_criteria[key];
+        const kdigo = settings.kdigo_criteria
+            .slice()
+            .sort((a,b) => b.x - a.x)
+            .find(criterion => {
                 return (
-                    criterion.creat_fchg <= d.creat_fchg ||
-                    criterion.egfr_creat_chg <= d.egfr_creat_chg
+                    criterion.x <= d.creat_fchg ||
+                    criterion.y <= d.egfr_creat_chg
                 );
-            });
+            })
+            .label;
         d.kdigo = kdigo
             ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
             : '???';

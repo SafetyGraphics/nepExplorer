@@ -1,9 +1,8 @@
 import { createTable } from 'webcharts';
 
 export default function addKdigoLegend() {
-    this.data.kdigoSummary = Object.keys(this.settings.synced.kdigo_criteria).map(stage => {
-        const datum = { ...this.settings.synced.kdigo_criteria[stage] };
-        datum.label = stage.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI');
+    this.data.kdigoSummary = this.settings.synced.kdigo_criteria.map(stage => {
+        const datum = { ...stage };
         datum.n = this.data.participants.filter(d => d.kdigo === datum.label).length;
         datum.rate = datum.n / this.data.participants.length;
         datum.pct = d3.format('.1%')(datum.rate);

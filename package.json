@@ -28,7 +28,7 @@
         "check-settings-schema": "node ./scripts/check-settings-schema.js",
         "format": "npm run format-src && npm run format-bundle",
         "format-bundle": "prettier --print-width=100 --tab-width=4 --single-quote --write ./nepExplorer.js",
-        "format-src": "prettier --print-width=100 --tab-width=4 --single-quote --write \"./src/**/*.js\"",
+        "format-src": "prettier --print-width=100 --tab-width=4 --single-quote --write \"./src/**/!(*layout|*styles).js\"",
         "test-page": "start chrome ./test-page/index.html && start firefox ./test-page/index.html && start iexplore file://%CD%/test-page/index.html",
         "watch": "rollup -c -w"
     },
