@@ -290,9 +290,13 @@
             '.wc-subcomponent--kdigo-scatter-plot .tick line {',
             '    stroke-opacity: .4;',
             '}',
+            '.wc-subcomponent--kdigo-scatter-plot .legend--kdigo {',
+            '    height: 20px;',
+            '    margin: 8px 0px;',
+            '}',
             '.wc-subcomponent__legend {',
-            '    position: absolute;',
-            '    top: 14;',
+            '    position: absolute;', //'    top: 14;',
+            //'    bottom: 0;',
             '    left: 80%;',
             '    width: 100%;',
             '}',
@@ -375,7 +379,7 @@
             '.wc-chart-container {',
             '    position: relative;',
             '}',
-            '.legend {', //'    width: 20% !important;',
+            '.legend--time-series {', //'    width: 20% !important;',
             //'    display: inline-block;',
             //'    float: right;',
             '    position: absolute;',
@@ -383,19 +387,19 @@
             '    left: 80%;',
             '    width: 100%;',
             '}',
-            '.legend-item {',
+            '.legend--time-series .legend-item {',
             '    float: left;',
             '    clear: left;',
             '    margin-right: 0 !important;',
             '}',
-            '.legend-mark-text {',
+            '.legend--time-series .legend-mark-text {',
             '    display: none;',
             '}',
-            '.legend-label {',
+            '.legend--time-series .legend-label {',
             '    margin-right: .55em;',
             '    font-size: 12px;',
             '}',
-            '.legend-color-block {',
+            '.legend--time-series .legend-color-block {',
             '}',
             '.wc-reference-lines {',
             '    cursor: help;',
@@ -720,7 +724,24 @@
                     label: 'Race'
                 }
             ],
-            groups: [],
+            groups: [
+                {
+                    value_col: 'ARM',
+                    label: 'Treatment Group'
+                },
+                {
+                    value_col: 'AGEGRP',
+                    label: 'Age Group'
+                },
+                {
+                    value_col: 'SEX',
+                    label: 'Sex'
+                },
+                {
+                    value_col: 'RACE',
+                    label: 'Race'
+                }
+            ],
             details: [
                 {
                     value_col: 'AGE',
@@ -777,9 +798,15 @@
                 {
                     type: 'circle',
                     per: ['key'],
-                    tooltip: '[key]: $x,$y'
+                    tooltip: '[key]: $x,$y',
+                    attributes: {}
                 }
             ],
+            color_by: null,
+            legend: {
+                location: 'bottom',
+                mark: 'circle'
+            },
             //resizable: false,
             aspect: 2,
             gridlines: 'xy',
@@ -1307,14 +1334,26 @@
                 var filterObj = {
                     type: 'subsetter',
                     label: filter.label || filter.value_col || filter,
+                    description: null,
                     value_col: filter.value_col || filter,
                     multiple: true
                 };
                 controlInputs.push(filterObj);
             });
+        } // Add group control.
+
+        if (Array.isArray(settings.groups) && settings.groups.length > 0) {
+            controlInputs.push({
+                type: 'dropdown',
+                label: 'Group',
+                description: 'Grouping variable',
+                options: ['color_by', 'legend.label'],
+                values: settings.groups.map(function(group) {
+                    return group.value_col || group;
+                })
+            });
         }
 
-        console.log(settings.groups);
         return controlInputs;
     }
 
@@ -1336,7 +1375,11 @@
             .selectAll('.control-group')
             .attr('class', function(d) {
                 return 'control-group control-group--'.concat(d.type);
-            });
+            }); // group filters
+
+        this.controls.filters = this.controls.controlGroups.filter(function(d) {
+            return d.type === 'subsetter';
+        });
         this.controls.filtersHeader = this.controls.wrap
             .insert('div', '.control-group--subsetter')
             .classed('wc-subheader', true);
@@ -1346,7 +1389,21 @@
             .text('Filters');
         this.controls.popCount = this.controls.filtersHeader
             .append('span')
-            .classed('wc-subheader__content', true);
+            .classed('wc-subheader__content', true); // group other controls
+
+        this.controls.settings = this.controls.controlGroups.filter(function(d) {
+            return d.type !== 'subsetter';
+        });
+
+        if (this.controls.settings.size()) {
+            this.controls.settingsHeader = this.controls.wrap
+                .insert('div', '.control-group--dropdown')
+                .classed('wc-subheader', true);
+            this.controls.settingsHeader
+                .append('span')
+                .classed('wc-subheader__text', true)
+                .text('Settings');
+        }
     }
 
     function onLayout() {
@@ -1486,12 +1543,14 @@
                     applyCSS: false
                 }
             );
+            this.kdigoLegend.kdigoChart = this;
             this.kdigoLegend.on('init', function() {
                 this.initialized = true;
             });
             this.kdigoLegend.on('draw', function() {
                 var _this2 = this;
 
+                d3.select(this.div).style('top', this.kdigoChart.margin.top);
                 this.wrap
                     .selectAll('tbody td')
                     .filter(function(d) {
@@ -1509,10 +1568,15 @@
         }
     }
 
+    function moveLegend() {
+        this.legend.classed('legend--kdigo', true).style('margin-left', this.margin.left); //this.kdigoLegend.wrap.node().appendChild(this.legend.node());
+    }
+
     function onResize() {
         drawKdigoStages.call(this);
         addPointClick.call(this);
         addKdigoLegend.call(this);
+        moveLegend.call(this);
     }
 
     function onDestroy() {}
@@ -1731,14 +1795,14 @@
         }
     }
 
-    function moveLegend() {
-        this.div.appendChild(this.legend.node());
+    function moveLegend$1() {
+        this.div.appendChild(this.legend.classed('legend--time-series', true).node());
     }
 
     function onResize$1() {
         drawReferenceLine.call(this);
         drawDifference.call(this);
-        moveLegend.call(this);
+        moveLegend$1.call(this);
     }
 
     function onDestroy$1() {}
@@ -1814,23 +1878,23 @@
             var mergedSettings = Object.assign(
                 {},
                 configuration.renderer(),
-                configuration.timeSeries(chart),
-                nepExplorer.settings.user
-            );
-            var syncedSettings = configuration.syncTimeSeries(mergedSettings);
+                configuration.timeSeries(chart) //nepExplorer.settings.user
+            ); //const syncedSettings = configuration.syncTimeSeries(mergedSettings);
+
             nepExplorer.containers[''.concat(chart, 'Container')] = container;
             nepExplorer.containers[''.concat(chart, 'Header')] = nepExplorer.containers[
                 ''.concat(chart, 'Container')
             ]
                 .append('div')
                 .classed('wc-header wc-header--'.concat(chart), true)
-                .text(syncedSettings.title);
+                .text(mergedSettings.title); //.text(syncedSettings.title);
+
             nepExplorer.containers[chart] = container
                 .append('div')
                 .classed('wc-chart-container wc-chart-container--'.concat(chart), true);
             var timeSeries = webcharts.createChart(
                 nepExplorer.containers[chart].node(),
-                syncedSettings
+                mergedSettings //syncedSettings
             );
 
             for (var _callback in timeSeriesCallbacks) {

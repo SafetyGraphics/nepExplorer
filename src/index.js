@@ -70,21 +70,26 @@ export default function nepExplorer(element = 'body', settings = {}) {
         const mergedSettings = Object.assign(
             {},
             configuration.renderer(),
-            configuration.timeSeries(chart),
-            nepExplorer.settings.user
+            configuration.timeSeries(chart)
+            //nepExplorer.settings.user
         );
-        const syncedSettings = configuration.syncTimeSeries(mergedSettings);
+        //const syncedSettings = configuration.syncTimeSeries(mergedSettings);
 
         nepExplorer.containers[`${chart}Container`] = container;
         nepExplorer.containers[`${chart}Header`] = nepExplorer.containers[`${chart}Container`]
             .append('div')
             .classed(`wc-header wc-header--${chart}`, true)
-            .text(syncedSettings.title);
+            .text(mergedSettings.title);
+        //.text(syncedSettings.title);
         nepExplorer.containers[chart] = container
             .append('div')
             .classed(`wc-chart-container wc-chart-container--${chart}`, true);
 
-        const timeSeries = createChart(nepExplorer.containers[chart].node(), syncedSettings);
+        const timeSeries = createChart(
+            nepExplorer.containers[chart].node(),
+            mergedSettings
+            //syncedSettings
+        );
 
         for (const callback in timeSeriesCallbacks)
             timeSeries.on(callback.substring(2).toLowerCase(), timeSeriesCallbacks[callback]);

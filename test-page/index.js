@@ -15,6 +15,7 @@ fetch('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinica
                 : '>45';
         });
         const settings = {
+            color_by: 'ARM',
         };
         const instance = nepExplorer('#container', settings);
         instance.init(data, '02-008');

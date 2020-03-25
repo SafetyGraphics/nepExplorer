@@ -21,12 +21,14 @@ export default function addKdigoLegend() {
             exportable: false,
             applyCSS: false
         });
+        this.kdigoLegend.kdigoChart = this;
 
         this.kdigoLegend.on('init', function() {
             this.initialized = true;
         });
 
         this.kdigoLegend.on('draw', function() {
+            d3.select(this.div).style('top', this.kdigoChart.margin.top);
             this.wrap
                 .selectAll('tbody td')
                 .filter(d => d.col === 'label')

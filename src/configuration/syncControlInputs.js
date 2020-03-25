@@ -5,6 +5,7 @@ export default function syncControlInputs(controlInputs, settings) {
             const filterObj = {
                 type: 'subsetter',
                 label: filter.label || filter.value_col || filter,
+                description: null,
                 value_col: filter.value_col || filter,
                 multiple: true
             };
@@ -12,6 +13,16 @@ export default function syncControlInputs(controlInputs, settings) {
         });
     }
 
-    console.log(settings.groups);
+    // Add group control.
+    if (Array.isArray(settings.groups) && settings.groups.length > 0) {
+        controlInputs.push({
+            type: 'dropdown',
+            label: 'Group',
+            description: 'Grouping variable',
+            options: ['color_by', 'legend.label'],
+            values: settings.groups.map(group => group.value_col || group)
+        });
+    }
+
     return controlInputs;
 }

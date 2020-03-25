@@ -47,7 +47,12 @@ export default function renderer() {
             { value_col: 'SEX', label: 'Sex' },
             { value_col: 'RACE', label: 'Race' }
         ],
-        groups: [],
+        groups: [
+            { value_col: 'ARM', label: 'Treatment Group' },
+            { value_col: 'AGEGRP', label: 'Age Group' },
+            { value_col: 'SEX', label: 'Sex' },
+            { value_col: 'RACE', label: 'Race' }
+        ],
         details: [{ value_col: 'AGE', label: 'Age' }],
         baseline_value: 'Y',
         kdigo_criteria: [

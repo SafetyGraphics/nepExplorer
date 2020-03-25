@@ -18,9 +18,15 @@ export default function kdigoScatterPlot() {
             {
                 type: 'circle',
                 per: ['key'],
-                tooltip: '[key]: $x,$y'
+                tooltip: '[key]: $x,$y',
+                attributes: {}
             }
         ],
+        color_by: null,
+        legend: {
+            location: 'bottom',
+            mark: 'circle'
+        },
         //resizable: false,
         aspect: 2,
         gridlines: 'xy',
