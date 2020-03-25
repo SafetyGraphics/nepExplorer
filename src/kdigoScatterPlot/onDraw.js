@@ -1,4 +1,7 @@
+import updatePopCount from './onDraw/updatePopCount';
+import updateDomains from './onDraw/updateDomains';
+
 export default function onDraw() {
-    this.x_dom[1] = Math.max(this.x_dom[1], 3);
-    this.y_dom[1] = Math.max(this.y_dom[1], 75);
+    updatePopCount.call(this);
+    updateDomains.call(this);
 }

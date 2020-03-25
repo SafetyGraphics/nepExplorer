@@ -23,6 +23,12 @@ export default function kdigoScatterPlot() {
         ],
         //resizable: false,
         aspect: 2,
-        gridlines: 'xy'
+        gridlines: 'xy',
+        margin: {
+            top: 14,
+            right: 0,
+            left: 50,
+            bottom: 0
+        }
     };
 }

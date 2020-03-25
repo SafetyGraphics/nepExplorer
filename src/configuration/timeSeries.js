@@ -39,7 +39,12 @@ export default function timeSeries(chart) {
         gridlines: 'xy',
         //resizable: false,
         aspect: 3,
-        margin: {}
+        margin: {
+            top: 14,
+            right: 0,
+            left: 50,
+            bottom: 0
+        }
     };
     const commonKeys = Object.keys(commonSettings);
 

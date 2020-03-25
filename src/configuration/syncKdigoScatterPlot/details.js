@@ -13,7 +13,7 @@ export default function details(settings) {
                 label: filter.label ? filter.label : filter.value_col ? filter.value_col : filter
             };
 
-            if (details.find(detail => detail.value_col === detail.value_col) === undefined)
+            if (details.find(detail => detail.value_col === filter.value_col) === undefined)
                 details.push(obj);
         });
 
@@ -33,11 +33,10 @@ export default function details(settings) {
 
     // Convert details to array to array if needed
     if (!(settings.details instanceof Array))
-        settings.details = typeof settings.details == 'string' ? [settings.details] : [];
+        settings.details = typeof settings.details === 'string' ? [settings.details] : [];
 
     // Use default details if detailsIf [settings.details] is not specified:
-    if (!settings.details) settings.details = details;
-    else {
+    if (settings.details) {
         //If [settings.details] is specified:
         //Allow user to specify an array of columns or an array of objects with a column property
         //and optionally a column label.
@@ -56,7 +55,6 @@ export default function details(settings) {
                         : detail
                 });
         });
-        settings.details = details;
     }
 
     return details;

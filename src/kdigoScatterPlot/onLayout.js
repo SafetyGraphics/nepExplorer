@@ -1,1 +1,5 @@
-export default function onLayout() {}
+import groupControls from './onLayout/groupControls';
+
+export default function onLayout() {
+    groupControls.call(this);
+}

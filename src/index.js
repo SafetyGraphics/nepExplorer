@@ -8,7 +8,7 @@ import destroy from './destroy';
 
 import configuration from './configuration/index';
 
-import { createChart } from 'webcharts';
+import { createControls, createChart } from 'webcharts';
 import kdigoScatterPlotCallbacks from './kdigoScatterPlot/index';
 import timeSeriesCallbacks from './timeSeries/index';
 
@@ -25,7 +25,7 @@ export default function nepExplorer(element = 'body', settings = {}) {
         destroy
     };
 
-    // KDIGO scatter plot
+    // settings
     nepExplorer.settings.merged = Object.assign(
         {},
         configuration.renderer(),
@@ -33,9 +33,24 @@ export default function nepExplorer(element = 'body', settings = {}) {
         nepExplorer.settings.user
     );
     nepExplorer.settings.synced = configuration.syncKdigoScatterPlot(nepExplorer.settings.merged);
+
+    // controls
+    nepExplorer.settings.controls = {
+        inputs: configuration.syncControlInputs(
+            configuration.controlInputs(),
+            nepExplorer.settings.synced
+        )
+    };
+    nepExplorer.controls = createControls(
+        nepExplorer.containers.controls.node(),
+        nepExplorer.settings.controls
+    );
+
+    // chart
     nepExplorer.kdigoScatterPlot = createChart(
         nepExplorer.containers.kdigoScatterPlot.node(),
-        nepExplorer.settings.synced
+        nepExplorer.settings.synced,
+        nepExplorer.controls
     );
 
     for (const callback in kdigoScatterPlotCallbacks)

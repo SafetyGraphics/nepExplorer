@@ -23,9 +23,6 @@ export default function albcreat() {
             column: 'result',
             label: 'mg/g',
             domain: [0, 30]
-        },
-        margin: {
-            top: 14
         }
     };
 }

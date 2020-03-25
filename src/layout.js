@@ -7,57 +7,76 @@ export default function layout(element) {
             .classed('wc-framework', true)
     };
 
-    // left column
+    // column: left
     containers.leftColumn = containers.main
         .append('div')
         .classed('wc-column wc-column--left', true);
 
-        // controls section
+        // section: controls
         containers.controls = containers.leftColumn
             .append('div')
             .classed('wc-section wc-section--controls', true);
 
-    // right column
+    // column: right
     containers.rightColumn = containers.main
         .append('div')
         .classed('wc-column wc-column--right', true);
 
-    // population section - KDIGO scatter plot, KDIGO legend/frequency table
-    containers.population = containers.rightColumn
-        .append('div')
-        .classed('wc-section wc-section--population', true);
-    containers.kdigoHeader = containers.population
-        .append('div')
-        .classed('wc-header wc-header--kdigo-scatter-plot', true)
-        .text('KDIGO Scatter Plot');
-    containers.kdigoScatterPlot = containers.population
-        .append('div')
-        .classed('wc-component wc-component--kdigo-scatter-plot', true);
-    containers.kdigoLegend = containers.rightColumn
-        .append('div')
-        .classed('wc-component wc-component--kdigo-legend', true);
+        // section: population
+        containers.population = containers.rightColumn
+            .append('div')
+            .classed('wc-section wc-section--population', true);
 
-    // participant section - participant details, time series charts
+        // component: kdigo scatter plot
+        containers.kdigo = containers.population
+            .append('div')
+            .classed('wc-component wc-component--kdigo', true)
+
+            // header
+            containers.kdigoHeader = containers.kdigo
+                .append('div')
+                .classed('wc-header wc-header--kdigo-scatter-plot', true)
+                .text('KDIGO Scatter Plot');
+
+            // content
+            containers.kdigoScatterPlot = containers.kdigo
+                .append('div')
+                .classed('wc-subcomponent wc-subcomponent--kdigo-scatter-plot', true);
+
+            containers.kdigoLegend = containers.kdigoScatterPlot
+                .append('div')
+                .classed('wc-subcomponent__legend', true);
+
+    // section: participant
     containers.participant = containers.rightColumn
         .append('div')
         .classed('wc-section wc-section--participant', true);
-    containers.detailsContainer = containers.participant
-        .append('div')
-        .classed('wc-component wc-component--details-container', true);
-    containers.detailsHeader = containers.detailsContainer
-        .append('div')
-        .classed('wc-header wc-header--details', true)
-        .text('Click a point to view participant details.');
-    containers.detailsClear = containers.detailsContainer
-        .append('button')
-        .classed('wc-component__details-clear wc-hidden', true)
-        .text('Clear');
-    containers.detailsParticipant = containers.detailsContainer
-        .append('ul')
-        .classed('wc-component__details-participant wc-hidden', true);
-    containers.timeSeries = containers.participant
-        .append('div')
-        .classed('wc-component wc-component--time-series wc-hidden', true);
+
+        // component: details
+        containers.detailsContainer = containers.participant
+            .append('div')
+            .classed('wc-component wc-component--details-container', true);
+
+            // header
+            containers.detailsHeader = containers.detailsContainer
+                .append('div')
+                .classed('wc-header wc-header--details', true)
+                .text('Click a point to view participant details.');
+
+            containers.detailsClear = containers.detailsContainer
+                .append('button')
+                .classed('wc-component__details-clear wc-hidden', true)
+                .text('Clear');
+
+            // content
+            containers.detailsParticipant = containers.detailsContainer
+                .append('ul')
+                .classed('wc-subcomponent wc-subcomponent__details-participant wc-hidden', true);
+
+        // component: time series
+        containers.timeSeries = containers.participant
+            .append('div')
+            .classed('wc-component wc-component--time-series wc-hidden', true);
 
     return containers;
 }

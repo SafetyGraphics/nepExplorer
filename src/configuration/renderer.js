@@ -41,13 +41,14 @@ export default function renderer() {
         },
 
         // renderer settings
-        filters: [],
-        groups: [],
-        details: [
-            { value_col: 'AGE', label: 'Age' },
+        filters: [
+            { value_col: 'ARM', label: 'Treatment Group' },
+            { value_col: 'AGEGRP', label: 'Age Group' },
             { value_col: 'SEX', label: 'Sex' },
             { value_col: 'RACE', label: 'Race' }
         ],
+        groups: [],
+        details: [{ value_col: 'AGE', label: 'Age' }],
         baseline_value: 'Y',
         kdigo_criteria: [
             {
@@ -74,6 +75,6 @@ export default function renderer() {
                 y: 75,
                 color: '#d73027'
             }
-        ],
+        ]
     };
 }

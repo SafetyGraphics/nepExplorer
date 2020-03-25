@@ -49,6 +49,9 @@ export default function defineParticipantLevelData({
         const datum = data.find(di => di[settings.id_col] === d.key);
 
         // participant details
+        settings.filters.forEach(filter => {
+            d[filter.value_col] = datum[filter.value_col];
+        });
         settings.details.forEach(detail => {
             d[detail.value_col] = datum[detail.value_col];
         });
@@ -68,14 +71,10 @@ export default function defineParticipantLevelData({
         // KDIGO stage
         const kdigo = settings.kdigo_criteria
             .slice()
-            .sort((a,b) => b.x - a.x)
+            .sort((a, b) => b.x - a.x)
             .find(criterion => {
-                return (
-                    criterion.x <= d.creat_fchg ||
-                    criterion.y <= d.egfr_creat_chg
-                );
-            })
-            .label;
+                return criterion.x <= d.creat_fchg || criterion.y <= d.egfr_creat_chg;
+            }).label;
         d.kdigo = kdigo
             ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
             : '???';

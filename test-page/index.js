@@ -6,6 +6,13 @@ fetch('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinica
             d.ABLFL = d.VISIT === 'Screening' ? 'Y' : '';
             if (Math.random() < .05)
                 d.STRESN = (+d.STRESN*Math.random()*5).toString();
+            d.AGEGRP = d.AGE < 25
+                ? '18-24'
+                : d.AGE < 35
+                ? '25-34'
+                : d.AGE <= 45
+                ? '35-44'
+                : '>45';
         });
         const settings = {
         };

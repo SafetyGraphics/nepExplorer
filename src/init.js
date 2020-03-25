@@ -1,6 +1,5 @@
 import addVariables from './init/addVariables';
 import defineParticipantLevelData from './init/defineParticipantLevelData';
-import addKdigoLegend from './init/addKdigoLegend';
 import addClearFunctionality from './init/addClearFunctionality';
 import displayParticipantDetails from './init/displayParticipantDetails';
 import drawTimeSeriesCharts from './init/drawTimeSeriesCharts';
@@ -14,7 +13,6 @@ export default function init(data, id) {
     this.data.participants = defineParticipantLevelData(this);
     this.kdigoScatterPlot.nepExplorer = this;
     this.kdigoScatterPlot.init(this.data.participants);
-    addKdigoLegend.call(this);
 
     // Display specified participant on initialization.
     if (id) {
