@@ -34,11 +34,11 @@ export default function timeSeries(chart) {
         legend: {
             label: '',
             location: 'right',
-            mark: 'circle'
+            mark: 'line'
         },
         gridlines: 'xy',
         //resizable: false,
-        aspect: 3,
+        aspect: 4,
         margin: {
             top: 14,
             right: 0,

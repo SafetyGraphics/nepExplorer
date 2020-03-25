@@ -28,7 +28,7 @@ export default function kdigoScatterPlot() {
             mark: 'circle'
         },
         //resizable: false,
-        aspect: 2,
+        aspect: 1.25,
         gridlines: 'xy',
         margin: {
             top: 14,

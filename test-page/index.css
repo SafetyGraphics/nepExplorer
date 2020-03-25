@@ -29,22 +29,3 @@ body > * {
 #container {
     display: inline-block;
 }
-
-.control-group {
-    width: 100%;
-}
-.changer {
-    width: 200px !important;
-}
-.wc-subheader {
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    margin-right: 1em;
-    margin-bottom: 1em;
-}
-.wc-subheader__text {
-    display: block;
-}
-.wc-subheader__content {
-    font-size: .8em;
-}
