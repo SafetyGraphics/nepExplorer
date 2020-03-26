@@ -80,6 +80,32 @@ export default function renderer() {
                 y: 75,
                 color: '#d73027'
             }
+        ],
+        kdigo_dc_criteria: [
+            {
+                label: 'No AKI',
+                x: 0,
+                y: 0,
+                color: 'white'
+            },
+            {
+                label: 'Stage 1 AKI',
+                x: 1.5,
+                y: 0.3,
+                color: '#ffffbf'
+            },
+            {
+                label: 'Stage 2 AKI',
+                x: 2,
+                y: 0.7,
+                color: '#fdae61'
+            },
+            {
+                label: 'Stage 3 AKI',
+                x: 3,
+                y: 1.2,
+                color: '#d73027'
+            }
         ]
     };
 }

@@ -1,4 +1,5 @@
 import { select } from 'd3';
+import drawVisitPath from './addPointClick/drawVisitPath';
 import addClearFunctionality from '../../init/addClearFunctionality';
 import displayParticipantDetails from '../../init/displayParticipantDetails';
 import drawTimeSeriesCharts from '../../init/drawTimeSeriesCharts';
@@ -15,12 +16,20 @@ export default function addPointClick() {
             select(this).classed('wc-highlighted', false);
         })
         .on('click', function(d) {
+            // Get participant data.
+            chart.nepExplorer.participant = d.key;
+            chart.nepExplorer.data.participant = chart.nepExplorer.data.participants
+                .find(d => d.key === chart.nepExplorer.participant);
+
+            // Update points.
             points.classed('wc-selected', false);
             select(this).classed('wc-selected', true);
-            chart.nepExplorer.selected = d.key;
+            drawVisitPath.call(chart);
+
+            // Update participant details section
             chart.nepExplorer.containers.detailsHeader.text('Participant Details');
             addClearFunctionality.call(chart.nepExplorer);
-            displayParticipantDetails.call(chart.nepExplorer, d.key);
-            drawTimeSeriesCharts.call(chart.nepExplorer, d.key);
+            displayParticipantDetails.call(chart.nepExplorer);
+            drawTimeSeriesCharts.call(chart.nepExplorer);
         });
 }

@@ -1,11 +1,11 @@
 export default function metadata() {
-    const metadata = this.config.kdigo_criteria
+    const metadata = this.config.criteria
         .slice()
         .sort((a, b) => a.x - b.x)
         .map((d, i) => {
             const next =
-                i < this.config.kdigo_criteria.length - 1
-                    ? this.config.kdigo_criteria[i + 1]
+                i < this.config.criteria.length - 1
+                    ? this.config.criteria[i + 1]
                     : {
                           x: this.x_dom[1],
                           y: this.y_dom[1]

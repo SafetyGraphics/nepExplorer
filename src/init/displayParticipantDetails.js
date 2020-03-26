@@ -1,6 +1,4 @@
-export default function displayParticipantDetails(id) {
-    const participant = this.data.participants.find(d => d.key === id);
-
+export default function displayParticipantDetails() {
     this.containers.detailsParticipant
         .classed('wc-hidden', false)
         .selectAll('li')
@@ -19,5 +17,5 @@ export default function displayParticipantDetails(id) {
 
     lis.append('div')
         .classed('wc-details__value', true)
-        .text(d => participant[d.value_col]);
+        .text(d => this.data.participant[d.value_col]);
 }

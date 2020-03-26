@@ -45,6 +45,8 @@ export default function defineParticipantLevelData({
         .entries(data);
 
     // Capture measure-level results at participant level.
+    const measures = ['creat', 'cystatc', 'egfr_creat', 'egfr_cystatc'];
+    const results = ['chg', 'fchg', 'pchg'];
     participantLevel.forEach(d => {
         const datum = data.find(di => di[settings.id_col] === d.key);
 
@@ -56,28 +58,14 @@ export default function defineParticipantLevelData({
             d[detail.value_col] = datum[detail.value_col];
         });
 
-        // x-axis
-        const creat = d.values.find(di => di.key === settings.measure_values.creat);
-        d.creat_fchg = creat ? creat.values.max_fchg : null;
-        const cystatc = d.values.find(di => di.key === settings.measure_values.cystatc);
-        d.cystatc_fchg = cystatc ? cystatc.values.max_fchg : null;
-
-        // y-axis
-        const egfr_creat = d.values.find(di => di.key === settings.measure_values.egfr_creat);
-        d.egfr_creat_chg = egfr_creat ? (egfr_creat.values.max_fchg - 1) * 100 : null;
-        const egfr_cystatc = d.values.find(di => di.key === settings.measure_values.egfr_cystatc);
-        d.egfr_cystatc_chg = egfr_cystatc ? egfr_cystatc.values.max_chg : null;
-
-        // KDIGO stage
-        const kdigo = settings.kdigo_criteria
-            .slice()
-            .sort((a, b) => b.x - a.x)
-            .find(criterion => {
-                return criterion.x <= d.creat_fchg || criterion.y <= d.egfr_creat_chg;
-            }).label;
-        d.kdigo = kdigo
-            ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
-            : '???';
+        // x- and y-axis
+        measures.forEach(measure => {
+            results.forEach(result => {
+                const measure_result = `${measure}_${result}`;
+                const measure_datum = d.values.find(di => di.key === settings.measure_values[measure]);
+                d[measure_result] = measure_datum ? measure_datum.values[`max_${result}`] : null;
+            });
+        });
 
         // color
         d.creat_fn = d.creat_chg >= 0.3 ? 1 : 0;

@@ -14,8 +14,16 @@ fetch('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinica
                 ? '35-44'
                 : '>45';
         });
+        const creatinine = data.filter(d => d.TEST === 'Creatinine');
+        creatinine
+            .forEach(d => {
+                if (d.STRESU === 'μmol/L') {
+                    d.STRESN = (d.STRESN/88.42).toString();
+                    d.STRESU = 'mg/dL';
+                }
+            });
         const settings = {
-            color_by: 'ARM',
+            //color_by: 'ARM',
         };
         const instance = nepExplorer('#container', settings);
         instance.init(data, '02-008');

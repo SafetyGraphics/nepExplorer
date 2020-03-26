@@ -1,6 +1,4 @@
-export default function drawTimeSeriesCharts(id) {
-    const participant = this.data.participants.find(d => d.key === id);
-
+export default function drawTimeSeriesCharts() {
     this.containers.timeSeries.classed('wc-hidden', false);
 
     for (const name in this.charts) {
@@ -11,7 +9,7 @@ export default function drawTimeSeriesCharts(id) {
         );
 
         const chartData = d3.merge(
-            participant.values.filter(d => chartMeasures.includes(d.key)).map(d => d.values.data)
+            this.data.participant.values.filter(d => chartMeasures.includes(d.key)).map(d => d.values.data)
         );
 
         if (chartData.length) {
