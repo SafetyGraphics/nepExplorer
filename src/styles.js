@@ -168,7 +168,6 @@ export default function styles() {
                 \----------------------------------------------------------------------------*****/
 
                     '.wc-component__details-clear {',
-                    '    float: right;',
                     '    margin: 0.5em;',
                     '}',
                     '.wc-subcomponent__details-participant {',

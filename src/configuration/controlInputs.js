@@ -23,6 +23,6 @@ export default function controlInputs() {
             options: ['x.type', 'y.type'],
             values: ['log', 'linear'],
             require: true
-        },
+        }
     ];
 }

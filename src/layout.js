@@ -60,12 +60,16 @@ export default function layout(element) {
             // header
             containers.detailsHeader = containers.detailsContainer
                 .append('div')
-                .classed('wc-header wc-header--details', true)
+                .classed('wc-header wc-header--details', true);
+
+            containers.detailsHeaderText = containers.detailsHeader
+                .append('span')
+                .classed('wc-header__text', true)
                 .text('Click a point to view participant details.');
 
-            containers.detailsClear = containers.detailsContainer
+            containers.detailsClear = containers.detailsHeader
                 .append('button')
-                .classed('wc-component__details-clear wc-hidden', true)
+                .classed('wc-header__button wc-component__details-clear wc-hidden', true)
                 .text('Clear');
 
             // content

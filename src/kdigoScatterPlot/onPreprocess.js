@@ -13,27 +13,23 @@ export default function onPreprocess() {
 
     // setXLabel
     this.config.x.result = this.config.x.column.split('_').pop();
-    this.config.x.measure = this.config.measure_values[this.config.x.column.replace(`_${this.config.x.result}`, '')];
-    this.config.x.label = `${
-            this.config.x.measure
-        }${
-            this.config.x.result
-                .replace('chg', ' ')
-                .replace('f', ' Fold ')
-                .replace('p', ' Percent ')
-        } Change`;
+    this.config.x.measure = this.config.measure_values[
+        this.config.x.column.replace(`_${this.config.x.result}`, '')
+    ];
+    this.config.x.label = `${this.config.x.measure}${this.config.x.result
+        .replace('chg', ' ')
+        .replace('f', ' Fold ')
+        .replace('p', ' Percent ')} Change`;
 
     // setYLabel
     this.config.y.result = this.config.y.column.split('_').pop();
-    this.config.y.measure = this.config.measure_values[this.config.y.column.replace(`_${this.config.y.result}`, '')];
-    this.config.y.label = `${
-            this.config.y.measure
-        }${
-            this.config.y.result
-                .replace('chg', ' ')
-                .replace('f', ' Fold ')
-                .replace('p', ' Percent ')
-        }Change`;
+    this.config.y.measure = this.config.measure_values[
+        this.config.y.column.replace(`_${this.config.y.result}`, '')
+    ];
+    this.config.y.label = `${this.config.y.measure}${this.config.y.result
+        .replace('chg', ' ')
+        .replace('f', ' Fold ')
+        .replace('p', ' Percent ')}Change`;
 
     // chooseCriteria
     this.config.criteria = /_chg/.test(this.config.y.column)
@@ -41,12 +37,11 @@ export default function onPreprocess() {
         : this.config.kdigo_criteria; // fold/percent change
 
     // updateKdigoHeader
-    this.nepExplorer.containers.kdigoHeader
-        .text(
-            this.config.criteria === this.config.kdigo_criteria
-                ? 'KDIGO Scatter Plot'
-                : 'KDIGO-DC Scatter Plot'
-        );
+    this.nepExplorer.containers.kdigoHeader.text(
+        this.config.criteria === this.config.kdigo_criteria
+            ? 'KDIGO Scatter Plot'
+            : 'KDIGO-DC Scatter Plot'
+    );
 
     // defineKdigoStage
     this.raw_data.forEach(d => {
@@ -54,7 +49,9 @@ export default function onPreprocess() {
             .slice()
             .sort((a, b) => b.x - a.x)
             .find(criterion => {
-                return criterion.x <= d[this.config.x.column] || criterion.y <= d[this.config.y.column];
+                return (
+                    criterion.x <= d[this.config.x.column] || criterion.y <= d[this.config.y.column]
+                );
             }).label;
         d.kdigo = kdigo
             ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
@@ -62,7 +59,8 @@ export default function onPreprocess() {
     });
 
     // setLegendLabel
-    this.config.legend.label = this.config.color_by && this.config.color_by !== 'None'
-        ? this.config.groups.find(group => group.value_col === this.config.color_by).label
-        : 'All Participants';
+    this.config.legend.label =
+        this.config.color_by && this.config.color_by !== 'None'
+            ? this.config.groups.find(group => group.value_col === this.config.color_by).label
+            : 'All Participants';
 }

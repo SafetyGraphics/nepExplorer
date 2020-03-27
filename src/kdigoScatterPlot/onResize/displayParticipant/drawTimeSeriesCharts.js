@@ -1,22 +1,26 @@
 export default function drawTimeSeriesCharts() {
-    this.containers.timeSeries.classed('wc-hidden', false);
+    const nepExplorer = this.nepExplorer;
 
-    for (const name in this.charts) {
-        const chart = this.charts[name];
+    nepExplorer.containers.timeSeries.classed('wc-hidden', false);
+
+    for (const name in nepExplorer.charts) {
+        const chart = nepExplorer.charts[name];
 
         const chartMeasures = chart.config.measures.map(
-            measure => this.settings.synced.measure_values[measure]
+            measure => nepExplorer.settings.synced.measure_values[measure]
         );
 
         const chartData = d3.merge(
-            this.data.participant.values.filter(d => chartMeasures.includes(d.key)).map(d => d.values.data)
+            nepExplorer.data.participant.values
+                .filter(d => chartMeasures.includes(d.key))
+                .map(d => d.values.data)
         );
 
         if (chartData.length) {
             if (chart.initialized) chart.draw(chartData);
             else chart.init(chartData);
         } else {
-            delete this.charts[chart];
+            delete nepExplorer.charts[chart];
             console.warn(
                 `[ ${measures.join(
                     ', '

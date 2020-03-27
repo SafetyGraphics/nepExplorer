@@ -62,7 +62,9 @@ export default function defineParticipantLevelData({
         measures.forEach(measure => {
             results.forEach(result => {
                 const measure_result = `${measure}_${result}`;
-                const measure_datum = d.values.find(di => di.key === settings.measure_values[measure]);
+                const measure_datum = d.values.find(
+                    di => di.key === settings.measure_values[measure]
+                );
                 d[measure_result] = measure_datum ? measure_datum.values[`max_${result}`] : null;
             });
         });

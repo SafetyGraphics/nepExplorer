@@ -14,11 +14,10 @@ export default function labelOptions() {
                     updateOptionText.call(chart, options, function(text) {
                         const result = text.split('_').pop();
                         const measure = chart.config.measure_values[text.replace(`_${result}`, '')];
-                        return `${
-                            measure
-                        }${
-                            result.replace('chg', '').replace('f', ' Fold').replace('p', ' Percent')
-                        } Change`
+                        return `${measure}${result
+                            .replace('chg', '')
+                            .replace('f', ' Fold')
+                            .replace('p', ' Percent')} Change`;
                     });
                     addChangeEventListener.call(chart, select);
                     break;
@@ -26,11 +25,10 @@ export default function labelOptions() {
                     updateOptionText.call(chart, options, function(text) {
                         const result = text.split('_').pop();
                         const measure = chart.config.measure_values[text.replace(`_${result}`, '')];
-                        return `${
-                            measure
-                        }${
-                            result.replace('chg', '').replace('f', ' Fold').replace('p', ' Percent')
-                        } Change`
+                        return `${measure}${result
+                            .replace('chg', '')
+                            .replace('f', ' Fold')
+                            .replace('p', ' Percent')} Change`;
                     });
                     addChangeEventListener.call(chart, select);
                     break;

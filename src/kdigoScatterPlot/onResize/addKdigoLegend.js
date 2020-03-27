@@ -11,9 +11,8 @@ export default function addKdigoLegend() {
     });
 
     if (this.kdigoLegend) {
-        this.kdigoLegend.config.headers[0] = this.config.criteria === this.config.kdigo_criteria
-            ? 'KDIGO'
-            : 'KDIGO-DC';
+        this.kdigoLegend.config.headers[0] =
+            this.config.criteria === this.config.kdigo_criteria ? 'KDIGO' : 'KDIGO-DC';
         this.kdigoLegend.draw(this.kdigoSummary);
     } else {
         this.kdigoLegend = createTable(this.nepExplorer.containers.kdigoLegend.node(), {

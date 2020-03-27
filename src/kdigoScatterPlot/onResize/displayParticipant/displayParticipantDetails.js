@@ -1,12 +1,14 @@
 export default function displayParticipantDetails() {
-    this.containers.detailsParticipant
+    const nepExplorer = this.nepExplorer;
+
+    nepExplorer.containers.detailsParticipant
         .classed('wc-hidden', false)
         .selectAll('li')
         .remove();
 
-    const lis = this.containers.detailsParticipant
+    const lis = nepExplorer.containers.detailsParticipant
         .selectAll('li')
-        .data(this.settings.synced.details)
+        .data(nepExplorer.settings.synced.details)
         .enter()
         .append('li')
         .classed('wc-details__li', true);
@@ -17,5 +19,5 @@ export default function displayParticipantDetails() {
 
     lis.append('div')
         .classed('wc-details__value', true)
-        .text(d => this.data.participant[d.value_col]);
+        .text(d => nepExplorer.data.participant[d.value_col]);
 }
