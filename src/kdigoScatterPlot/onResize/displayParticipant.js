@@ -1,7 +1,7 @@
 import highlightPoint from './displayParticipant/highlightPoint';
 import drawHysteresisPlot from './displayParticipant/drawHysteresisPlot';
 import updateDetailsHeader from './displayParticipant/updateDetailsHeader';
-import addClearFunctionality from './displayParticipant/addClearFunctionality';
+import displayClearButton from './displayParticipant/displayClearButton';
 import displayParticipantDetails from './displayParticipant/displayParticipantDetails';
 import drawTimeSeriesCharts from './displayParticipant/drawTimeSeriesCharts';
 
@@ -15,7 +15,7 @@ export default function displayParticipant() {
         highlightPoint.call(this);
         drawHysteresisPlot.call(this);
         updateDetailsHeader.call(this);
-        addClearFunctionality.call(this);
+        displayClearButton.call(this);
         displayParticipantDetails.call(this);
         drawTimeSeriesCharts.call(this);
     }

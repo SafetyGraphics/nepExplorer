@@ -1,29 +1,89 @@
 export default function drawPoints() {
-    const visitPoints = this.hysteresisPlotContainer
-        .selectAll('g.visit-point')
+    const chart = this;
+
+    const visitContainers = this.hysteresisPlotContainer
+        .selectAll('g.wc-hysteresis-point-container')
         .data(this.nepExplorer.data.participant.visits)
         .enter()
         .append('g')
-        .attr('class', 'visit-point');
+        .classed('wc-hysteresis-point-container', true);
 
-    visitPoints
-        .append('circle')
-        .attr('class', 'participant-visits')
-        .attr('r', 0)
-        .attr('stroke', d => this.colorScale(d[this.config.color_by]))
-        .attr('stroke-width', 1)
-        .attr('cx', d => this.x(d.xClamped))
-        .attr('cy', d => this.y(d.yClamped))
-        .attr('fill', d => this.colorScale(d[this.config.color_by]))
-        .attr('fill-opacity', d => (d.xIsClamped || d.yIsClamped ? 0.25 : 0.75))
-        .transition()
-        .delay(2000)
-        .duration(200)
-        .attr('r', 4);
+    visitContainers.each(function(d) {
+        const visitContainer = d3.select(this);
+        const x = chart.x(d.xClamped);
+        const y = chart.y(d.yClamped);
+        const color = chart.colorScale(d[chart.config.color_by]);
+        const width = 5;
+
+        if (d.xIsClamped)
+            visitContainer
+                .append('polygon')
+                .classed('wc-hysteresis-point--clamped wc-hysteresis-point--clamped--x', true)
+                .attr({
+                    points: [
+                        [x, y],
+                        [x, y],
+                        [x, y],
+                    ],
+                    fill: color,
+                })
+                .transition()
+                .delay(2000)
+                .duration(200)
+                .attr({
+                    points: [
+                        [x, y - width],
+                        [x-width, y],
+                        [x, y + width],
+                    ],
+                });
+
+        if (d.yIsClamped)
+            visitContainer
+                .append('polygon')
+                .classed('wc-hysteresis-point--clamped wc-hysteresis-point--clamped--y', true)
+                .attr({
+                    points: [
+                        [x, y],
+                        [x, y],
+                        [x, y],
+                    ],
+                    fill: color,
+                })
+                .transition()
+                .delay(2000)
+                .duration(200)
+                .attr({
+                    points: [
+                        [x - width, y],
+                        [x + width, y],
+                        [x        , y + width],
+                    ],
+                });
+
+        if (!d.xIsClamped && !d.yIsClamped)
+            visitContainer
+                .append('circle')
+                .classed('wc-hysteresis-point', true)
+                .attr({
+                    cx: x,
+                    cy: y,
+                    r: 0,
+                    fill: color,
+                    stroke: color,
+                    'stroke-width': 1,
+                })
+                .transition()
+                .delay(2000)
+                .duration(200)
+                .attr({
+                    r: chart.config.marks.find(mark => mark.type === 'circle').radius,
+                });
+    });
 
     //custom titles for points on mouseover
-    visitPoints.append('title').text(d => {
-        const studyDay_label = 'Study day: ' + d.studyDay + '\n';
+    visitContainers.append('title').text(d => {
+        const studyDay_label = 'Study day: ' + d.studyday + '\n';
         const visitn_label = d.visitn ? 'Visit Number: ' + d.visitn + '\n' : '';
         const visit_label = d.visit ? 'Visit: ' + d.visit + '\n' : '';
         const x_label = this.config.x.label + ': ' + d3.format('0.3f')(d.x) + '\n';
@@ -33,5 +93,5 @@ export default function drawPoints() {
         return studyDay_label + visit_label + visitn_label + x_label + y_label + kdigo_label;
     });
 
-    return visitPoints;
+    return visitContainers;
 }

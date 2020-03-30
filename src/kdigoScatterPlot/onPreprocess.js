@@ -17,9 +17,10 @@ export default function onPreprocess() {
         this.config.x.column.replace(`_${this.config.x.result}`, '')
     ];
     this.config.x.label = `${this.config.x.measure}${this.config.x.result
-        .replace('chg', ' ')
-        .replace('f', ' Fold ')
-        .replace('p', ' Percent ')} Change`;
+        .replace('chg', '')
+        .replace('f', ' Fold')
+        .replace('p', ' Percent')
+    } Change`;
 
     // setYLabel
     this.config.y.result = this.config.y.column.split('_').pop();
@@ -27,9 +28,10 @@ export default function onPreprocess() {
         this.config.y.column.replace(`_${this.config.y.result}`, '')
     ];
     this.config.y.label = `${this.config.y.measure}${this.config.y.result
-        .replace('chg', ' ')
-        .replace('f', ' Fold ')
-        .replace('p', ' Percent ')}Change`;
+        .replace('chg', '')
+        .replace('f', ' Fold')
+        .replace('p', ' Percent')
+    } Change`;
 
     // chooseCriteria
     this.config.criteria = /_chg/.test(this.config.y.column)

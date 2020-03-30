@@ -4,11 +4,13 @@ import displayParticipant from './displayParticipant';
 export default function addPointClick() {
     this.marks
         .find(mark => mark.type === 'circle')
-        .circles.on('mouseover', function(d) {
-            select(this).classed('wc-highlighted', true);
+        .groups
+        .selectAll('circle')
+        .on('mouseover', function(d) {
+            d3.select(this.parentNode).select('.wc-data-mark').classed('wc-highlighted', true);
         })
         .on('mouseout', function(d) {
-            select(this).classed('wc-highlighted', false);
+            d3.select(this.parentNode).select('.wc-data-mark').classed('wc-highlighted', false);
         })
         .on('click', d => {
             // Attach participant value.
