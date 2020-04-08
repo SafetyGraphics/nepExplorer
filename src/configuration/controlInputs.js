@@ -5,7 +5,7 @@ export default function controlInputs() {
             label: 'X-axis',
             description: 'From baseline',
             option: 'x.column',
-            values: ['creat_fchg', 'cystatc_fchg'],
+            values: ['creat_pchg', 'cystatc_pchg'],
             require: true
         },
         {
@@ -23,6 +23,12 @@ export default function controlInputs() {
             options: ['x.type', 'y.type'],
             values: ['log', 'linear'],
             require: true
+        },
+        {
+            type: 'number',
+            label: 'Visit Window',
+            description: 'number of days between visits in which to calculate change',
+            option: 'visit_window'
         }
     ];
 }

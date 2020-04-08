@@ -1,6 +1,6 @@
 export default function creat_cystatc() {
     return {
-        title: 'Fold Change from Baseline',
+        title: 'Percent Change from Baseline',
         measures: ['creat', 'cystatc'],
         reference_lines: [
             {
@@ -18,7 +18,7 @@ export default function creat_cystatc() {
             }
         ],
         y: {
-            column: 'fchg',
+            column: 'pchg',
             label: '%'
         },
         diff: true

@@ -29,14 +29,30 @@ export default function defineVisitLevelData() {
             // Get x coordinate.
             const xMatch = x_data.find(d => d.studyday === studyday);
             visitObj.x = xMatch[this.config.x.result];
-            visitObj.xClamped = Math.max(visitObj.x, this.config.x.domain[0]);
-            visitObj.xIsClamped = visitObj.x !== visitObj.xClamped;
+            if (visitObj.x < this.x_dom[0]) {
+                visitObj.xClamped = this.x_dom[0];
+                visitObj.xIsClamped = '<';
+            } else if (visitObj.x > this.x_dom[1]) {
+                visitObj.xClamped = this.x_dom[1];
+                visitObj.xIsClamped = '>';
+            } else {
+                visitObj.xClamped = visitObj.x;
+                visitObj.xIsClamped = '';
+            }
 
             // Get y coordinate.
             const yMatch = y_data.find(d => d.studyday === studyday);
             visitObj.y = yMatch[this.config.y.result];
-            visitObj.yClamped = Math.max(visitObj.y, this.config.y.domain[0]);
-            visitObj.yIsClamped = visitObj.y !== visitObj.yClamped;
+            if (visitObj.y < this.y_dom[0]) {
+                visitObj.yClamped = this.y_dom[0];
+                visitObj.yIsClamped = '<';
+            } else if (visitObj.y > this.y_dom[1]) {
+                visitObj.yClamped = this.y_dom[1];
+                visitObj.yIsClamped = '>';
+            } else {
+                visitObj.yClamped = visitObj.y;
+                visitObj.yIsClamped = '';
+            }
 
             // Get color value.
             if (this.config.color_by)
@@ -48,9 +64,9 @@ export default function defineVisitLevelData() {
                 .sort((a, b) => b.x - a.x)
                 .find(criterion => {
                     return criterion.x <= visitObj.x || criterion.y <= visitObj.y;
-                }).label;
+                });
             visitObj.kdigo = kdigo
-                ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
+                ? kdigo.label.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
                 : '???';
 
             return visitObj;

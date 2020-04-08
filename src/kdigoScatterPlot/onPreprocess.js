@@ -9,7 +9,11 @@ export default function onPreprocess() {
 
     // updateYDomain
     this.config.y.domain[0] =
-        this.config.x.type === 'log' ? d3.min(this.raw_data, d => d[this.config.y.column]) : 0;
+        this.config.x.type === 'log'
+            ? d3.min(this.raw_data, d => d[this.config.y.column])
+            : this.config.y.column.includes('pchg')
+            ? 1
+            : 0;
 
     // setXLabel
     this.config.x.result = this.config.x.column.split('_').pop();
@@ -19,8 +23,7 @@ export default function onPreprocess() {
     this.config.x.label = `${this.config.x.measure}${this.config.x.result
         .replace('chg', '')
         .replace('f', ' Fold')
-        .replace('p', ' Percent')
-    } Change`;
+        .replace('p', ' Percent')} Change`;
 
     // setYLabel
     this.config.y.result = this.config.y.column.split('_').pop();
@@ -30,8 +33,7 @@ export default function onPreprocess() {
     this.config.y.label = `${this.config.y.measure}${this.config.y.result
         .replace('chg', '')
         .replace('f', ' Fold')
-        .replace('p', ' Percent')
-    } Change`;
+        .replace('p', ' Percent')} Change`;
 
     // chooseCriteria
     this.config.criteria = /_chg/.test(this.config.y.column)

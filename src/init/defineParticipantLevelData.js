@@ -1,3 +1,6 @@
+import cartesianProduct from './defineParticipantLevelData/cartesianProduct';
+import getExtremum from './defineParticipantLevelData/getExtremum';
+
 export default function defineParticipantLevelData({
     settings: { synced: settings },
     data: { data: data }
@@ -7,6 +10,34 @@ export default function defineParticipantLevelData({
         .key(d => d.id)
         .key(d => d.measure)
         .rollup(data => {
+            // visit comparisons
+            const studydays = [...new Set(data.map(d => d.studyday)).values()];
+            const visitWindows = cartesianProduct(studydays, studydays)
+                .filter(d => d[1] > d[0] && d[1] - d[0] < settings.visit_window)
+                .map(visitWindow => {
+                    const vis1 = data.find(d => d.studyday === visitWindow[0]);
+                    const vis2 = data.find(d => d.studyday === visitWindow[1]);
+                    const chg = vis2.result - vis1.result;
+                    const fchg =
+                        vis1.result > 0
+                            ? Math.round((vis2.result / vis1.result) * 100) / 100
+                            : null;
+                    const pchg =
+                        vis1.result > 0
+                            ? Math.round((vis2.result / vis1.result - 1) * 100 * 100) / 100
+                            : null;
+
+                    return {
+                        visitWindow,
+                        vis1,
+                        vis2,
+                        chg,
+                        fchg,
+                        pchg
+                    };
+                });
+
+            // baseline comparison
             const baseline = data.find(d =>
                 Array.isArray(settings.baseline_value)
                     ? settings.baseline_value.includes(d.baseline)
@@ -28,17 +59,27 @@ export default function defineParticipantLevelData({
             });
 
             const datum = {
-                data
-            };
+                data,
+                visitWindows,
+                min: d3.min(data, d => d.result),
+                max: d3.max(data, d => d.result),
 
-            datum.min = d3.min(datum.data, d => d.result);
-            datum.max = d3.max(datum.data, d => d.result);
-            datum.min_chg = d3.min(datum.data, d => d.chg);
-            datum.max_chg = d3.max(datum.data, d => d.chg);
-            datum.min_fchg = d3.min(datum.data, d => d.fchg);
-            datum.max_fchg = d3.max(datum.data, d => d.fchg);
-            datum.min_pchg = d3.min(datum.data, d => d.pchg);
-            datum.max_pchg = d3.max(datum.data, d => d.pchg);
+                // extreme change from baseline
+                min_chg_b: getExtremum(data, 'min', 'chg'),
+                max_chg_b: getExtremum(data, 'max', 'chg'),
+                min_fchg_b: getExtremum(data, 'min', 'fchg'),
+                max_fchg_b: getExtremum(data, 'max', 'fchg'),
+                min_pchg_b: getExtremum(data, 'min', 'pchg'),
+                max_pchg_b: getExtremum(data, 'max', 'pchg'),
+
+                // extreme change between visits
+                min_chg: getExtremum(visitWindows, 'min', 'chg'),
+                max_chg: getExtremum(visitWindows, 'max', 'chg'),
+                min_fchg: getExtremum(visitWindows, 'min', 'fchg'),
+                max_fchg: getExtremum(visitWindows, 'max', 'fchg'),
+                min_pchg: getExtremum(visitWindows, 'min', 'pchg'),
+                max_pchg: getExtremum(visitWindows, 'max', 'pchg')
+            };
 
             return datum;
         })

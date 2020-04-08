@@ -15,7 +15,7 @@ export default function drawPoints() {
         const color = chart.colorScale(d[chart.config.color_by]);
         const width = 5;
 
-        if (d.xIsClamped)
+        if (['<', '>'].includes(d.xIsClamped))
             visitContainer
                 .append('polygon')
                 .classed('wc-hysteresis-point--clamped wc-hysteresis-point--clamped--x', true)
@@ -23,9 +23,9 @@ export default function drawPoints() {
                     points: [
                         [x, y],
                         [x, y],
-                        [x, y],
+                        [x, y]
                     ],
-                    fill: color,
+                    fill: color
                 })
                 .transition()
                 .delay(2000)
@@ -33,12 +33,12 @@ export default function drawPoints() {
                 .attr({
                     points: [
                         [x, y - width],
-                        [x-width, y],
-                        [x, y + width],
-                    ],
+                        [d.xIsClamped === '<' ? x - width : x + width, y],
+                        [x, y + width]
+                    ]
                 });
 
-        if (d.yIsClamped)
+        if (['<', '>'].includes(d.yIsClamped))
             visitContainer
                 .append('polygon')
                 .classed('wc-hysteresis-point--clamped wc-hysteresis-point--clamped--y', true)
@@ -46,9 +46,9 @@ export default function drawPoints() {
                     points: [
                         [x, y],
                         [x, y],
-                        [x, y],
+                        [x, y]
                     ],
-                    fill: color,
+                    fill: color
                 })
                 .transition()
                 .delay(2000)
@@ -57,8 +57,8 @@ export default function drawPoints() {
                     points: [
                         [x - width, y],
                         [x + width, y],
-                        [x        , y + width],
-                    ],
+                        [x, d.yIsClamped === '<' ? y + width : y - width]
+                    ]
                 });
 
         if (!d.xIsClamped && !d.yIsClamped)
@@ -71,13 +71,13 @@ export default function drawPoints() {
                     r: 0,
                     fill: color,
                     stroke: color,
-                    'stroke-width': 1,
+                    'stroke-width': 1
                 })
                 .transition()
                 .delay(2000)
                 .duration(200)
                 .attr({
-                    r: chart.config.marks.find(mark => mark.type === 'circle').radius,
+                    r: chart.config.marks.find(mark => mark.type === 'circle').radius
                 });
     });
 

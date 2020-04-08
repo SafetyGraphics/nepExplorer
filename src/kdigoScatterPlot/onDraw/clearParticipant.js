@@ -1,5 +1,8 @@
 export default function clearParticipant() {
-    if (this.nepExplorer.participant === undefined || this.nepExplorer.data.participant !== undefined) {
+    if (
+        this.nepExplorer.participant === undefined ||
+        this.nepExplorer.data.participant !== undefined
+    ) {
         const containers = this.nepExplorer.containers;
         delete this.nepExplorer.data.participant;
         containers.detailsHeaderText.text('Click a point to view participant details.');

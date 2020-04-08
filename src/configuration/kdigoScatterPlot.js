@@ -1,10 +1,10 @@
 export default function kdigoScatterPlot() {
     return {
         x: {
-            column: 'creat_fchg',
+            column: 'creat_pchg',
             type: 'log',
-            label: 'Creatinine Fold Change',
-            format: '.1f',
+            label: 'Creatinine Percent Change',
+            format: '.1d',
             domain: [1, null]
         },
         y: {

@@ -55,6 +55,7 @@ export default function renderer() {
         ],
         details: [{ value_col: 'AGE', label: 'Age' }],
         baseline_value: 'Y',
+        visit_window: 56,
         kdigo_criteria: [
             {
                 label: 'No AKI',
@@ -64,19 +65,19 @@ export default function renderer() {
             },
             {
                 label: 'Stage 1 AKI',
-                x: 1.5,
+                x: 50,
                 y: 25,
                 color: '#ffffbf'
             },
             {
                 label: 'Stage 2 AKI',
-                x: 2,
+                x: 100,
                 y: 50,
                 color: '#fdae61'
             },
             {
                 label: 'Stage 3 AKI',
-                x: 3,
+                x: 200,
                 y: 75,
                 color: '#d73027'
             }
@@ -90,19 +91,19 @@ export default function renderer() {
             },
             {
                 label: 'Stage 1 AKI',
-                x: 1.5,
+                x: 50,
                 y: 0.3,
                 color: '#ffffbf'
             },
             {
                 label: 'Stage 2 AKI',
-                x: 2,
+                x: 100,
                 y: 0.7,
                 color: '#fdae61'
             },
             {
                 label: 'Stage 3 AKI',
-                x: 3,
+                x: 200,
                 y: 1.2,
                 color: '#d73027'
             }
