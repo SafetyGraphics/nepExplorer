@@ -4,7 +4,7 @@ export default function kdigoScatterPlot() {
             column: 'creat_pchg',
             type: 'log',
             label: 'Creatinine Percent Change',
-            format: '.1d',
+            format: ',1d',
             domain: [1, null]
         },
         y: {

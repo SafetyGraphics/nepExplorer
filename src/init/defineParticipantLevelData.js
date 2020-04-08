@@ -1,5 +1,6 @@
 import cartesianProduct from './defineParticipantLevelData/cartesianProduct';
 import getExtremum from './defineParticipantLevelData/getExtremum';
+import round from '../util/round';
 
 export default function defineParticipantLevelData({
     settings: { synced: settings },
@@ -13,22 +14,19 @@ export default function defineParticipantLevelData({
             // visit comparisons
             const studydays = [...new Set(data.map(d => d.studyday)).values()];
             const visitWindows = cartesianProduct(studydays, studydays)
-                .filter(d => d[1] > d[0] && d[1] - d[0] < settings.visit_window)
+                .filter(d => d[1] > d[0] && d[1] - d[0] <= settings.visit_window) // visit 2 is later than visit 1 and the difference between the visits is less than or equal to the visit window
                 .map(visitWindow => {
                     const vis1 = data.find(d => d.studyday === visitWindow[0]);
                     const vis2 = data.find(d => d.studyday === visitWindow[1]);
                     const chg = vis2.result - vis1.result;
-                    const fchg =
-                        vis1.result > 0
-                            ? Math.round((vis2.result / vis1.result) * 100) / 100
-                            : null;
+                    const fchg = vis1.result > 0 ? round(vis2.result / vis1.result) : null;
                     const pchg =
-                        vis1.result > 0
-                            ? Math.round((vis2.result / vis1.result - 1) * 100 * 100) / 100
-                            : null;
+                        vis1.result > 0 ? round((vis2.result / vis1.result - 1) * 100) : null;
 
                     return {
                         visitWindow,
+                        studyday1: visitWindow[0],
+                        studyday2: visitWindow[1],
                         vis1,
                         vis2,
                         chg,
@@ -46,16 +44,12 @@ export default function defineParticipantLevelData({
 
             data.forEach(d => {
                 d.chg = baseline ? d.result - baseline.result : null;
-                d.fchg =
-                    baseline && baseline.result > 0
-                        ? Math.round((d.result / baseline.result) * 100) / 100
-                        : null;
+                d.fchg = baseline && baseline.result > 0 ? round(d.result / baseline.result) : null;
                 d.pchg =
                     baseline && baseline.result > 0
-                        ? Math.round((d.result / baseline.result - 1) * 100 * 100) / 100
+                        ? round((d.result / baseline.result - 1) * 100)
                         : null;
-                d.xuln =
-                    d.result > 0 && d.uln > 0 ? Math.round((d.result / d.uln) * 100) / 100 : null;
+                d.xuln = d.result > 0 && d.uln > 0 ? round(d.result / d.uln) : null;
             });
 
             const datum = {

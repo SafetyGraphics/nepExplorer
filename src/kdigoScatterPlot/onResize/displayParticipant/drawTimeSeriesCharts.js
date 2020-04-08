@@ -18,7 +18,10 @@ export default function drawTimeSeriesCharts() {
 
         if (chartData.length) {
             if (chart.initialized) chart.draw(chartData);
-            else chart.init(chartData);
+            else {
+                chart.nepExplorer = nepExplorer;
+                chart.init(chartData);
+            }
         } else {
             delete nepExplorer.charts[chart];
             console.warn(

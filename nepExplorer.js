@@ -304,10 +304,11 @@
             '    fill-opacity: 1;',
             '    stroke-width: 1;',
             '}',
-            '.wc-subcomponent--kdigo-scatter-plot circle.wc-data-mark:hover,',
-            '.wc-subcomponent--kdigo-scatter-plot circle.wc-data-mark.wc-highlighted,',
-            '.wc-subcomponent--kdigo-scatter-plot circle.wc-data-mark.wc-selected {',
+            'circle.wc-data-mark:hover,',
+            'circle.wc-data-mark.wc-highlighted,',
+            'circle.wc-data-mark.wc-selected {',
             '    stroke-width: 3;',
+            '    stroke: black;',
             '}',
             '.kdigo-stage {',
             '    stroke: black;',
@@ -448,6 +449,23 @@
         return style;
     }
 
+    function round(value) {
+        var _float = parseFloat(value);
+
+        if (_float === NaN) return NaN;
+
+        var _int = parseInt(value);
+
+        if (_float === _int) return _int;
+        return _float < 1
+            ? Math.round(_float * 1000) / 1000
+            : _float < 10
+            ? Math.round(_float * 100) / 100
+            : _float < 100
+            ? Math.round(_float * 10) / 10
+            : Math.round(_float);
+    }
+
     function addVariables(_ref) {
         var settings = _ref.settings.synced,
             data = _ref.data.data;
@@ -457,7 +475,7 @@
             d.visitn = parseFloat(d[settings.visitn_col]);
             d.studyday = parseFloat(d[settings.studyday_col]);
             d.measure = d[settings.measure_col];
-            d.result = parseFloat(d[settings.value_col]);
+            d.result = round(d[settings.value_col]);
             d.unit = d[settings.unit_col];
             d.lln = parseFloat(d[settings.normal_col_low]);
             d.uln = parseFloat(d[settings.normal_col_high]);
@@ -671,8 +689,8 @@
 
                 var visitWindows = cartesianProduct(studydays, studydays)
                     .filter(function(d) {
-                        return d[1] > d[0] && d[1] - d[0] < settings.visit_window;
-                    })
+                        return d[1] > d[0] && d[1] - d[0] <= settings.visit_window;
+                    }) // visit 2 is later than visit 1 and the difference between the visits is less than or equal to the visit window
                     .map(function(visitWindow) {
                         var vis1 = data.find(function(d) {
                             return d.studyday === visitWindow[0];
@@ -681,16 +699,13 @@
                             return d.studyday === visitWindow[1];
                         });
                         var chg = vis2.result - vis1.result;
-                        var fchg =
-                            vis1.result > 0
-                                ? Math.round((vis2.result / vis1.result) * 100) / 100
-                                : null;
+                        var fchg = vis1.result > 0 ? round(vis2.result / vis1.result) : null;
                         var pchg =
-                            vis1.result > 0
-                                ? Math.round((vis2.result / vis1.result - 1) * 100 * 100) / 100
-                                : null;
+                            vis1.result > 0 ? round((vis2.result / vis1.result - 1) * 100) : null;
                         return {
                             visitWindow: visitWindow,
+                            studyday1: visitWindow[0],
+                            studyday2: visitWindow[1],
                             vis1: vis1,
                             vis2: vis2,
                             chg: chg,
@@ -707,17 +722,12 @@
                 data.forEach(function(d) {
                     d.chg = baseline ? d.result - baseline.result : null;
                     d.fchg =
-                        baseline && baseline.result > 0
-                            ? Math.round((d.result / baseline.result) * 100) / 100
-                            : null;
+                        baseline && baseline.result > 0 ? round(d.result / baseline.result) : null;
                     d.pchg =
                         baseline && baseline.result > 0
-                            ? Math.round((d.result / baseline.result - 1) * 100 * 100) / 100
+                            ? round((d.result / baseline.result - 1) * 100)
                             : null;
-                    d.xuln =
-                        d.result > 0 && d.uln > 0
-                            ? Math.round((d.result / d.uln) * 100) / 100
-                            : null;
+                    d.xuln = d.result > 0 && d.uln > 0 ? round(d.result / d.uln) : null;
                 });
                 var datum = {
                     data: data,
@@ -798,12 +808,52 @@
         }
     }
 
+    function konamiCode(callback) {
+        // a key map of allowed keys
+        var allowedKeys = {
+            37: 'left',
+            38: 'up',
+            39: 'right',
+            40: 'down',
+            65: 'a',
+            66: 'b'
+        }; // the 'official' Konami Code sequence
+
+        var konamiCode = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right', 'b', 'a']; // a variable to remember the 'position' the user has reached so far.
+
+        var konamiCodePosition = 0; // add keydown event listener
+
+        document.addEventListener('keydown', function(e) {
+            // get the value of the key code from the key map
+            var key = allowedKeys[e.keyCode]; // get the value of the required key from the konami code
+
+            var requiredKey = konamiCode[konamiCodePosition]; // compare the key with the required key
+
+            if (key == requiredKey) {
+                // move to the next key in the konami code sequence
+                konamiCodePosition++; // if the last key is reached, activate cheats
+
+                if (konamiCodePosition == konamiCode.length) {
+                    callback();
+                    konamiCodePosition = 0;
+                }
+            } else {
+                konamiCodePosition = 0;
+            }
+        });
+    }
+
     function addEventListeners() {
         var _this = this;
 
         this.containers.detailsClear.on('click', function() {
             delete _this.participant;
             clearParticipant.call(_this.kdigoScatterPlot);
+        });
+        konamiCode(function() {
+            _this.settings.synced.display_voronoi = !_this.settings.synced.display_voronoi;
+
+            _this.kdigoScatterPlot.draw();
         });
     }
 
@@ -967,7 +1017,7 @@
                 column: 'creat_pchg',
                 type: 'log',
                 label: 'Creatinine Percent Change',
-                format: '.1d',
+                format: ',1d',
                 domain: [1, null]
             },
             y: {
@@ -1808,7 +1858,9 @@
                     return 'wc-voronoi__cell';
                 },
                 id: function id(d) {
-                    return 'wc-voronoi__cell--'.concat(d.point.key);
+                    return 'wc-voronoi__cell--'.concat(
+                        d.point.key.toLowerCase().replace(/ /g, '-')
+                    );
                 }
             })
             .append('path')
@@ -1829,10 +1881,16 @@
             .insert('circle', ':first-child')
             .classed('wc-hover-mark', true)
             .attr('clip-path', function(d) {
-                return 'url(#wc-voronoi__cell--'.concat(d.key, ')');
+                return 'url(#wc-voronoi__cell--'.concat(
+                    d.key.toLowerCase().replace(/ /g, '-'),
+                    ')'
+                );
             })
             .style('clip-path', function(d) {
-                return 'url(#wc-voronoi__cell--'.concat(d.key, ')');
+                return 'url(#wc-voronoi__cell--'.concat(
+                    d.key.toLowerCase().replace(/ /g, '-'),
+                    ')'
+                );
             })
             .attr('cx', function(d) {
                 return _this.x(d.values.x);
@@ -1843,21 +1901,102 @@
             .attr('r', 50)
             .style('fill', 'lightblue')
             .style('pointer-events', 'all')
-            .style('fill-opacity', 0); //this.svg.selectAll('path.voronoi-partition').remove();
-        //const voronoiCells = this.svg
-        //    .selectAll('path.voronoi-partition')
-        //    .data(voronoiData)
-        //    .enter()
-        //    .append('path')
-        //    .attr({
-        //        class: d => `voronoi-partition`,
-        //        d: d => `M${d.join(',')}Z`,
-        //    })
-        //    .style({
-        //        fill: 'none',
-        //        stroke: 'black',
-        //        'pointer-events': 'all',
-        //    });
+            .style('fill-opacity', 0);
+        this.svg.selectAll('path.voronoi-partition').remove();
+
+        if (this.nepExplorer.settings.synced.display_voronoi) {
+            var voronoiCells = this.svg
+                .selectAll('path.voronoi-partition')
+                .data(voronoiData)
+                .enter()
+                .insert('path', '.wc-voronoi-diagram')
+                .attr({
+                    class: function _class(d) {
+                        return 'voronoi-partition';
+                    },
+                    d: function d(_d2) {
+                        return 'M'.concat(_d2.join(','), 'Z');
+                    }
+                })
+                .style({
+                    fill: 'none',
+                    stroke: 'black',
+                    'pointer-events': 'all'
+                });
+        }
+    }
+
+    function updateTooltips() {
+        var chart = this;
+        var mark = this.marks.find(function(mark) {
+            return mark.type === 'circle';
+        });
+        mark.groups.each(function(d, i) {
+            var title = d3.select(this).selectAll('title');
+            var participant = d.values.raw[0];
+            var x = participant.values.find(function(value) {
+                return value.key === chart.config.x.measure;
+            }).values;
+            var xVisitWindow = x.visitWindows.find(function(visitWindow) {
+                return visitWindow[chart.config.x.result] === d.values.x;
+            });
+            var xVis1 = xVisitWindow.vis1;
+            var xVis2 = xVisitWindow.vis2;
+            var y = participant.values.find(function(value) {
+                return value.key === chart.config.y.measure;
+            }).values;
+            var yVisitWindow = y.visitWindows.find(function(visitWindow) {
+                return visitWindow[chart.config.y.result] === d.values.y;
+            });
+            var yVis1 = yVisitWindow.vis1;
+            var yVis2 = yVisitWindow.vis2;
+            title.text(
+                [
+                    'Participant ID: '.concat(d.key),
+                    'KDIGO: '.concat(participant.kdigo),
+                    ''
+                        .concat(chart.config.x.label, ': ')
+                        .concat(d.values.x, ' (')
+                        .concat(xVis1.result, ' > ')
+                        .concat(xVis2.result, ')'),
+                    ''
+                        .concat(chart.config.y.label, ': ')
+                        .concat(d.values.y, ' (')
+                        .concat(yVis1.result, ' > ')
+                        .concat(yVis2.result, ')'),
+                    ''
+                        .concat(chart.config.x.measure, ' visit window: ')
+                        .concat(xVis1.studyday, ' > ')
+                        .concat(xVis2.studyday, ' (')
+                        .concat(xVis1.visit, ' > ')
+                        .concat(xVis2.visit, ')'),
+                    ''
+                        .concat(chart.config.y.measure, ' visit window: ')
+                        .concat(yVis1.studyday, ' > ')
+                        .concat(yVis2.studyday, ' (')
+                        .concat(yVis1.visit, ' > ')
+                        .concat(yVis2.visit, ')')
+                ].join('\n')
+            );
+        });
+    }
+
+    function addPointHover() {
+        this.marks
+            .find(function(mark) {
+                return mark.type === 'circle';
+            })
+            .groups.selectAll('circle')
+            .on('mouseover', function(d) {
+                d3.select(this.parentNode)
+                    .select('.wc-data-mark')
+                    .classed('wc-highlighted', true);
+            })
+            .on('mouseout', function(d) {
+                d3.select(this.parentNode)
+                    .select('.wc-data-mark')
+                    .classed('wc-highlighted', false);
+            });
     }
 
     function highlightPoint() {
@@ -2155,7 +2294,10 @@
 
             if (chartData.length) {
                 if (chart.initialized) chart.draw(chartData);
-                else chart.init(chartData);
+                else {
+                    chart.nepExplorer = nepExplorer;
+                    chart.init(chartData);
+                }
             } else {
                 delete nepExplorer.charts[chart];
                 console.warn(
@@ -2196,16 +2338,6 @@
                 return mark.type === 'circle';
             })
             .groups.selectAll('circle')
-            .on('mouseover', function(d) {
-                d3.select(this.parentNode)
-                    .select('.wc-data-mark')
-                    .classed('wc-highlighted', true);
-            })
-            .on('mouseout', function(d) {
-                d3.select(this.parentNode)
-                    .select('.wc-data-mark')
-                    .classed('wc-highlighted', false);
-            })
             .on('click', function(d) {
                 // Attach participant value.
                 _this.nepExplorer.participant = d.key;
@@ -2278,6 +2410,8 @@
     function onResize() {
         drawKdigoStages.call(this);
         drawVoronoiDiagram.call(this);
+        updateTooltips.call(this);
+        addPointHover.call(this);
         addPointClick.call(this);
         displayParticipant.call(this);
         addKdigoLegend.call(this);
@@ -2300,7 +2434,9 @@
         this.initialized = true;
     }
 
-    function onLayout$1() {}
+    function onLayout$1() {
+        addVoronoiDiagramContainer.call(this);
+    }
 
     function onPreprocess$1() {}
 
@@ -2505,8 +2641,10 @@
     }
 
     function onResize$1() {
+        drawVoronoiDiagram.call(this);
         drawReferenceLine.call(this);
         drawDifference.call(this);
+        addPointHover.call(this);
         moveLegend$1.call(this);
     }
 
