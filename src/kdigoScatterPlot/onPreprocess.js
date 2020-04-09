@@ -6,14 +6,21 @@ export default function onPreprocess() {
                   d => d[this.config.y.column] > 0 && d[this.config.x.column] > 0
               )
             : this.nepExplorer.data.participants;
+    //.filter(
+    //          d => d[this.config.y.column] >= 0 && d[this.config.x.column] >= 0
+    //      );
 
     // updateYDomain
-    this.config.y.domain[0] =
-        this.config.x.type === 'log'
-            ? d3.min(this.raw_data, d => d[this.config.y.column])
-            : this.config.y.column.includes('pchg')
-            ? 1
-            : 0;
+    //this.config.y.domain[0] =
+    //    this.config.x.type === 'log'
+    //        ? d3.min(this.raw_data, d => d[this.config.y.column])
+    //        : this.config.y.column.includes('pchg')
+    //        ? 1
+    //        : 0;
+    //if (this.config.x.type !== 'linear') {
+    //    delete this.config.y.domain;
+    //    delete this.config.x.domain;
+    //}
 
     // setXLabel
     this.config.x.result = this.config.x.column.split('_').pop();
@@ -47,19 +54,48 @@ export default function onPreprocess() {
             : 'KDIGO-DC Scatter Plot'
     );
 
-    // defineKdigoStage
-    this.raw_data.forEach(d => {
+    // addVariables
+    this.nepExplorer.data.participants.forEach(participant => {
+        // defineKdigoStage
         const kdigo = this.config.criteria
             .slice()
             .sort((a, b) => b.x - a.x)
             .find(criterion => {
                 return (
-                    criterion.x <= d[this.config.x.column] || criterion.y <= d[this.config.y.column]
+                    criterion.x <= participant[this.config.x.column] ||
+                    criterion.y <= participant[this.config.y.column]
                 );
-            }).label;
-        d.kdigo = kdigo
-            ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
+            });
+        participant.kdigo = kdigo
+            ? kdigo.label.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
             : '???';
+
+        // identifyMissingParticipants
+        const x = participant.values.find(measure => measure.key === this.config.x.measure);
+        const y = participant.values.find(measure => measure.key === this.config.y.measure);
+
+        // missing a measure
+        participant.missingMeasure = x === undefined || y === undefined;
+
+        // results only at one visit
+        participant.singleVisit =
+            !participant.missingMeasure &&
+            ((x !== undefined && x.values.data.filter(d => !isNaN(d.result)).length === 1) ||
+                (y !== undefined && y.values.data.filter(d => !isNaN(d.result)).length === 1));
+
+        // log axis and nonpositive maximal change
+        participant.nonPositiveChange =
+            !participant.singleVisit &&
+            this.config.x.type === 'log' &&
+                (participant[this.config.x.column] <= 0 || participant[this.config.y.column] <= 0);
+
+        participant.status = participant.missingMeasure
+            ? 'Missing measure'
+            : participant.singleVisit
+            ? 'Single visit'
+            : participant.nonPositiveChange
+            ? 'Nonpositive change'
+            : participant.kdigo;
     });
 
     // setLegendLabel

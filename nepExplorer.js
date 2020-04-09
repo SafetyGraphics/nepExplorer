@@ -342,14 +342,8 @@
             '.wc-subcomponent__legend thead tr {',
             '    padding: 0.1em;',
             '}',
-            '.wc-subcomponent__legend tbody {',
-            '    border-bottom: 2px solid #999;',
-            '}',
-            '.wc-subcomponent__legend tbody {',
-            '    border-bottom: 2px solid #999;',
-            '}',
-            '.wc-subcomponent__legend tbody tr {',
-            '    padding: 0.1em;',
+            '.wc-subcomponent__legend tbody tr:last-child {',
+            '    border-top: 2px solid #999;',
             '}',
             '.wc-subcomponent__legend tbody td {',
             '    text-align: center;',
@@ -804,7 +798,7 @@
                 .remove();
             containers.timeSeries.classed('wc-hidden', true);
             this.svg.selectAll('circle.wc-data-mark').classed('wc-selected', false);
-            this.hysteresisPlotContainer.selectAll('*').remove();
+            this.containers.hysteresisPlot.selectAll('*').remove();
         }
     }
 
@@ -955,12 +949,12 @@
                 }
             ],
             baseline_value: 'Y',
-            visit_window: 56,
+            visit_window: 9999,
             kdigo_criteria: [
                 {
                     label: 'No AKI',
-                    x: 0,
-                    y: 0,
+                    x: -Infinity,
+                    y: -Infinity,
                     color: 'white'
                 },
                 {
@@ -985,8 +979,8 @@
             kdigo_dc_criteria: [
                 {
                     label: 'No AKI',
-                    x: 0,
-                    y: 0,
+                    x: -Infinity,
+                    y: -Infinity,
                     color: 'white'
                 },
                 {
@@ -1017,15 +1011,13 @@
                 column: 'creat_pchg',
                 type: 'log',
                 label: 'Creatinine Percent Change',
-                format: ',1d',
-                domain: [1, null]
+                format: ',1d' //domain: [1, null]
             },
             y: {
                 column: 'egfr_creat_pchg',
                 type: 'log',
                 label: 'eGFR Percent Change',
-                format: ',1d',
-                domain: [0, null]
+                format: ',1d' //domain: [0, null]
             },
             marks: [
                 {
@@ -1624,23 +1616,35 @@
         });
     }
 
-    function addVoronoiDiagramContainer() {
-        this.voronoiDiagramContainer = this.svg
+    function addChartContainer(name) {
+        var propertyName = name
+            .toLowerCase()
+            .split(' ')
+            .map(function(str, i) {
+                return i === 0 ? str : str.substring(0, 1).toUpperCase() + str.substring(1);
+            })
+            .join('');
+        var className = name
+            .toLowerCase()
+            .split(' ')
+            .join('-');
+        this.containers[propertyName] = this.svg
             .append('g')
-            .classed('wc-voronoi-diagram', true)
-            .append('defs');
+            .classed('wc-chart-customization wc-chart-customization--'.concat(className), true);
     }
 
-    function addHysteresisPlotContainer() {
-        this.hysteresisPlotContainer = this.svg.append('g').classed('wc-hysteresis-plot', true);
+    function addChartContainers() {
+        this.containers = {};
+        addChartContainer.call(this, 'origin');
+        addChartContainer.call(this, 'voronoi diagram');
+        addChartContainer.call(this, 'hysteresis plot');
     }
 
     function onLayout() {
         groupControls.call(this);
         labelOptions.call(this);
         updateVisitWindow.call(this);
-        addVoronoiDiagramContainer.call(this);
-        addHysteresisPlotContainer.call(this);
+        addChartContainers.call(this);
     }
 
     function onPreprocess() {
@@ -1652,16 +1656,21 @@
                 ? this.nepExplorer.data.participants.filter(function(d) {
                       return d[_this.config.y.column] > 0 && d[_this.config.x.column] > 0;
                   })
-                : this.nepExplorer.data.participants; // updateYDomain
-
-        this.config.y.domain[0] =
-            this.config.x.type === 'log'
-                ? d3.min(this.raw_data, function(d) {
-                      return d[_this.config.y.column];
-                  })
-                : this.config.y.column.includes('pchg')
-                ? 1
-                : 0; // setXLabel
+                : this.nepExplorer.data.participants; //.filter(
+        //          d => d[this.config.y.column] >= 0 && d[this.config.x.column] >= 0
+        //      );
+        // updateYDomain
+        //this.config.y.domain[0] =
+        //    this.config.x.type === 'log'
+        //        ? d3.min(this.raw_data, d => d[this.config.y.column])
+        //        : this.config.y.column.includes('pchg')
+        //        ? 1
+        //        : 0;
+        //if (this.config.x.type !== 'linear') {
+        //    delete this.config.y.domain;
+        //    delete this.config.x.domain;
+        //}
+        // setXLabel
 
         this.config.x.result = this.config.x.column.split('_').pop();
         this.config.x.measure = this.config.measure_values[
@@ -1696,9 +1705,10 @@
             this.config.criteria === this.config.kdigo_criteria
                 ? 'KDIGO Scatter Plot'
                 : 'KDIGO-DC Scatter Plot'
-        ); // defineKdigoStage
+        ); // addVariables
 
-        this.raw_data.forEach(function(d) {
+        this.nepExplorer.data.participants.forEach(function(participant) {
+            // defineKdigoStage
             var kdigo = _this.config.criteria
                 .slice()
                 .sort(function(a, b) {
@@ -1706,14 +1716,47 @@
                 })
                 .find(function(criterion) {
                     return (
-                        criterion.x <= d[_this.config.x.column] ||
-                        criterion.y <= d[_this.config.y.column]
+                        criterion.x <= participant[_this.config.x.column] ||
+                        criterion.y <= participant[_this.config.y.column]
                     );
-                }).label;
+                });
 
-            d.kdigo = kdigo
-                ? kdigo.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
-                : '???';
+            participant.kdigo = kdigo
+                ? kdigo.label.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
+                : '???'; // identifyMissingParticipants
+
+            var x = participant.values.find(function(measure) {
+                return measure.key === _this.config.x.measure;
+            });
+            var y = participant.values.find(function(measure) {
+                return measure.key === _this.config.y.measure;
+            }); // missing a measure
+
+            participant.missingMeasure = x === undefined || y === undefined; // results only at one visit
+
+            participant.singleVisit =
+                !participant.missingMeasure &&
+                ((x !== undefined &&
+                    x.values.data.filter(function(d) {
+                        return !isNaN(d.result);
+                    }).length === 1) ||
+                    (y !== undefined &&
+                        y.values.data.filter(function(d) {
+                            return !isNaN(d.result);
+                        }).length === 1)); // log axis and nonpositive maximal change
+
+            participant.nonPositiveChange =
+                !participant.singleVisit &&
+                _this.config.x.type === 'log' &&
+                (participant[_this.config.x.column] <= 0 ||
+                    participant[_this.config.y.column] <= 0);
+            participant.status = participant.missingMeasure
+                ? 'Missing measure'
+                : participant.singleVisit
+                ? 'Single visit'
+                : participant.nonPositiveChange
+                ? 'Nonpositive change'
+                : participant.kdigo;
         }); // setLegendLabel
 
         this.config.legend.label =
@@ -1740,10 +1783,23 @@
     }
 
     function updatePopCount() {
+        var _this = this;
+
+        this.nepExplorer.data.filtered = this.nepExplorer.data.participants;
+        this.filters.forEach(function(filter) {
+            _this.nepExplorer.data.filtered = _this.nepExplorer.data.filtered.filter(function(d) {
+                return Array.isArray(filter.val)
+                    ? filter.val.includes(d[filter.col])
+                    : filter.val === d[filter.col];
+            });
+        });
         this.controls.popCount.html(
             "<span class = 'numerator'>"
-                .concat(this.filtered_data.length, "</span> of <span class = 'numerator'>")
-                .concat(this.nepExplorer.data.participants.length, '</span> participants shown.')
+                .concat(
+                    this.nepExplorer.data.filtered.length,
+                    "</span> of <span class = 'numerator'>"
+                )
+                .concat(this.nepExplorer.data.participants.length, '</span> participants selected.')
         );
     }
 
@@ -1821,13 +1877,45 @@
         });
     }
 
+    function drawOrigin() {
+        this.containers.origin.selectAll('*').remove();
+
+        if (this.x_dom[0] < 0) {
+            this.containers.origin
+                .append('line')
+                .classed('wc-origin wc-origin--x', true)
+                .attr({
+                    x1: this.x(0),
+                    x2: this.x(0),
+                    y1: 0,
+                    y2: this.plot_height,
+                    stroke: 'black',
+                    'stroke-width': 2
+                });
+        }
+
+        if (this.y_dom[0] < 0) {
+            this.containers.origin
+                .append('line')
+                .classed('wc-origin wc-origin--y', true)
+                .attr({
+                    x1: 0,
+                    x2: this.plot_width,
+                    y1: this.y(0),
+                    y2: this.y(0),
+                    stroke: 'black',
+                    'stroke-width': 2
+                });
+        }
+    }
+
     function drawVoronoiDiagram() {
         var _this = this;
 
         var mark = this.marks.find(function(mark) {
             return mark.type === 'circle';
         });
-        this.voronoiDiagramContainer.selectAll('*').remove();
+        this.containers.voronoiDiagram.selectAll('*').remove();
         var uniquePoints = mark.data.reduce(function(uniqueValues, d) {
             var existingValue = uniqueValues.find(function(di) {
                 return di.values.x === d.values.x && di.values.y === d.values.y;
@@ -1848,7 +1936,8 @@
                 [this.plot_width, this.plot_height]
             ]);
         var voronoiData = voronoiGenerator(uniquePoints);
-        var voronoiClipPaths = this.voronoiDiagramContainer
+        var voronoiClipPaths = this.containers.voronoiDiagram
+            .append('defs')
             .selectAll('clipPath')
             .data(voronoiData)
             .enter()
@@ -1869,6 +1958,7 @@
                     return 'M'.concat(_d.join(','), 'Z');
                 }
             });
+        mark.groups.selectAll('.wc-hover-mark').remove();
         var hoverMarks = mark.groups
             .filter(function(d) {
                 return (
@@ -1905,11 +1995,11 @@
         this.svg.selectAll('path.voronoi-partition').remove();
 
         if (this.nepExplorer.settings.synced.display_voronoi) {
-            var voronoiCells = this.svg
+            var voronoiCells = this.containers.voronoiDiagram
                 .selectAll('path.voronoi-partition')
                 .data(voronoiData)
                 .enter()
-                .insert('path', '.wc-voronoi-diagram')
+                .insert('path', ':first-child')
                 .attr({
                     class: function _class(d) {
                         return 'voronoi-partition';
@@ -2118,7 +2208,7 @@
                 return _this.y(d.yClamped);
             }); // Draw path.
 
-        var visitPath = this.hysteresisPlotContainer
+        var visitPath = this.containers.hysteresisPlot
             .append('path')
             .attr('class', 'participant-visits')
             .datum(this.nepExplorer.data.participant.visits)
@@ -2144,7 +2234,7 @@
         var _this = this;
 
         var chart = this;
-        var visitContainers = this.hysteresisPlotContainer
+        var visitContainers = this.containers.hysteresisPlot
             .selectAll('g.wc-hysteresis-point-container')
             .data(this.nepExplorer.data.participant.visits)
             .enter()
@@ -2236,7 +2326,7 @@
 
     function drawHysteresisPlot() {
         this.nepExplorer.data.participant.visits = defineVisitLevelData.call(this);
-        this.hysteresisPlotContainer.selectAll('*').remove();
+        this.containers.hysteresisPlot.selectAll('*').remove();
         this.visitPath = drawPath.call(this);
         this.visitPoints = drawPoints.call(this);
     }
@@ -2351,18 +2441,62 @@
         this.kdigoSummary = this.config.criteria.map(function(stage) {
             var datum = _objectSpread2({}, stage);
 
-            datum.n = _this.filtered_data.filter(function(d) {
-                return d.kdigo === datum.label;
-            }).length;
-            datum.rate = datum.n / _this.filtered_data.length;
+            datum.n = _this.nepExplorer.data.filtered
+                .filter(function(d) {
+                    return !d.missingMeasure && !d.singleVisit && !d.nonPositiveChange;
+                })
+                .filter(function(d) {
+                    return d.kdigo === datum.label;
+                }).length;
+            datum.rate = datum.n / _this.nepExplorer.data.participants.length;
             datum.pct = d3.format('.1%')(datum.rate);
             return datum;
         });
+        this.statusSummary = d3
+            .nest()
+            .key(function(d) {
+                return d.status;
+            })
+            .rollup(function(data) {
+                var datum = {
+                    label: data[0].status,
+                    n: data.length
+                };
+                datum.rate = data.length / _this.nepExplorer.data.filtered.length;
+                datum.pct = d3.format('.1%')(datum.rate);
+                return datum;
+            })
+            .entries(this.nepExplorer.data.filtered)
+            .map(function(d) {
+                return Object.assign(d, d.values);
+            })
+            .sort(function(a, b) {
+                return a.label < b.label ? -1 : 1;
+            });
+        var totalRow = {
+            label: 'Total',
+            n: this.nepExplorer.data.filtered.length
+        };
+        totalRow.rate = totalRow.n / this.nepExplorer.data.participants.length;
+        totalRow.pct = d3.format('.1%')(totalRow.rate);
+        var summary = [].concat(
+            _toConsumableArray(this.kdigoSummary),
+            _toConsumableArray(
+                this.statusSummary.filter(function(d) {
+                    return !_this.config.criteria
+                        .map(function(stage) {
+                            return stage.label;
+                        })
+                        .includes(d.label);
+                })
+            ),
+            [totalRow]
+        );
 
         if (this.kdigoLegend) {
             this.kdigoLegend.config.headers[0] =
                 this.config.criteria === this.config.kdigo_criteria ? 'KDIGO' : 'KDIGO-DC';
-            this.kdigoLegend.draw(this.kdigoSummary);
+            this.kdigoLegend.draw(summary);
         } else {
             this.kdigoLegend = webcharts.createTable(
                 this.nepExplorer.containers.kdigoLegend.node(),
@@ -2397,7 +2531,7 @@
                         }
                     });
             });
-            this.kdigoLegend.init(this.kdigoSummary);
+            this.kdigoLegend.init(summary);
         }
     }
 
@@ -2409,6 +2543,7 @@
 
     function onResize() {
         drawKdigoStages.call(this);
+        drawOrigin.call(this);
         drawVoronoiDiagram.call(this);
         updateTooltips.call(this);
         addPointHover.call(this);
@@ -2434,8 +2569,13 @@
         this.initialized = true;
     }
 
+    function addChartContainers$1() {
+        this.containers = {};
+        addChartContainer.call(this, 'voronoi diagram');
+    }
+
     function onLayout$1() {
-        addVoronoiDiagramContainer.call(this);
+        addChartContainers$1.call(this);
     }
 
     function onPreprocess$1() {}

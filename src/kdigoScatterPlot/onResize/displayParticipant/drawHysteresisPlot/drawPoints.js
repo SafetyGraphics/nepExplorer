@@ -1,7 +1,7 @@
 export default function drawPoints() {
     const chart = this;
 
-    const visitContainers = this.hysteresisPlotContainer
+    const visitContainers = this.containers.hysteresisPlot
         .selectAll('g.wc-hysteresis-point-container')
         .data(this.nepExplorer.data.participant.visits)
         .enter()

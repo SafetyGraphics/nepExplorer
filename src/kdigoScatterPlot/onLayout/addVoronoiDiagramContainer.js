@@ -1,6 +1,6 @@
 export default function addVoronoiDiagramContainer() {
-    this.voronoiDiagramContainer = this.svg
+    this.voronoiPlotContainer = this.svg
         .append('g')
-        .classed('wc-voronoi-diagram', true)
+        .classed('wc-chart-customization wc-chart-customization--voronoi-diagram', true)
         .append('defs');
 }

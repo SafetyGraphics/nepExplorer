@@ -13,6 +13,6 @@ export default function clearParticipant() {
             .remove();
         containers.timeSeries.classed('wc-hidden', true);
         this.svg.selectAll('circle.wc-data-mark').classed('wc-selected', false);
-        this.hysteresisPlotContainer.selectAll('*').remove();
+        this.containers.hysteresisPlot.selectAll('*').remove();
     }
 }

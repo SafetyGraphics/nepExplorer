@@ -55,12 +55,12 @@ export default function renderer() {
         ],
         details: [{ value_col: 'AGE', label: 'Age' }],
         baseline_value: 'Y',
-        visit_window: 56,
+        visit_window: 9999,
         kdigo_criteria: [
             {
                 label: 'No AKI',
-                x: 0,
-                y: 0,
+                x: -Infinity,
+                y: -Infinity,
                 color: 'white'
             },
             {
@@ -85,8 +85,8 @@ export default function renderer() {
         kdigo_dc_criteria: [
             {
                 label: 'No AKI',
-                x: 0,
-                y: 0,
+                x: -Infinity,
+                y: -Infinity,
                 color: 'white'
             },
             {

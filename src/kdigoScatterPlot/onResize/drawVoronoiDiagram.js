@@ -1,6 +1,6 @@
 export default function drawVoronoiDiagram() {
     const mark = this.marks.find(mark => mark.type === 'circle');
-    this.voronoiDiagramContainer.selectAll('*').remove();
+    this.containers.voronoiDiagram.selectAll('*').remove();
     const uniquePoints = mark.data.reduce((uniqueValues, d) => {
         const existingValue = uniqueValues.find(
             di => di.values.x === d.values.x && di.values.y === d.values.y
@@ -17,7 +17,8 @@ export default function drawVoronoiDiagram() {
             [this.plot_width, this.plot_height]
         ]);
     const voronoiData = voronoiGenerator(uniquePoints);
-    const voronoiClipPaths = this.voronoiDiagramContainer
+    const voronoiClipPaths = this.containers.voronoiDiagram
+        .append('defs')
         .selectAll('clipPath')
         .data(voronoiData)
         .enter()
@@ -30,6 +31,7 @@ export default function drawVoronoiDiagram() {
         .attr({
             d: d => `M${d.join(',')}Z`
         });
+    mark.groups.selectAll('.wc-hover-mark').remove();
     const hoverMarks = mark.groups
         .filter(
             d =>
@@ -54,11 +56,11 @@ export default function drawVoronoiDiagram() {
 
     this.svg.selectAll('path.voronoi-partition').remove();
     if (this.nepExplorer.settings.synced.display_voronoi) {
-        const voronoiCells = this.svg
+        const voronoiCells = this.containers.voronoiDiagram
             .selectAll('path.voronoi-partition')
             .data(voronoiData)
             .enter()
-            .insert('path', '.wc-voronoi-diagram')
+            .insert('path', ':first-child')
             .attr({
                 class: d => `voronoi-partition`,
                 d: d => `M${d.join(',')}Z`

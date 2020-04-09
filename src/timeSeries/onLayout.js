@@ -1,4 +1,5 @@
-import addVoronoiDiagramContainer from '../kdigoScatterPlot/onLayout/addVoronoiDiagramContainer';
+import addChartContainers from './onLayout/addChartContainers';
+
 export default function onLayout() {
-    addVoronoiDiagramContainer.call(this);
+    addChartContainers.call(this);
 }

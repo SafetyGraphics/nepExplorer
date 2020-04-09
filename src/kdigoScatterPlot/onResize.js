@@ -1,4 +1,5 @@
 import drawKdigoStages from './onResize/drawKdigoStages';
+import drawOrigin from './onResize/drawOrigin';
 import drawVoronoiDiagram from './onResize/drawVoronoiDiagram';
 import updateTooltips from './onResize/updateTooltips';
 import addPointHover from './onResize/addPointHover';
@@ -9,6 +10,7 @@ import moveLegend from './onResize/moveLegend';
 
 export default function onResize() {
     drawKdigoStages.call(this);
+    drawOrigin.call(this);
     drawVoronoiDiagram.call(this);
     updateTooltips.call(this);
     addPointHover.call(this);

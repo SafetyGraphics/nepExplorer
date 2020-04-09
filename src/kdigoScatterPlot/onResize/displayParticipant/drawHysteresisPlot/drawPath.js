@@ -6,7 +6,7 @@ export default function drawPath() {
         .y(d => this.y(d.yClamped));
 
     // Draw path.
-    const visitPath = this.hysteresisPlotContainer
+    const visitPath = this.containers.hysteresisPlot
         .append('path')
         .attr('class', 'participant-visits')
         .datum(this.nepExplorer.data.participant.visits)
