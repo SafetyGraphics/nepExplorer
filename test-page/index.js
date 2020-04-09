@@ -4,8 +4,8 @@ fetch('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinica
     .then(data => {
         data.forEach(d => {
             d.ABLFL = d.VISIT === 'Screening' ? 'Y' : '';
-            if (Math.random() < .05)
-                d.STRESN = (+d.STRESN*Math.random()*5).toString();
+            //if (Math.random() < .05)
+            //    d.STRESN = (+d.STRESN*Math.random()*5).toString();
             d.AGEGRP = d.AGE < 25
                 ? '18-24'
                 : d.AGE < 35
