@@ -13,6 +13,8 @@ fetch('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinica
                 : d.AGE <= 45
                 ? '35-44'
                 : '>45';
+            if (d.DY > 8)
+                d.DY = Math.ceil(d.DY/8);
         });
         const creatinine = data.filter(d => d.TEST === 'Creatinine');
         creatinine
@@ -23,8 +25,8 @@ fetch('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinica
                 }
             });
         const settings = {
-            //color_by: 'ARM',
+            color_by: 'ARM',
         };
         const instance = nepExplorer('#container', settings);
-        instance.init(data, '02-008');
+        instance.init(data.filter(d => d.ARM !== 'Screen Failure'), '02-008');
     });

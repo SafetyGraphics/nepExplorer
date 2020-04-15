@@ -55,7 +55,7 @@ export default function renderer() {
         ],
         details: [{ value_col: 'AGE', label: 'Age' }],
         baseline_value: 'Y',
-        visit_window: 9999,
+        visit_window: 7,
         kdigo_criteria: [
             {
                 label: 'No AKI',

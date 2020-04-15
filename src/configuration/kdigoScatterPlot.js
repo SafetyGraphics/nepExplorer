@@ -8,7 +8,7 @@ export default function kdigoScatterPlot() {
             //domain: [1, null]
         },
         y: {
-            column: 'egfr_creat_pchg',
+            column: 'egfr_creat_pchg_inv',
             type: 'log',
             label: 'eGFR Percent Change',
             format: ',1d'

@@ -1,7 +1,7 @@
 import { createTable } from 'webcharts';
 
 export default function addKdigoLegend() {
-    this.kdigoSummary = this.config.criteria.map(stage => {
+    this.kdigoSummary = this.config.criteria.slice().reverse().map(stage => {
         const datum = { ...stage };
         datum.n = this.nepExplorer.data.filtered
             .filter(d => !d.missingMeasure && !d.singleVisit && !d.nonPositiveChange)
