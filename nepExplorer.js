@@ -299,16 +299,23 @@
             '.wc-subcomponent--kdigo-scatter-plot circle.wc-data-mark {',
             '    cursor: pointer;',
             '}',
-            '.wc-subcomponent--kdigo-scatter-plot circle.wc-data-mark {',
-            '    stroke: black;',
-            '    fill-opacity: 1;',
+            '.wc-subcomponent--kdigo-scatter-plot .wc-hysteresis-point-container circle.wc-hover-mark,',
+            '.wc-subcomponent--kdigo-scatter-plot .wc-hysteresis-point-container circle.wc-data-mark {',
+            '    cursor: default;',
+            '}',
+            '.wc-subcomponent--kdigo-scatter-plot circle.wc-data-mark {', //'    stroke: black;',
+            //'    fill-opacity: 1;',
             '    stroke-width: 1;',
             '}',
-            'circle.wc-data-mark:hover,',
             'circle.wc-data-mark.wc-highlighted,',
+            'circle.wc-hysteresis-point.wc-highlighted,',
             'circle.wc-data-mark.wc-selected {',
             '    stroke-width: 3;',
             '    stroke: black;',
+            '}',
+            'circle.wc-data-mark.wc-deemphasized:not(.wc-highlighted) {',
+            '    stroke-opacity: .25;',
+            '    fill-opacity: .25;',
             '}',
             '.kdigo-stage {',
             '    stroke: black;',
@@ -683,9 +690,11 @@
 
                 var visitWindows = cartesianProduct(studydays, studydays)
                     .filter(function(d) {
-                        return d[1] > d[0] && d[1] - d[0] <= settings.visit_window;
-                    }) // visit 2 is later than visit 1 and the difference between the visits is less than or equal to the visit window
+                        return d[1] > d[0];
+                    }) // && d[1] - d[0] <= settings.visit_window) // visit 2 is later than visit 1 and the difference between the visits is less than or equal to the visit window
                     .map(function(visitWindow) {
+                        var visit_window = visitWindow[1] - visitWindow[0];
+                        var in_window = visit_window <= settings.visit_window;
                         var vis1 = data.find(function(d) {
                             return d.studyday === visitWindow[0];
                         });
@@ -693,20 +702,25 @@
                             return d.studyday === visitWindow[1];
                         });
                         var chg = vis2.result - vis1.result;
-                        var fchg = vis1.result > 0 ? round(vis2.result / vis1.result) : null;
                         var pchg =
                             vis1.result > 0 ? round((vis2.result / vis1.result - 1) * 100) : null;
+                        var pchg_inv = pchg !== null ? pchg * -1 : null;
                         return {
                             visitWindow: visitWindow,
                             studyday1: visitWindow[0],
                             studyday2: visitWindow[1],
+                            visit_window: visit_window,
+                            in_window: in_window,
                             vis1: vis1,
                             vis2: vis2,
                             chg: chg,
-                            fchg: fchg,
-                            pchg: pchg
+                            pchg: pchg,
+                            pchg_inv: pchg_inv
                         };
-                    }); // baseline comparison
+                    });
+                var insideVisitWindow = visitWindows.filter(function(visitWindow) {
+                    return visitWindow.in_window;
+                }); // baseline comparison
 
                 var baseline = data.find(function(d) {
                     return Array.isArray(settings.baseline_value)
@@ -714,13 +728,13 @@
                         : settings.baseline_value === d.baseline;
                 });
                 data.forEach(function(d) {
+                    d.baseline_result = baseline ? baseline.result : null;
                     d.chg = baseline ? d.result - baseline.result : null;
-                    d.fchg =
-                        baseline && baseline.result > 0 ? round(d.result / baseline.result) : null;
                     d.pchg =
                         baseline && baseline.result > 0
                             ? round((d.result / baseline.result - 1) * 100)
                             : null;
+                    d.pchg_inv = d.pchg !== null ? d.pchg * -1 : null;
                     d.xuln = d.result > 0 && d.uln > 0 ? round(d.result / d.uln) : null;
                 });
                 var datum = {
@@ -735,24 +749,24 @@
                     // extreme change from baseline
                     min_chg_b: getExtremum(data, 'min', 'chg'),
                     max_chg_b: getExtremum(data, 'max', 'chg'),
-                    min_fchg_b: getExtremum(data, 'min', 'fchg'),
-                    max_fchg_b: getExtremum(data, 'max', 'fchg'),
                     min_pchg_b: getExtremum(data, 'min', 'pchg'),
                     max_pchg_b: getExtremum(data, 'max', 'pchg'),
                     // extreme change between visits
-                    min_chg: getExtremum(visitWindows, 'min', 'chg'),
-                    max_chg: getExtremum(visitWindows, 'max', 'chg'),
-                    min_fchg: getExtremum(visitWindows, 'min', 'fchg'),
-                    max_fchg: getExtremum(visitWindows, 'max', 'fchg'),
-                    min_pchg: getExtremum(visitWindows, 'min', 'pchg'),
-                    max_pchg: getExtremum(visitWindows, 'max', 'pchg')
+                    min_chg: getExtremum(insideVisitWindow, 'min', 'chg'),
+                    max_chg: getExtremum(insideVisitWindow, 'max', 'chg'),
+                    min_pchg: getExtremum(insideVisitWindow, 'min', 'pchg'),
+                    max_pchg: getExtremum(insideVisitWindow, 'max', 'pchg')
                 };
+                datum.min_pchg_b_inv = datum.min_pchg_b !== null ? datum.min_pchg_b * -1 : null;
+                datum.max_pchg_b_inv = datum.max_pchg_b !== null ? datum.max_pchg_b * -1 : null;
+                datum.min_pchg_inv = datum.min_pchg !== null ? datum.min_pchg * -1 : null;
+                datum.max_pchg_inv = datum.max_pchg !== null ? datum.max_pchg * -1 : null;
                 return datum;
             })
             .entries(data); // Capture measure-level results at participant level.
 
         var measures = ['creat', 'cystatc', 'egfr_creat', 'egfr_cystatc'];
-        var results = ['chg', 'fchg', 'pchg'];
+        var results = ['chg', 'pchg', 'pchg_inv'];
         participantLevel.forEach(function(d) {
             var datum = data.find(function(di) {
                 return di[settings.id_col] === d.key;
@@ -790,6 +804,8 @@
         ) {
             var containers = this.nepExplorer.containers;
             delete this.nepExplorer.data.participant;
+            delete this.visitPath;
+            delete this.visitPoints;
             containers.detailsHeaderText.text('Click a point to view participant details.');
             containers.detailsClear.classed('wc-hidden', true);
             containers.detailsParticipant
@@ -797,7 +813,10 @@
                 .selectAll('*')
                 .remove();
             containers.timeSeries.classed('wc-hidden', true);
-            this.svg.selectAll('circle.wc-data-mark').classed('wc-selected', false);
+            this.svg
+                .selectAll('circle.wc-data-mark')
+                .classed('wc-deemphasized', false)
+                .classed('wc-selected', false);
             this.containers.hysteresisPlot.selectAll('*').remove();
         }
     }
@@ -949,7 +968,7 @@
                 }
             ],
             baseline_value: 'Y',
-            visit_window: 9999,
+            visit_window: 7,
             kdigo_criteria: [
                 {
                     label: 'No AKI',
@@ -1014,7 +1033,7 @@
                 format: ',1d' //domain: [1, null]
             },
             y: {
-                column: 'egfr_creat_pchg',
+                column: 'egfr_creat_pchg_inv',
                 type: 'log',
                 label: 'eGFR Percent Change',
                 format: ',1d' //domain: [0, null]
@@ -1024,7 +1043,7 @@
                     type: 'circle',
                     per: ['key'],
                     tooltip: '[key]: $x,$y',
-                    radius: 3,
+                    radius: 4,
                     attributes: {}
                 }
             ],
@@ -1041,7 +1060,8 @@
                 right: 0,
                 left: 50,
                 bottom: 0
-            }
+            },
+            title: 'KDIGO Scatter Plot'
         };
     }
 
@@ -1418,7 +1438,12 @@
                 label: 'Y-axis',
                 description: 'From baseline',
                 option: 'y.column',
-                values: ['egfr_creat_pchg', 'egfr_cystatc_pchg', 'creat_chg', 'cystatc_chg'],
+                values: [
+                    'egfr_creat_pchg_inv',
+                    'egfr_cystatc_pchg_inv',
+                    'creat_chg',
+                    'cystatc_chg'
+                ],
                 require: true
             },
             {
@@ -1556,15 +1581,14 @@
                 switch (d.label) {
                     case 'X-axis':
                         updateOptionText.call(chart, options, function(text) {
-                            var result = text.split('_').pop();
+                            var result = text.substring(text.search(/_.?chg/) + 1);
                             var measure =
                                 chart.config.measure_values[text.replace('_'.concat(result), '')];
-                            return ''.concat(measure).concat(
+                            return ''.concat(measure, ' ').concat(
                                 result
-                                    .replace('chg', '')
-                                    .replace('f', ' Fold')
-                                    .replace('p', ' Percent'),
-                                ' Change'
+                                    .replace(/^chg$/, 'Change')
+                                    .replace(/^pchg$/, 'Percent Increase')
+                                    .replace(/^pchg_inv$/, 'Percent Decrease')
                             );
                         });
                         addChangeEventListener.call(chart, select);
@@ -1572,15 +1596,14 @@
 
                     case 'Y-axis':
                         updateOptionText.call(chart, options, function(text) {
-                            var result = text.split('_').pop();
+                            var result = text.substring(text.search(/_.?chg/) + 1);
                             var measure =
                                 chart.config.measure_values[text.replace('_'.concat(result), '')];
-                            return ''.concat(measure).concat(
+                            return ''.concat(measure, ' ').concat(
                                 result
-                                    .replace('chg', '')
-                                    .replace('f', ' Fold')
-                                    .replace('p', ' Percent'),
-                                ' Change'
+                                    .replace(/^chg$/, 'Change')
+                                    .replace(/^pchg$/, 'Percent Increase')
+                                    .replace(/^pchg_inv$/, 'Percent Decrease')
                             );
                         });
                         addChangeEventListener.call(chart, select);
@@ -1609,7 +1632,7 @@
                 return d.label === 'Visit Window';
             });
         this.controls.visitWindow.selectAll('input').on('change', function() {
-            console.log(this.value);
+            console.log('Visit window: '.concat(this.value));
             chart.nepExplorer.settings.synced.visit_window = this.value;
             chart.nepExplorer.data.participants = defineParticipantLevelData(chart.nepExplorer);
             chart.draw();
@@ -1647,65 +1670,51 @@
         addChartContainers.call(this);
     }
 
-    function onPreprocess() {
+    function removeNonpositiveRecords() {
         var _this = this;
 
-        // removeNonPositiveRecords
         this.raw_data =
             this.config.x.type === 'log'
                 ? this.nepExplorer.data.participants.filter(function(d) {
                       return d[_this.config.y.column] > 0 && d[_this.config.x.column] > 0;
                   })
-                : this.nepExplorer.data.participants; //.filter(
-        //          d => d[this.config.y.column] >= 0 && d[this.config.x.column] >= 0
-        //      );
-        // updateYDomain
-        //this.config.y.domain[0] =
-        //    this.config.x.type === 'log'
-        //        ? d3.min(this.raw_data, d => d[this.config.y.column])
-        //        : this.config.y.column.includes('pchg')
-        //        ? 1
-        //        : 0;
-        //if (this.config.x.type !== 'linear') {
-        //    delete this.config.y.domain;
-        //    delete this.config.x.domain;
-        //}
-        // setXLabel
+                : this.nepExplorer.data.participants;
+    }
 
-        this.config.x.result = this.config.x.column.split('_').pop();
-        this.config.x.measure = this.config.measure_values[
-            this.config.x.column.replace('_'.concat(this.config.x.result), '')
-        ];
-        this.config.x.label = ''.concat(this.config.x.measure).concat(
-            this.config.x.result
-                .replace('chg', '')
-                .replace('f', ' Fold')
-                .replace('p', ' Percent'),
-            ' Change'
-        ); // setYLabel
+    function setAxisLabels() {
+        var _this = this;
 
-        this.config.y.result = this.config.y.column.split('_').pop();
-        this.config.y.measure = this.config.measure_values[
-            this.config.y.column.replace('_'.concat(this.config.y.result), '')
-        ];
-        this.config.y.label = ''.concat(this.config.y.measure).concat(
-            this.config.y.result
-                .replace('chg', '')
-                .replace('f', ' Fold')
-                .replace('p', ' Percent'),
-            ' Change'
-        ); // chooseCriteria
+        ['x', 'y'].forEach(function(axis) {
+            _this.config[axis].result = _this.config[axis].column.substring(
+                _this.config[axis].column.search(/_.?chg/) + 1
+            );
+            _this.config[axis].measure =
+                _this.config.measure_values[
+                    _this.config[axis].column.replace('_'.concat(_this.config[axis].result), '')
+                ];
+            _this.config[axis].label = ''.concat(_this.config[axis].measure, ' ').concat(
+                _this.config[axis].result
+                    .replace(/^chg$/, 'Change')
+                    .replace(/^pchg$/, 'Percent Increase')
+                    .replace(/^pchg_inv$/, 'Percent Decrease')
+            );
+        });
+    }
 
+    function identifyCriteria() {
         this.config.criteria = /_chg/.test(this.config.y.column)
             ? this.config.kdigo_dc_criteria // absolute change
-            : this.config.kdigo_criteria; // fold/percent change
-        // updateKdigoHeader
+            : this.config.kdigo_criteria; // percent change
 
         this.nepExplorer.containers.kdigoHeader.text(
             this.config.criteria === this.config.kdigo_criteria
                 ? 'KDIGO Scatter Plot'
                 : 'KDIGO-DC Scatter Plot'
-        ); // addVariables
+        );
+    }
+
+    function addVariables$1() {
+        var _this = this;
 
         this.nepExplorer.data.participants.forEach(function(participant) {
             // defineKdigoStage
@@ -1732,10 +1741,10 @@
                 return measure.key === _this.config.y.measure;
             }); // missing a measure
 
-            participant.missingMeasure = x === undefined || y === undefined; // results only at one visit
+            participant.missingResult = x === undefined || y === undefined; // results only at one visit
 
             participant.singleVisit =
-                !participant.missingMeasure &&
+                !participant.missingResult &&
                 ((x !== undefined &&
                     x.values.data.filter(function(d) {
                         return !isNaN(d.result);
@@ -1743,28 +1752,70 @@
                     (y !== undefined &&
                         y.values.data.filter(function(d) {
                             return !isNaN(d.result);
-                        }).length === 1)); // log axis and nonpositive maximal change
+                        }).length === 1)); // results outside visit window
+
+            var xVisitWindow =
+                x !== undefined
+                    ? d3.min(x.values.visitWindows, function(visitWindow) {
+                          return visitWindow.studyday2 - visitWindow.studyday1;
+                      })
+                    : undefined;
+            var yVisitWindow =
+                y !== undefined
+                    ? d3.min(y.values.visitWindows, function(visitWindow) {
+                          return visitWindow.studyday2 - visitWindow.studyday1;
+                      })
+                    : undefined;
+            participant.outsideWindow =
+                !participant.singleVisit &&
+                (xVisitWindow > _this.config.visit_window ||
+                    yVisitWindow > _this.config.visit_window); // log axis and nonpositive maximal change
 
             participant.nonPositiveChange =
-                !participant.singleVisit &&
+                !participant.outsideWindow &&
                 _this.config.x.type === 'log' &&
                 (participant[_this.config.x.column] <= 0 ||
                     participant[_this.config.y.column] <= 0);
-            participant.status = participant.missingMeasure
-                ? 'Missing measure'
+            participant.status = participant.missingResult
+                ? 'Missing result'
                 : participant.singleVisit
                 ? 'Single visit'
                 : participant.nonPositiveChange
                 ? 'Nonpositive change'
+                : participant.outsideWindow
+                ? 'Outside visit window'
                 : participant.kdigo;
-        }); // setLegendLabel
+        });
+    }
 
-        this.config.legend.label =
-            this.config.color_by && this.config.color_by !== 'None'
-                ? this.config.groups.find(function(group) {
-                      return group.value_col === _this.config.color_by;
-                  }).label
-                : 'All Participants';
+    function updateGrouping() {
+        var _this = this;
+
+        if (this.config.color_by && this.config.color_by !== 'None') {
+            this.config.color_dom = _toConsumableArray(
+                new Set(
+                    this.nepExplorer.data.participants.map(function(participant) {
+                        return participant[_this.config.color_by];
+                    })
+                ).values()
+            ).sort();
+            this.config.legend.order = this.config.color_dom.slice();
+            this.config.legend.label = this.config.groups.find(function(group) {
+                return group.value_col === _this.config.color_by;
+            }).label;
+        } else {
+            delete this.config.color_dom;
+            delete this.config.legend.order;
+            this.config.legend.label = 'All Participants';
+        }
+    }
+
+    function onPreprocess() {
+        removeNonpositiveRecords.call(this);
+        setAxisLabels.call(this);
+        identifyCriteria.call(this);
+        addVariables$1.call(this);
+        updateGrouping.call(this);
     }
 
     function onDatatransform() {}
@@ -1804,8 +1855,20 @@
     }
 
     function updateDomains() {
-        this.x_dom[1] = Math.max(this.x_dom[1], 3);
-        this.y_dom[1] = Math.max(this.y_dom[1], 75);
+        this.x_dom[0] = Math.min(this.x_dom[0], this.config.y.type === 'log' ? 1 : 0);
+        this.x_dom[1] = Math.max(
+            this.x_dom[1],
+            d3.max(this.config.criteria, function(criterion) {
+                return criterion.x;
+            })
+        );
+        this.y_dom[0] = Math.min(this.y_dom[0], this.config.y.type === 'log' ? 1 : 0);
+        this.y_dom[1] = Math.max(
+            this.y_dom[1],
+            d3.max(this.config.criteria, function(criterion) {
+                return criterion.y;
+            })
+        );
     }
 
     function onDraw() {
@@ -1915,13 +1978,23 @@
         var mark = this.marks.find(function(mark) {
             return mark.type === 'circle';
         });
-        this.containers.voronoiDiagram.selectAll('*').remove();
-        var uniquePoints = mark.data.reduce(function(uniqueValues, d) {
+        this.containers.voronoiDiagram.selectAll('*').remove(); // add hysteresis plot points to voronoi data
+
+        var markData =
+            this.nepExplorer.participant && this.config.title === 'KDIGO Scatter Plot'
+                ? mark.data.concat(
+                      this.nepExplorer.data.participant.visits.filter(function(d, i) {
+                          return i !== 0;
+                      })
+                  )
+                : mark.data; // voronoi requires a unique set of coordinates
+
+        var uniquePoints = markData.reduce(function(uniqueValues, d) {
             var existingValue = uniqueValues.find(function(di) {
                 return di.values.x === d.values.x && di.values.y === d.values.y;
             });
             return existingValue ? uniqueValues : [].concat(_toConsumableArray(uniqueValues), [d]);
-        }, []); // voronoi requires a unique set of coordinates
+        }, []); // voronoi generator
 
         var voronoiGenerator = d3.geom
             .voronoi()
@@ -1934,8 +2007,10 @@
             .clipExtent([
                 [0, 0],
                 [this.plot_width, this.plot_height]
-            ]);
-        var voronoiData = voronoiGenerator(uniquePoints);
+            ]); // pass coordinates to voronoi generator
+
+        var voronoiData = voronoiGenerator(uniquePoints); // add clipPaths for each voronoi partition
+
         var voronoiClipPaths = this.containers.voronoiDiagram
             .append('defs')
             .selectAll('clipPath')
@@ -1957,7 +2032,8 @@
                 d: function d(_d) {
                     return 'M'.concat(_d.join(','), 'Z');
                 }
-            });
+            }); // add gigantic circles on top of each point to make hovering easier
+
         mark.groups.selectAll('.wc-hover-mark').remove();
         var hoverMarks = mark.groups
             .filter(function(d) {
@@ -1968,7 +2044,7 @@
                     d.values.y <= _this.y_dom[1]
                 );
             })
-            .insert('circle', ':first-child')
+            .append('circle')
             .classed('wc-hover-mark', true)
             .attr('clip-path', function(d) {
                 return 'url(#wc-voronoi__cell--'.concat(
@@ -1991,7 +2067,8 @@
             .attr('r', 50)
             .style('fill', 'lightblue')
             .style('pointer-events', 'all')
-            .style('fill-opacity', 0);
+            .style('fill-opacity', 0); // add paths for each voronoi partition to view voronoi diagram
+
         this.svg.selectAll('path.voronoi-partition').remove();
 
         if (this.nepExplorer.settings.synced.display_voronoi) {
@@ -2087,6 +2164,21 @@
                     .select('.wc-data-mark')
                     .classed('wc-highlighted', false);
             });
+
+        if (this.containers.hasOwnProperty('hysteresisPlot')) {
+            this.containers.hysteresisPlot
+                .selectAll('circle')
+                .on('mouseover', function(d) {
+                    d3.select(this.parentNode)
+                        .select('.wc-hysteresis-point')
+                        .classed('wc-highlighted', true);
+                })
+                .on('mouseout', function(d) {
+                    d3.select(this.parentNode)
+                        .select('.wc-hysteresis-point')
+                        .classed('wc-highlighted', false);
+                });
+        }
     }
 
     function highlightPoint() {
@@ -2096,7 +2188,10 @@
             .find(function(mark) {
                 return mark.type === 'circle';
             })
-            .circles.classed('wc-selected', function(d) {
+            .circles.classed('wc-deemphasized', function(d) {
+                return d.key !== _this.nepExplorer.participant;
+            })
+            .classed('wc-selected', function(d) {
                 return d.key === _this.nepExplorer.participant;
             });
     }
@@ -2183,7 +2278,13 @@
 
                 visitObj.kdigo = kdigo
                     ? kdigo.label.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
-                    : '???';
+                    : '???'; // for voronoi diagram
+
+                visitObj.values = {
+                    x: visitObj.x,
+                    y: visitObj.y
+                };
+                visitObj.key = 'study-day-'.concat(studyday);
                 return visitObj;
             })
             .sort(function(a, b) {
@@ -2245,7 +2346,8 @@
             var x = chart.x(d.xClamped);
             var y = chart.y(d.yClamped);
             var color = chart.colorScale(d[chart.config.color_by]);
-            var width = 5;
+            var width = 5; // clamped on the left or right side of the chart
+
             if (['<', '>'].includes(d.xIsClamped))
                 visitContainer
                     .append('polygon')
@@ -2267,7 +2369,8 @@
                             [d.xIsClamped === '<' ? x - width : x + width, y],
                             [x, y + width]
                         ]
-                    });
+                    }); // clamped on the bottom or top of the chart
+
             if (['<', '>'].includes(d.yIsClamped))
                 visitContainer
                     .append('polygon')
@@ -2289,7 +2392,8 @@
                             [x + width, y],
                             [x, d.yIsClamped === '<' ? y + width : y - width]
                         ]
-                    });
+                    }); // not clamped
+
             if (!d.xIsClamped && !d.yIsClamped)
                 visitContainer
                     .append('circle')
@@ -2309,7 +2413,29 @@
                         r: chart.config.marks.find(function(mark) {
                             return mark.type === 'circle';
                         }).radius
-                    });
+                    }); // add gigantic circles on top of each point to make hovering easier
+
+            visitContainer
+                .append('circle')
+                .classed('wc-hover-mark', true)
+                .attr('clip-path', function(d) {
+                    return 'url(#wc-voronoi__cell--'.concat(
+                        d.key.toLowerCase().replace(/ /g, '-'),
+                        ')'
+                    );
+                })
+                .style('clip-path', function(d) {
+                    return 'url(#wc-voronoi__cell--'.concat(
+                        d.key.toLowerCase().replace(/ /g, '-'),
+                        ')'
+                    );
+                })
+                .attr('cx', x)
+                .attr('cy', y)
+                .attr('r', 50)
+                .style('fill', 'lightblue')
+                .style('pointer-events', 'all')
+                .style('fill-opacity', 0);
         }); //custom titles for points on mouseover
 
         visitContainers.append('title').text(function(d) {
@@ -2438,20 +2564,23 @@
     function addKdigoLegend() {
         var _this = this;
 
-        this.kdigoSummary = this.config.criteria.map(function(stage) {
-            var datum = _objectSpread2({}, stage);
+        this.kdigoSummary = this.config.criteria
+            .slice()
+            .reverse()
+            .map(function(stage) {
+                var datum = _objectSpread2({}, stage);
 
-            datum.n = _this.nepExplorer.data.filtered
-                .filter(function(d) {
-                    return !d.missingMeasure && !d.singleVisit && !d.nonPositiveChange;
-                })
-                .filter(function(d) {
-                    return d.kdigo === datum.label;
-                }).length;
-            datum.rate = datum.n / _this.nepExplorer.data.participants.length;
-            datum.pct = d3.format('.1%')(datum.rate);
-            return datum;
-        });
+                datum.n = _this.nepExplorer.data.filtered
+                    .filter(function(d) {
+                        return !d.missingMeasure && !d.singleVisit && !d.nonPositiveChange;
+                    })
+                    .filter(function(d) {
+                        return d.kdigo === datum.label;
+                    }).length;
+                datum.rate = datum.n / _this.nepExplorer.data.participants.length;
+                datum.pct = d3.format('.1%')(datum.rate);
+                return datum;
+            });
         this.statusSummary = d3
             .nest()
             .key(function(d) {
@@ -2544,11 +2673,15 @@
     function onResize() {
         drawKdigoStages.call(this);
         drawOrigin.call(this);
-        drawVoronoiDiagram.call(this);
         updateTooltips.call(this);
-        addPointHover.call(this);
-        addPointClick.call(this);
-        displayParticipant.call(this);
+        displayParticipant.call(this); // draw hysteresis plot before voronoi digram to provide hysteresis plot points to voronoi digram
+
+        drawVoronoiDiagram.call(this); // add voronoi diagram after hysteresis plot to include hysteresis plot points in voronoi diagram
+
+        addPointHover.call(this); // add point hover after voronoi diagram to include hover marks in mouseover and mouseout event listeners
+
+        addPointClick.call(this); // add point click after voronoi diagram to include hover marks in click event listener
+
         addKdigoLegend.call(this);
         moveLegend.call(this);
     }
@@ -2621,6 +2754,14 @@
         setYDomain.call(this);
     }
 
+    function increaseYAxisTicks() {
+        var yAxis = this.svg.select('g.y.axis');
+        yAxis.selectAll('.tick').remove();
+        this.yAxis.ticks(4);
+        yAxis.call(this.yAxis);
+        this.drawGridlines();
+    }
+
     function drawReferenceLine() {
         var _this = this;
 
@@ -2681,7 +2822,7 @@
         this.svg.selectAll('.wc-diffs').remove();
 
         if (this.config.diff) {
-            var g = this.svg.insert('g', '.point-supergroup').classed('wc-diffs', true);
+            var g = this.svg.append('g').classed('wc-diffs', true);
             var mark = this.marks.find(function(mark) {
                 return mark.type === 'circle';
             });
@@ -2752,7 +2893,7 @@
                     }
                 });
             hoverLines.append('title').text(function(d) {
-                return 'Study day '
+                return 'Study Day: '
                     .concat(d.key, '\n')
                     .concat(d.values.measure1, ': ')
                     .concat(d.values.y1, ' (')
@@ -2776,15 +2917,81 @@
         }
     }
 
+    function updateTooltips$1() {
+        var chart = this;
+        var mark = this.marks.find(function(mark) {
+            return mark.type === 'circle';
+        });
+        mark.groups.each(function(d, i) {
+            var title = d3.select(this).selectAll('title');
+            var datum = d.values.raw[0];
+            var variables = [
+                {
+                    value_col: 'studyday',
+                    label: 'Study Day'
+                },
+                {
+                    value_col: 'visit',
+                    label: 'Visit'
+                },
+                {
+                    value_col: 'visitn',
+                    label: 'Visit Number'
+                },
+                {
+                    value_col: 'measure',
+                    label: 'Measure'
+                },
+                {
+                    value_col: 'result',
+                    label: 'Result'
+                }
+            ];
+
+            if (
+                datum.baseline !== chart.config.baseline_value &&
+                !isNaN(datum.baseline_result) &&
+                datum.baseline_result !== null
+            ) {
+                variables.push({
+                    value_col: 'baseline_result',
+                    label: 'Baseline Result'
+                });
+                variables.push({
+                    value_col: 'chg',
+                    label: 'Change from Baseline'
+                });
+                variables.push({
+                    value_col: 'pchg',
+                    label: 'Percent Change from Baseline'
+                });
+            }
+
+            if (datum.xuln !== null)
+                variables.push({
+                    value_col: 'xuln',
+                    label: 'Result xULN'
+                });
+            var tooltip = variables
+                .map(function(variable) {
+                    return ''.concat(variable.label, ': ').concat(datum[variable.value_col]);
+                })
+                .join('\n');
+            title.text(tooltip);
+        });
+    }
+
     function moveLegend$1() {
         this.div.appendChild(this.legend.classed('legend--time-series', true).node());
     }
 
     function onResize$1() {
+        increaseYAxisTicks.call(this);
         drawVoronoiDiagram.call(this);
         drawReferenceLine.call(this);
         drawDifference.call(this);
         addPointHover.call(this);
+        updateTooltips$1.call(this);
         moveLegend$1.call(this);
     }
 

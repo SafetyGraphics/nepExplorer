@@ -8,7 +8,7 @@ export default function kdigoScatterPlot() {
             //domain: [1, null]
         },
         y: {
-            column: 'egfr_creat_pchg',
+            column: 'egfr_creat_pchg_inv',
             type: 'log',
             label: 'eGFR Percent Change',
             format: ',1d'
@@ -19,7 +19,7 @@ export default function kdigoScatterPlot() {
                 type: 'circle',
                 per: ['key'],
                 tooltip: '[key]: $x,$y',
-                radius: 3,
+                radius: 4,
                 attributes: {}
             }
         ],
@@ -36,6 +36,7 @@ export default function kdigoScatterPlot() {
             right: 0,
             left: 50,
             bottom: 0
-        }
+        },
+        title: 'KDIGO Scatter Plot'
     };
 }

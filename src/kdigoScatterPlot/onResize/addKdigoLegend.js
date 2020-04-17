@@ -1,16 +1,19 @@
 import { createTable } from 'webcharts';
 
 export default function addKdigoLegend() {
-    this.kdigoSummary = this.config.criteria.map(stage => {
-        const datum = { ...stage };
-        datum.n = this.nepExplorer.data.filtered
-            .filter(d => !d.missingMeasure && !d.singleVisit && !d.nonPositiveChange)
-            .filter(d => d.kdigo === datum.label).length;
-        datum.rate = datum.n / this.nepExplorer.data.participants.length;
-        datum.pct = d3.format('.1%')(datum.rate);
+    this.kdigoSummary = this.config.criteria
+        .slice()
+        .reverse()
+        .map(stage => {
+            const datum = { ...stage };
+            datum.n = this.nepExplorer.data.filtered
+                .filter(d => !d.missingMeasure && !d.singleVisit && !d.nonPositiveChange)
+                .filter(d => d.kdigo === datum.label).length;
+            datum.rate = datum.n / this.nepExplorer.data.participants.length;
+            datum.pct = d3.format('.1%')(datum.rate);
 
-        return datum;
-    });
+            return datum;
+        });
     this.statusSummary = d3
         .nest()
         .key(d => d.status)

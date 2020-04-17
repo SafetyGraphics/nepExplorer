@@ -69,6 +69,13 @@ export default function defineVisitLevelData() {
                 ? kdigo.label.replace(/stage_(\d)/, 'Stage $1 AKI').replace('no_aki', 'No AKI')
                 : '???';
 
+            // for voronoi diagram
+            visitObj.values = {
+                x: visitObj.x,
+                y: visitObj.y
+            };
+            visitObj.key = `study-day-${studyday}`;
+
             return visitObj;
         })
         .sort((a, b) => a.studyday - b.studyday)

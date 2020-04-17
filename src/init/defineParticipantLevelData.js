@@ -14,26 +14,31 @@ export default function defineParticipantLevelData({
             // visit comparisons
             const studydays = [...new Set(data.map(d => d.studyday)).values()];
             const visitWindows = cartesianProduct(studydays, studydays)
-                .filter(d => d[1] > d[0] && d[1] - d[0] <= settings.visit_window) // visit 2 is later than visit 1 and the difference between the visits is less than or equal to the visit window
+                .filter(d => d[1] > d[0]) // && d[1] - d[0] <= settings.visit_window) // visit 2 is later than visit 1 and the difference between the visits is less than or equal to the visit window
                 .map(visitWindow => {
+                    const visit_window = visitWindow[1] - visitWindow[0];
+                    const in_window = visit_window <= settings.visit_window;
                     const vis1 = data.find(d => d.studyday === visitWindow[0]);
                     const vis2 = data.find(d => d.studyday === visitWindow[1]);
                     const chg = vis2.result - vis1.result;
-                    const fchg = vis1.result > 0 ? round(vis2.result / vis1.result) : null;
                     const pchg =
                         vis1.result > 0 ? round((vis2.result / vis1.result - 1) * 100) : null;
+                    const pchg_inv = pchg !== null ? pchg * -1 : null;
 
                     return {
                         visitWindow,
                         studyday1: visitWindow[0],
                         studyday2: visitWindow[1],
+                        visit_window,
+                        in_window,
                         vis1,
                         vis2,
                         chg,
-                        fchg,
-                        pchg
+                        pchg,
+                        pchg_inv
                     };
                 });
+            const insideVisitWindow = visitWindows.filter(visitWindow => visitWindow.in_window);
 
             // baseline comparison
             const baseline = data.find(d =>
@@ -43,12 +48,13 @@ export default function defineParticipantLevelData({
             );
 
             data.forEach(d => {
+                d.baseline_result = baseline ? baseline.result : null;
                 d.chg = baseline ? d.result - baseline.result : null;
-                d.fchg = baseline && baseline.result > 0 ? round(d.result / baseline.result) : null;
                 d.pchg =
                     baseline && baseline.result > 0
                         ? round((d.result / baseline.result - 1) * 100)
                         : null;
+                d.pchg_inv = d.pchg !== null ? d.pchg * -1 : null;
                 d.xuln = d.result > 0 && d.uln > 0 ? round(d.result / d.uln) : null;
             });
 
@@ -61,19 +67,20 @@ export default function defineParticipantLevelData({
                 // extreme change from baseline
                 min_chg_b: getExtremum(data, 'min', 'chg'),
                 max_chg_b: getExtremum(data, 'max', 'chg'),
-                min_fchg_b: getExtremum(data, 'min', 'fchg'),
-                max_fchg_b: getExtremum(data, 'max', 'fchg'),
                 min_pchg_b: getExtremum(data, 'min', 'pchg'),
                 max_pchg_b: getExtremum(data, 'max', 'pchg'),
 
                 // extreme change between visits
-                min_chg: getExtremum(visitWindows, 'min', 'chg'),
-                max_chg: getExtremum(visitWindows, 'max', 'chg'),
-                min_fchg: getExtremum(visitWindows, 'min', 'fchg'),
-                max_fchg: getExtremum(visitWindows, 'max', 'fchg'),
-                min_pchg: getExtremum(visitWindows, 'min', 'pchg'),
-                max_pchg: getExtremum(visitWindows, 'max', 'pchg')
+                min_chg: getExtremum(insideVisitWindow, 'min', 'chg'),
+                max_chg: getExtremum(insideVisitWindow, 'max', 'chg'),
+                min_pchg: getExtremum(insideVisitWindow, 'min', 'pchg'),
+                max_pchg: getExtremum(insideVisitWindow, 'max', 'pchg')
             };
+
+            datum.min_pchg_b_inv = datum.min_pchg_b !== null ? datum.min_pchg_b * -1 : null;
+            datum.max_pchg_b_inv = datum.max_pchg_b !== null ? datum.max_pchg_b * -1 : null;
+            datum.min_pchg_inv = datum.min_pchg !== null ? datum.min_pchg * -1 : null;
+            datum.max_pchg_inv = datum.max_pchg !== null ? datum.max_pchg * -1 : null;
 
             return datum;
         })
@@ -81,7 +88,7 @@ export default function defineParticipantLevelData({
 
     // Capture measure-level results at participant level.
     const measures = ['creat', 'cystatc', 'egfr_creat', 'egfr_cystatc'];
-    const results = ['chg', 'fchg', 'pchg'];
+    const results = ['chg', 'pchg', 'pchg_inv'];
     participantLevel.forEach(d => {
         const datum = data.find(di => di[settings.id_col] === d.key);
 

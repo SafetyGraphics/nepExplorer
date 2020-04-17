@@ -7,7 +7,7 @@ export default function updateVisitWindow() {
         .selectAll('.control-group')
         .filter(d => d.label === 'Visit Window');
     this.controls.visitWindow.selectAll('input').on('change', function() {
-        console.log(this.value);
+        console.log(`Visit window: ${this.value}`);
         chart.nepExplorer.settings.synced.visit_window = this.value;
         chart.nepExplorer.data.participants = defineParticipantLevelData(chart.nepExplorer);
         chart.draw();

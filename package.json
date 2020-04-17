@@ -1,7 +1,7 @@
 {
     "name": "nep-explorer",
     "description": "Interactive Graphic for Exploring Kidney Function Data in Clinical Trials",
-    "version": "0.8.0",
+    "version": "0.9.0",
     "author": "Rho, Inc.",
     "license": "MIT",
     "homepage": "https://github.com/SafetyGraphics/nep-explorer",

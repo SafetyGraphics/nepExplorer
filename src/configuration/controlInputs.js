@@ -13,7 +13,7 @@ export default function controlInputs() {
             label: 'Y-axis',
             description: 'From baseline',
             option: 'y.column',
-            values: ['egfr_creat_pchg', 'egfr_cystatc_pchg', 'creat_chg', 'cystatc_chg'],
+            values: ['egfr_creat_pchg_inv', 'egfr_cystatc_pchg_inv', 'creat_chg', 'cystatc_chg'],
             require: true
         },
         {

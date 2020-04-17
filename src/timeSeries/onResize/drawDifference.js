@@ -2,7 +2,7 @@ export default function drawDifference() {
     this.svg.selectAll('.wc-diffs').remove();
 
     if (this.config.diff) {
-        const g = this.svg.insert('g', '.point-supergroup').classed('wc-diffs', true);
+        const g = this.svg.append('g').classed('wc-diffs', true);
         const mark = this.marks.find(mark => mark.type === 'circle');
         const matches = d3
             .nest()
@@ -55,7 +55,7 @@ export default function drawDifference() {
             .append('title')
             .text(
                 d =>
-                    `Study day ${d.key}\n${d.values.measure1}: ${d.values.y1} (${d.values.result1})\n${d.values.measure2}: ${d.values.y2} (${d.values.result2})\nDifference: ${d.values.diff}`
+                    `Study Day: ${d.key}\n${d.values.measure1}: ${d.values.y1} (${d.values.result1})\n${d.values.measure2}: ${d.values.y2} (${d.values.result2})\nDifference: ${d.values.diff}`
             );
         hoverLines
             .on('mouseover', function(d) {
