@@ -13,28 +13,22 @@ export default function labelOptions() {
                 case 'X-axis':
                     updateOptionText.call(chart, options, function(text) {
                         const result = text.substring(text.search(/_.?chg/) + 1);
-                        const measure = chart.config.measure_values[
-                            text.replace(`_${result}`, '')
-                        ];
+                        const measure = chart.config.measure_values[text.replace(`_${result}`, '')];
                         return `${measure} ${result
                             .replace(/^chg$/, 'Change')
                             .replace(/^pchg$/, 'Percent Increase')
-                            .replace(/^pchg_inv$/, 'Percent Decrease')
-                        }`;
+                            .replace(/^pchg_inv$/, 'Percent Decrease')}`;
                     });
                     addChangeEventListener.call(chart, select);
                     break;
                 case 'Y-axis':
                     updateOptionText.call(chart, options, function(text) {
                         const result = text.substring(text.search(/_.?chg/) + 1);
-                        const measure = chart.config.measure_values[
-                            text.replace(`_${result}`, '')
-                        ];
+                        const measure = chart.config.measure_values[text.replace(`_${result}`, '')];
                         return `${measure} ${result
                             .replace(/^chg$/, 'Change')
                             .replace(/^pchg$/, 'Percent Increase')
-                            .replace(/^pchg_inv$/, 'Percent Decrease')
-                        }`;
+                            .replace(/^pchg_inv$/, 'Percent Decrease')}`;
                     });
                     addChangeEventListener.call(chart, select);
                     break;

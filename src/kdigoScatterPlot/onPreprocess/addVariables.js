@@ -28,20 +28,29 @@ export default function addVariables() {
                 (y !== undefined && y.values.data.filter(d => !isNaN(d.result)).length === 1));
 
         // results outside visit window
-        const xVisitWindow = x !== undefined
-            ? d3.min(x.values.visitWindows, visitWindow => visitWindow.studyday2 - visitWindow.studyday1)
-            : undefined;
-        const yVisitWindow = y !== undefined
-            ? d3.min(y.values.visitWindows, visitWindow => visitWindow.studyday2 - visitWindow.studyday1)
-            : undefined;
-        participant.outsideWindow = !participant.singleVisit &&
+        const xVisitWindow =
+            x !== undefined
+                ? d3.min(
+                      x.values.visitWindows,
+                      visitWindow => visitWindow.studyday2 - visitWindow.studyday1
+                  )
+                : undefined;
+        const yVisitWindow =
+            y !== undefined
+                ? d3.min(
+                      y.values.visitWindows,
+                      visitWindow => visitWindow.studyday2 - visitWindow.studyday1
+                  )
+                : undefined;
+        participant.outsideWindow =
+            !participant.singleVisit &&
             (xVisitWindow > this.config.visit_window || yVisitWindow > this.config.visit_window);
 
         // log axis and nonpositive maximal change
         participant.nonPositiveChange =
             !participant.outsideWindow &&
             this.config.x.type === 'log' &&
-                (participant[this.config.x.column] <= 0 || participant[this.config.y.column] <= 0);
+            (participant[this.config.x.column] <= 0 || participant[this.config.y.column] <= 0);
 
         participant.status = participant.missingResult
             ? 'Missing result'

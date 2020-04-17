@@ -15,6 +15,7 @@ export default function drawPoints() {
         const color = chart.colorScale(d[chart.config.color_by]);
         const width = 5;
 
+        // clamped on the left or right side of the chart
         if (['<', '>'].includes(d.xIsClamped))
             visitContainer
                 .append('polygon')
@@ -38,6 +39,7 @@ export default function drawPoints() {
                     ]
                 });
 
+        // clamped on the bottom or top of the chart
         if (['<', '>'].includes(d.yIsClamped))
             visitContainer
                 .append('polygon')
@@ -61,6 +63,7 @@ export default function drawPoints() {
                     ]
                 });
 
+        // not clamped
         if (!d.xIsClamped && !d.yIsClamped)
             visitContainer
                 .append('circle')
@@ -79,6 +82,25 @@ export default function drawPoints() {
                 .attr({
                     r: chart.config.marks.find(mark => mark.type === 'circle').radius
                 });
+
+        // add gigantic circles on top of each point to make hovering easier
+        visitContainer
+            .append('circle')
+            .classed('wc-hover-mark', true)
+            .attr(
+                'clip-path',
+                d => `url(#wc-voronoi__cell--${d.key.toLowerCase().replace(/ /g, '-')})`
+            )
+            .style(
+                'clip-path',
+                d => `url(#wc-voronoi__cell--${d.key.toLowerCase().replace(/ /g, '-')})`
+            )
+            .attr('cx', x)
+            .attr('cy', y)
+            .attr('r', 50)
+            .style('fill', 'lightblue')
+            .style('pointer-events', 'all')
+            .style('fill-opacity', 0);
     });
 
     //custom titles for points on mouseover

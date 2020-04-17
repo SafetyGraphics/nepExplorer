@@ -1,13 +1,23 @@
 export default function drawVoronoiDiagram() {
     const mark = this.marks.find(mark => mark.type === 'circle');
     this.containers.voronoiDiagram.selectAll('*').remove();
-    const uniquePoints = mark.data.reduce((uniqueValues, d) => {
+
+    // add hysteresis plot points to voronoi data
+    const markData =
+        this.nepExplorer.participant && this.config.title === 'KDIGO Scatter Plot'
+            ? mark.data.concat(this.nepExplorer.data.participant.visits.filter((d, i) => i !== 0))
+            : mark.data;
+
+    // voronoi requires a unique set of coordinates
+    const uniquePoints = markData.reduce((uniqueValues, d) => {
         const existingValue = uniqueValues.find(
             di => di.values.x === d.values.x && di.values.y === d.values.y
         );
 
         return existingValue ? uniqueValues : [...uniqueValues, d];
-    }, []); // voronoi requires a unique set of coordinates
+    }, []);
+
+    // voronoi generator
     const voronoiGenerator = d3.geom
         .voronoi()
         .x(d => this.x(d.values.x))
@@ -16,7 +26,11 @@ export default function drawVoronoiDiagram() {
             [0, 0],
             [this.plot_width, this.plot_height]
         ]);
+
+    // pass coordinates to voronoi generator
     const voronoiData = voronoiGenerator(uniquePoints);
+
+    // add clipPaths for each voronoi partition
     const voronoiClipPaths = this.containers.voronoiDiagram
         .append('defs')
         .selectAll('clipPath')
@@ -31,6 +45,8 @@ export default function drawVoronoiDiagram() {
         .attr({
             d: d => `M${d.join(',')}Z`
         });
+
+    // add gigantic circles on top of each point to make hovering easier
     mark.groups.selectAll('.wc-hover-mark').remove();
     const hoverMarks = mark.groups
         .filter(
@@ -40,7 +56,7 @@ export default function drawVoronoiDiagram() {
                 this.y_dom[0] <= d.values.y &&
                 d.values.y <= this.y_dom[1]
         )
-        .insert('circle', ':first-child')
+        .append('circle')
         .classed('wc-hover-mark', true)
         .attr('clip-path', d => `url(#wc-voronoi__cell--${d.key.toLowerCase().replace(/ /g, '-')})`)
         .style(
@@ -54,6 +70,7 @@ export default function drawVoronoiDiagram() {
         .style('pointer-events', 'all')
         .style('fill-opacity', 0);
 
+    // add paths for each voronoi partition to view voronoi diagram
     this.svg.selectAll('path.voronoi-partition').remove();
     if (this.nepExplorer.settings.synced.display_voronoi) {
         const voronoiCells = this.containers.voronoiDiagram
