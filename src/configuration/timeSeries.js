@@ -1,7 +1,6 @@
 import merge from '../util/merge';
 import timeSeriesSettings from './timeSeries/index';
 
-// TODO: add deep merge
 export default function timeSeries(chart) {
     const customSettings = timeSeriesSettings[chart]();
     const customKeys = Object.keys(customSettings);
