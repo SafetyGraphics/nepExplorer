@@ -1,1 +1,2 @@
-export default function onInit() {}
+export default function onInit() {
+}

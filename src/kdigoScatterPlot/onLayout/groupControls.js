@@ -1,7 +1,15 @@
 export default function groupControls() {
+    const chart = this;
+
     this.controls.controlGroups = this.controls.wrap
         .selectAll('.control-group')
         .attr('class', d => `control-group control-group--${d.type}`);
+
+    // attach each control group directly to controls object
+    this.controls.controlGroups.each(function(d) {
+        const property = d.label.toLowerCase().replace(/[^a-z_0-9]/g, '_');
+        chart.controls[property] = d3.select(this);
+    });
 
     // group filters
     this.controls.filters = this.controls.controlGroups.filter(d => d.type === 'subsetter');

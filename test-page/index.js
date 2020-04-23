@@ -26,6 +26,7 @@ fetch('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinica
             });
         const settings = {
             color_by: 'ARM',
+            visit_comparison: 'baseline',
         };
         const instance = nepExplorer('#container', settings);
         instance.init(data.filter(d => d.ARM !== 'Screen Failure'), '04-024');

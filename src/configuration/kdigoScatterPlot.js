@@ -2,14 +2,14 @@ export default function kdigoScatterPlot() {
     return {
         x: {
             column: 'creat_pchg',
-            type: 'log',
+            type: null,
             label: 'Creatinine Percent Change',
             format: ',1d'
             //domain: [1, null]
         },
         y: {
             column: 'egfr_creat_pchg_inv',
-            type: 'log',
+            type: null,
             label: 'eGFR Percent Change',
             format: ',1d'
             //domain: [0, null]

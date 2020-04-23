@@ -55,6 +55,8 @@ export default function renderer() {
         ],
         details: [{ value_col: 'AGE', label: 'Age' }],
         baseline_value: 'Y',
+        axis_type: 'linear',
+        visit_comparison: 'all visit windows',
         visit_window: 7,
         kdigo_criteria: [
             {

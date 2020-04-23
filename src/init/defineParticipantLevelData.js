@@ -88,7 +88,7 @@ export default function defineParticipantLevelData({
 
     // Capture measure-level results at participant level.
     const measures = ['creat', 'cystatc', 'egfr_creat', 'egfr_cystatc'];
-    const results = ['chg', 'pchg', 'pchg_inv'];
+    const results = ['chg', 'pchg', 'pchg_inv', 'chg_b', 'pchg_b', 'pchg_b_inv'];
     participantLevel.forEach(d => {
         const datum = data.find(di => di[settings.id_col] === d.key);
 
