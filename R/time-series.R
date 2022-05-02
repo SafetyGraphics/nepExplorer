@@ -19,6 +19,7 @@ library(tidyverse)
 #'
 #' @import ggplot2
 #' @import dplyr
+#' @import RColorBrewer
 #'
 #' @return ggplot object
 #' @export
@@ -34,13 +35,14 @@ drawPercentChange <- function(adlb, labs = c("Creatinine", "Cystatin C")){
   p <- ggplot(adlb_pct_chg, aes(x = DY, y = PCT_CHG, color = TEST)) +
     geom_line() + 
     geom_point() +
-    theme(legend.title = element_blank()) + #remove legend title
     theme_bw() + 
+    theme(legend.title = element_blank()) + #remove legend title
     annotate("text", x = max(adlb_pct_chg$DY)+.5, y = 0, label = "Baseline", color = "gray44")+ #add baseline label - this might not accommodate resizing...
     scale_y_continuous(name="Percent Change", labels = scales::percent_format(accuracy = 1)) + #format y axis
     xlab("Study Day") + #maybe move ticks to start at day 1 but keep increment automatic...
     geom_hline(yintercept=0, linetype="dashed", color = "gray") + #add baseline dashed line
-    coord_cartesian(xlim = c(1, max(adlb_pct_chg$DY)),  clip = 'off')  # allow baseline label off plot to keep things clean
+    coord_cartesian(xlim = c(1, max(adlb_pct_chg$DY)),  clip = 'off') +  # allow baseline label off plot to keep things clean+
+    scale_colour_manual(values = brewer.pal(9, "Set1")[-6]) #drop yellow
   
   return(p)
 }
@@ -52,19 +54,20 @@ drawRawChange <- function(adlb, labs = c("eGFR", "eGFRcys")){
     filter(TEST %in% labs) %>% 
     group_by(TEST) %>% 
     arrange(VISITN) %>% #sort by visit order
-    mutate(CHG = (STRESN - STRESN[1L])) %>% # for each visit, calculate % change from first visit 
+    mutate(CHG = STRESN - STRESN[1L]) %>% # for each visit, calculate % change from first visit 
     ungroup()
   
-  p <- ggplot(adlb_pct_chg, aes(x = DY, y = CHG, color = TEST)) +
+  p <- ggplot(adlb_raw_chg, aes(x = DY, y = CHG, color = TEST)) +
     geom_line() + 
     geom_point() +
-    theme(legend.title = element_blank()) + #remove legend title
     theme_bw() + 
+    theme(legend.title = element_blank()) + #remove legend title
     annotate("text", x = max(adlb_raw_chg$DY)+.5, y = 0, label = "Baseline", color = "gray44")+ #add baseline label - this might not accommodate resizing...
     ylab("Add units here") + 
     xlab("Study Day") + #maybe move ticks to start at day 1 but keep increment automatic...
     geom_hline(yintercept=0, linetype="dashed", color = "gray") + #add baseline dashed line
-    coord_cartesian(xlim = c(1, max(adlb_raw_chg$DY)),  clip = 'off')  # allow baseline label off plot to keep things clean
+    coord_cartesian(xlim = c(1, max(adlb_raw_chg$DY)),  clip = 'off') +  # allow baseline label off plot to keep things clean
+    scale_colour_manual(values = brewer.pal(9, "Set1")[-6]) #drop yellow
   
   return(p)
 }
@@ -72,7 +75,7 @@ drawRawChange <- function(adlb, labs = c("eGFR", "eGFRcys")){
 # Function for Percent Change from Baseline  Line Chart
 drawStandardizedValues <- function(adlb, labs = c("Bicarbonate", "Blood Urea Nitrogen", "Calcium", "Chloride", "Phosphorus","Potassium","Sodium")){
   
-  adlb_standarized <- adlb %>% 
+  adlb_standardized <- adlb %>% 
     filter(TEST %in% labs) %>% 
     group_by(TEST) %>% 
     arrange(VISITN) %>% #sort by visit order
@@ -84,11 +87,12 @@ drawStandardizedValues <- function(adlb, labs = c("Bicarbonate", "Blood Urea Nit
     geom_point() +
     theme_bw() + 
     theme(legend.title = element_blank()) + #remove legend title 
-    annotate("text", x = max(adlb_standarized$DY)+.5, y = 1, label = "ULN", color = "gray44")+ #add baseline label - this might not accommodate resizing...
+    annotate("text", x = max(adlb_standardized$DY)+.5, y = 1, label = "ULN", color = "gray44")+ #add baseline label - this might not accommodate resizing...
     ylab("ULN") + 
     xlab("Study Day") + #maybe move ticks to start at day 1 but keep increment automatic...
     geom_hline(yintercept=1, linetype="dashed", color = "gray") + #add baseline dashed line
-    coord_cartesian(xlim = c(1, max(adlb_standarized$DY)),  clip = 'off')  # allow baseline label off plot to keep things clean
+    coord_cartesian(xlim = c(1, max(adlb_standarized$DY)),  clip = 'off') +  # allow baseline label off plot to keep things clean
+    scale_colour_manual(values = brewer.pal(9, "Set1")[-6]) #drop yellow
   
   return(p)
 }
@@ -96,7 +100,7 @@ drawStandardizedValues <- function(adlb, labs = c("Bicarbonate", "Blood Urea Nit
 
 
 # test data
-subj_data <- read.csv('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinical-trials/renderer-specific/adbds.csv') %>% 
+adlb <- read.csv('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinical-trials/renderer-specific/adbds.csv') %>% 
   mutate(ABLFL = ifelse(VISIT == 'Screening', TRUE , FALSE)) %>% #Add flag for baseline value
   filter(USUBJID == "01-001") #choose random subject for testing
 
