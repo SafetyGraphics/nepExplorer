@@ -1,4 +1,3 @@
-library(tidyverse)
 #add renv and documentation
 #stick with refular old shiny as we'lluse modules and stick this in safetygraphics etc 
 
@@ -16,12 +15,6 @@ library(tidyverse)
 #' @return ggplot object
 #' @export
 drawPercentChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), KDIGO_reference_ranges = TRUE){
-  
-  adlb <- read.csv('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinical-trials/renderer-specific/adbds.csv') %>% 
-    filter(USUBJID == "04-024") %>% 
-    mutate(STRESN  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", STRESN*.0113, STRESN), #Convert μmol/L to mg/dL 
-           STRESU  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", "mg/dL", STRESU),
-    ) 
   
   adlb_pct_chg <- adlb %>% 
     filter(TEST %in% labs) %>% 
