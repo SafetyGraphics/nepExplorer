@@ -79,9 +79,7 @@ drawRawChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), delta_crea
   n_der_test <- n_distinct(adlb_raw_chg$TEST) 
   
   if (n_orig_test != n_der_test) {
-    warning("Some collected tests have multiple units.
-            Each unit-test combination will appear as a separate line in the visualization.
-            Standardization of units is required to achieve one line per test.")
+    warning("Some collected tests have multiple units. Each unit-test combination will appear as a separate line in the visualization. Standardization of units is required to achieve one line per test.")
   }
   
   p <- ggplot(adlb_raw_chg, aes(x = DY, y = CHG, color = TEST, group= TEST, text = 
@@ -159,8 +157,8 @@ drawBloodPressure <- function(adlb, labs = c("Diastolic Blood Pressure", "Systol
   
   bp_unit<- unique(adlb_bp$STRESU) 
   
-  if (length(bp_unit > 1)){
-    warning("Systolic and Diastolic Blood Pressure are not in the same units.")
+  if (length(bp_unit) > 1){
+    warning("Systolic and Diastolic Blood Pressure are not in the same units, therefore unit will not be displayed on the Y-axis. Standardize units to see unit on Y-axis.")
   }
   
   p <- ggplot(adlb_bp, aes(x = DY, y = STRESN, color = TEST, 
@@ -207,12 +205,8 @@ drawNormalizedAlbumin <- function(adlb){
   
   uacr_unit<- unique(adlb_norm$STRESU) 
   
-  if (length(uacr_unit > 1)){
-    warning("Multiple units provided for UACR")
-  }
-  
-  if (length(bp_unit > 1)){
-    warning("Systolic and Diastolic Blood Pressure are not in the same units.")
+  if (length(uacr_unit) > 1){
+    warning("Multiple units have been provided for UACR, therefore unit will not be displayed on the Y-axis. Standardize units to see unit on Y-axis.")
   }
   
   p <- ggplot(adlb_norm, aes(x = DY, y = STRESN, color = TEST, group= TEST, text = 
