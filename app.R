@@ -2,15 +2,17 @@ library(shiny)
 library(dplyr)
 library(ggplot2)
 library(RColorBrewer)
-library(magrittr)
+library(tidyverse)
+library(plotly)
 #Super basic shiny app for developing
 
 ui <- fluidPage(
-  plotOutput("percent_change"),
-  plotOutput("raw_change"),
-  plotOutput("standardized_values"),
-  plotOutput("blood_pressure"),
-  plotOutput("normalized_albumin"),
+  plotlyOutput("percent_change"),
+  plotlyOutput("raw_change"),
+  plotlyOutput("raw_change_egfr"),
+  plotlyOutput("ULN_FC"),
+  plotlyOutput("blood_pressure"),
+  plotlyOutput("normalized_albumin"),
 )
 
 #move to shiny module when complete 
@@ -18,25 +20,32 @@ server <- function(input, output, session) {
   
   #test data
   df <- read.csv('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinical-trials/renderer-specific/adbds.csv') %>% 
-    filter(USUBJID == "04-024") # choose random subject for testing 
+    filter(USUBJID == "04-024") %>%  # choose random subject for testing
+   mutate(STRESN  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", STRESN*.0113, STRESN), #Convert μmol/L to mg/dL 
+          STRESU  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", "mg/dL", STRESU),
+          ) 
   
-  output$percent_change <- renderPlot({
+  output$percent_change <- renderPlotly({
     drawPercentChange(df)
   })
   
-  output$raw_change <- renderPlot({
+  output$raw_change <- renderPlotly({
     drawRawChange(df)
   })
   
-  output$standardized_values <- renderPlot({
-    drawStandardizedValues(df)
+  output$raw_change_egfr <- renderPlotly({
+    drawRawChange(df, labs = c("eGFR", "eGFRcys"), delta_creatinine_reference_ranges = FALSE)
   })
   
-  output$blood_pressure <- renderPlot({
+  output$ULN_FC <- renderPlotly({
+    drawULNFoldChange(df)
+  })
+  
+  output$blood_pressure <- renderPlotly({
     drawBloodPressure(df)
   })
   
-  output$normalized_albumin <- renderPlot({
+  output$normalized_albumin <- renderPlotly({
     drawNormalizedAlbumin(df)
   })
   
