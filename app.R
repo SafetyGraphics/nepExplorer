@@ -4,9 +4,11 @@ library(ggplot2)
 library(RColorBrewer)
 library(tidyverse)
 library(plotly)
+library(gt)
 #Super basic shiny app for developing
 
 ui <- fluidPage(
+  gt_output("demo_table"),
   plotlyOutput("percent_change"),
   plotlyOutput("raw_change"),
   plotlyOutput("raw_change_egfr"),
@@ -23,7 +25,12 @@ server <- function(input, output, session) {
     filter(USUBJID == "04-024") %>%  # choose random subject for testing
    mutate(STRESN  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", STRESN*.0113, STRESN), #Convert μmol/L to mg/dL 
           STRESU  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", "mg/dL", STRESU),
-          ) 
+          ) %>% 
+    mutate(STRESU = ifelse(TEST == "Systolic Blood Pressure", "pop", STRESU))
+  
+  output$demo_table <- render_gt({
+    drawDemoTable(df)
+  })
   
   output$percent_change <- renderPlotly({
     drawPercentChange(df)

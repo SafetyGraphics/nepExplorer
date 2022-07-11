@@ -238,3 +238,19 @@ drawNormalizedAlbumin <- function(adlb){
   ggplotly(p, tooltip="text")
 }
 
+drawDemoTable <- function(adlb, demo_vars = c("USUBJID", "AGE", "SEX", "RACE", "ARM")){
+  
+  #specs mention: Subject ID, KDIGO Stage, Delta Creatinine Stage, Treatment group, Age, Age group, Sex, Race
+  demo_data <- adlb %>%
+    select(any_of(demo_vars)) %>%
+    distinct() 
+    
+    if(nrow(demo_data) > 1){
+      warning("Subject has multiple values for a demographic variable - will display a row for each unique combination of demographic information.")
+    }
+  
+  demo_data %>% 
+    gt()
+  
+  
+}
