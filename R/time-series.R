@@ -145,7 +145,7 @@ drawULNFoldChange <- function(adlb, labs = c("Bicarbonate", "Blood Urea Nitrogen
     
     ## Add ULN Annotation
     geom_hline(yintercept=1, linetype="dashed", color = "gray") +
-    annotate("text", x = max(adlb_raw_chg$DY)/10, y = 1, label = "\nULN", color = "gray44", size = 3)
+    annotate("text", x = max(adlb_FC$DY)/10, y = 1, label = "\nULN", color = "gray44", size = 3)
   
   ggplotly(p, tooltip="text")
 }
@@ -224,15 +224,15 @@ drawNormalizedAlbumin <- function(adlb){
     
     ## Add KDIGO Albuminuria Stage 1 Annotation
     geom_hline(yintercept=0, linetype="dashed", color = "gray") + 
-    annotate("text", x = max(adlb_raw_chg$DY)/10, y = 0, label = "\nA1 Albuminuria", color = "gray44", size = 3)+
+    annotate("text", x = max(adlb_norm$DY)/10, y = 0, label = "\nA1 Albuminuria", color = "gray44", size = 3)+
     
     ## Add KDIGO Albuminuria Stage 2 Annotation
     geom_hline(yintercept=30, linetype="dashed", color = "gray") + 
-    annotate("text", x = max(adlb_raw_chg$DY)/10, y = 30, label = "\nA2 Albuminuria", color = "gray44", size = 3)+
+    annotate("text", x = max(adlb_norm$DY)/10, y = 30, label = "\nA2 Albuminuria", color = "gray44", size = 3)+
     
     ## Add KDIGO Albuminuria Stage 3 Annotation
     geom_hline(yintercept=300, linetype="dashed", color = "gray") + 
-    annotate("text", x = max(adlb_raw_chg$DY)/10, y =  300, label = "\nA3 Albuminuria", color = "gray44", size = 3)
+    annotate("text", x = max(adlb_norm$DY)/10, y =  300, label = "\nA3 Albuminuria", color = "gray44", size = 3)
   
   
   ggplotly(p, tooltip="text")
