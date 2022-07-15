@@ -1,5 +1,4 @@
-#add renv and documentation
-#stick with refular old shiny as we'lluse modules and stick this in safetygraphics etc 
+####    add documentation to all of these!!!!!!!
 
 #' drawPercentChange
 #'
