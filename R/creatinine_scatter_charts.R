@@ -1,37 +1,27 @@
-## KDIGO
 
-
-
-#test data
-adlb <- read.csv('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinical-trials/renderer-specific/adbds.csv') %>% 
-  mutate(STRESN  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", STRESN*.0113, STRESN), #Convert μmol/L to mg/dL 
-         STRESU  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", "mg/dL", STRESU),
-  ) %>% 
-  mutate(STRESU = ifelse(TEST == "Systolic Blood Pressure", "pop", STRESU)) %>% 
-  mutate(BLFL = ifelse(VISITN == 0, TRUE, FALSE)) %>% 
-  filter(TEST == "Creatinine") %>% 
-  select(USUBJID, TEST, STRESN, BLFL) 
-
-delta_creat <- adlb %>% 
-  group_by(USUBJID, TEST) %>% 
-  arrange(desc(BLFL)) %>% 
-  mutate(DELTA_C = STRESN - STRESN[1L],
-         KDIGO = DELTA_C / STRESN[1L]) %>% 
-  summarize(KDIGO = max(KDIGO), DELTA_C= max(DELTA_C)) # get maximum delta creatinine for each subject (same as using delta creatinine)
+draw_creatinine_scatter <- function(df){
   
-## scatterplot
+  #determine the longest axis so that we can keep plot square in ggplot axis limits
+  max_axis= max(max(df$KDIGO, na.rm = TRUE) * (5/6),max(df$DELTA_C, na.rm = TRUE) * 1.2, na.rm=TRUE) + .2
   
-
-#determine the longest axis so that we can keep plot square in ggplot axis limits
-max_axis= max(max(delta_creat$KDIGO, na.rm = TRUE) * (5/6),max(delta_creat$DELTA_C, na.rm = TRUE) * 1.2, na.rm=TRUE) + .2
-
-  ggplot(delta_creat, aes(x=KDIGO, y=DELTA_C)) +
+  p <- ggplot(df, aes(x=KDIGO, y=DELTA_C, text = 
+                                 paste0("Subject ID: ", USUBJID, "\n",
+                                        "KDIGO Stage: ",KDIGO_STAGE, "\n",
+                                        "Creatinine Fold Change: " ,format(round(KDIGO, 2), nsmall = 2), "\n",
+                                        "Delta Creatinine Stage: " ,DELTA_STAGE, "\n",
+                                        "Absolute Creatinine Change: " ,format(round(DELTA_C, 2), nsmall = 2), "\n",
+                                        "Baseline Creatinine: " ,format(round(BASELINE, 2), nsmall = 2), "\n",
+                                        "Max Creatinine: " ,format(round(STRESN, 2), nsmall = 2), "\n",
+                                        "Max Creatinine Study Day: " ,DY, "\n",
+                                        "Max Creatinine Visit: " ,VISIT
+                                        
+                                 ))) +
     
     theme_bw() +  
     
     theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-                       panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
-   
+          panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) +
+    
     scale_x_continuous(name ="KDIGO (Fold increase from baseline (or ≥ 4 mg/dL))", 
                        breaks=c(1.5,2,2.5,3), limits = c(0, max(3.5, max_axis * 1.2, na.rm=TRUE)), labels=c("1.5x","2.0x","2.5x","3.0x*")
                        , expand = c(0, 0)) +
@@ -58,5 +48,14 @@ max_axis= max(max(delta_creat$KDIGO, na.rm = TRUE) * (5/6),max(delta_creat$DELTA
     
     # add points last to prevent them from being covered up
     geom_point() 
+  
+  ggplotly(p, tooltip="text")
+}
 
+# draw_summary_table <- function (df ){
+# browser()
+#   #df %>% 
+#     # add table!
+#   
+# }
 

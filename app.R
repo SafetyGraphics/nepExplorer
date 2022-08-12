@@ -19,8 +19,9 @@ ui <- fluidPage(
     mainPanel(
       
       # Scatterplot placeholder
-      plotOutput("fakescatterplot"),
-      
+      creatinineScatterUI("scatter"),
+      br(),
+      br(),
       # Patient Profile (demo tables + lab line charts)
       patientProfileUI("patprofile") 
     )
@@ -32,17 +33,21 @@ server <- function(input, output, session) {
   
   #test data
   adlb <- read.csv('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinical-trials/renderer-specific/adbds.csv') %>% 
-    filter(USUBJID == "04-024") %>%  # choose random subject for testing
     mutate(STRESN  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", STRESN*.0113, STRESN), #Convert μmol/L to mg/dL 
            STRESU  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", "mg/dL", STRESU),
     ) %>% 
-    mutate(STRESU = ifelse(TEST == "Systolic Blood Pressure", "pop", STRESU))
+    mutate(STRESU = ifelse(TEST == "Systolic Blood Pressure", "pop", STRESU)) %>% 
+    group_by(TEST) %>% 
+    arrange(VISITN) %>% #sort by visit order
+    mutate(BLFL = ifelse(STRESN[1L], TRUE, FALSE)) %>% 
+    ungroup()
   
-  #Scatterplot placeholder
-  output$fakescatterplot  <- renderPlot(ggplot(mtcars, aes(x=wt, y=mpg)) + geom_point())
+  
+  #Scatterplot (scatterplot + stage table)
+  creatinineScatterServer("scatter", df = adlb) 
   
   #Patient Profile (demo tables + lab line charts)
-  patientProfileServer("patprofile", df = adlb) 
+  patientProfileServer("patprofile", df = adlb, subj_id = "04-024") # test subject
 }
 
 

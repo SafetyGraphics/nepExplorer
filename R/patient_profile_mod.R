@@ -12,38 +12,40 @@ patientProfileUI <-  function(id){
   )
 }
 
-patientProfileServer <-  function(df, id) {
+patientProfileServer <-  function(df, id, subj_id) {
   moduleServer(
     id,
     function(input, output, session) {
-     
+      
+      patient_df <- df %>%   # filter to selected patient
+        filter(USUBJID == subj_id) 
       
       output$demo_table <- render_gt({
-        drawDemoTable(df)
+        drawDemoTable(patient_df)
       })
       
       output$percent_change <- renderPlotly({
-        drawPercentChange(df)
+        drawPercentChange(patient_df)
       })
       
       output$raw_change <- renderPlotly({
-        drawRawChange(df)
+        drawRawChange(patient_df)
       })
       
       output$raw_change_egfr <- renderPlotly({
-        drawRawChange(df, labs = c("eGFR", "eGFRcys"), delta_creatinine_reference_ranges = FALSE)
+        drawRawChange(patient_df, labs = c("eGFR", "eGFRcys"), delta_creatinine_reference_ranges = FALSE)
       })
       
       output$ULN_FC <- renderPlotly({
-        drawULNFoldChange(df)
+        drawULNFoldChange(patient_df)
       })
       
       output$blood_pressure <- renderPlotly({
-        drawBloodPressure(df)
+        drawBloodPressure(patient_df)
       })
       
       output$normalized_albumin <- renderPlotly({
-        drawNormalizedAlbumin(df)
+        drawNormalizedAlbumin(patient_df)
       })
       
       
