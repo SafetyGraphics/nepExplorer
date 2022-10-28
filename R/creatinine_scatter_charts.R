@@ -52,10 +52,21 @@ draw_creatinine_scatter <- function(df){
   ggplotly(p, tooltip="text")
 }
 
-# draw_summary_table <- function (df ){
-# browser()
-#   #df %>% 
-#     # add table!
-#   
-# }
+ draw_summary_table <- function (df ){
+   
+  
+   df %>% 
+     gt() %>% 
+     cols_move(columns = DELTA_STAGE, after= `KDIGO_%`) %>% 
+    cols_label(KDIGO_STAGE = "KDIGO",
+               KDIGO_N = "#",
+               `KDIGO_%` = "%",
+               DELTA_STAGE = "Delta Creatinine",
+               DELTA_N = "#",
+               `DELTA_%` = "%") %>% 
+     fmt_percent(
+       columns = c("KDIGO_%","DELTA_%"),
+       decimals = 1
+     )
+ }
 
