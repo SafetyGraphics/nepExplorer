@@ -53,20 +53,49 @@ draw_creatinine_scatter <- function(df){
 }
 
  draw_summary_table <- function (df ){
-   
   
    df %>% 
-     gt() %>% 
-     cols_move(columns = DELTA_STAGE, after= `KDIGO_%`) %>% 
-    cols_label(KDIGO_STAGE = "KDIGO",
-               KDIGO_N = "#",
-               `KDIGO_%` = "%",
-               DELTA_STAGE = "Delta Creatinine",
-               DELTA_N = "#",
-               `DELTA_%` = "%") %>% 
-     fmt_percent(
-       columns = c("KDIGO_%","DELTA_%"),
-       decimals = 1
-     )
+     gt(rowname_col = "Stage") %>% #move stage to rowname
+     tab_spanner_delim(
+       delim = "_"
+     ) %>% 
+     fmt_percent(ends_with("%"), decimals = 0) %>% #format percentage
+     tab_style( #add red fill to stage 1 rowname
+       style = list(
+         cell_fill(color = "red")
+       ),
+       locations = cells_stub(rows=1
+     )) %>% 
+     tab_style(  #add orange fill to stage 1 rowname
+       style = list(
+         cell_fill(color = "orange")
+       ),
+       locations = cells_stub(rows=2
+       )) %>% 
+     tab_style(  #add yellow fill to stage 1 rowname
+       style = list(
+         cell_fill(color = "yellow")
+       ),
+       locations = cells_stub(rows=3
+       )) %>% 
+     tab_style(
+       locations = cells_column_labels(columns = everything()),
+       style     = list(
+         #Make text bold
+         cell_text(weight = "bold")
+       )
+     ) %>% 
+     tab_style(
+       locations = cells_column_spanners(),
+       style     = list(
+         #Make text bold
+         cell_text(weight = "bold")
+       )
+     ) %>% 
+     cols_width(
+       everything() ~ px(70)
+     ) 
+       
+    
  }
 

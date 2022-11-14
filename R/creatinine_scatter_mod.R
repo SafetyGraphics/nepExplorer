@@ -23,10 +23,10 @@ creatinineScatterServer <-  function(df, id) {
         select(USUBJID, BASELINE = STRESN)
       
       processed_creatinine_data <- creatinine_data %>% 
-        group_by(USUBJID, TEST) %>% 
+        group_by(USUBJID) %>% 
         arrange(desc(BLFL)) %>% 
         mutate(DELTA_C = STRESN - STRESN[1L],
-               KDIGO = DELTA_C / STRESN[1L]) %>% 
+               KDIGO = STRESN / STRESN[1L]) %>% 
         summarize(KDIGO = max(KDIGO), DELTA_C= max(DELTA_C), STRESN = max(STRESN),  across()) %>%  # get maximum delta creatinine for each subject (same as using delta creatinine)
         mutate(
           KDIGO_STAGE =case_when(
@@ -36,29 +36,28 @@ creatinineScatterServer <-  function(df, id) {
             TRUE ~ "Did not trigger KDIGO Stage"
           ),
           DELTA_STAGE =case_when(
-            DELTA_C > .3  ~ "Stage 3",
+            DELTA_C > .3  ~ "Stage 1",
             DELTA_C > 1.5 ~ "Stage 2",
-            DELTA_C > 2.5  ~ "Stage 1",
+            DELTA_C > 2.5  ~ "Stage 3",
             TRUE ~ "Did not trigger Delta Creatinine Stage"
           ),
         ) %>% 
-        left_join(baseline_creat, by = "USUBJID")
+        left_join(baseline_creat, by = "USUBJID") %>% 
+        filter(BLFL == FALSE)
       
-     # browser()
       
       get_highest_stage <- function(vector_of_stages) {
         if("Stage 3" %in% vector_of_stages){
           return("Stage 3")
         } else if("Stage 2" %in% vector_of_stages){
           return("Stage 2")
-        } else if("Stage 2" %in% vector_of_stages){
+        } else if("Stage 1" %in% vector_of_stages){
             return("Stage 1") 
         } 
         else{
           "Stage 0"
         }
       }
-      
         
       patient_level_stages <- processed_creatinine_data %>% 
         group_by(USUBJID) %>% 
@@ -90,7 +89,8 @@ creatinineScatterServer <-  function(df, id) {
     summary_table_data <- summary_table_template %>% 
       left_join(KDIGO_summary) %>% 
       left_join(DELTA_summary) %>% 
-      replace(is.na(.), 0)
+      replace(is.na(.), 0) %>% 
+      select(-KDIGO_STAGE, Stage = DELTA_STAGE) # only need one stage column
     
    
       output$scatterplot <- renderPlotly({

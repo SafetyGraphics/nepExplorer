@@ -64,9 +64,9 @@ nepexplorer_server <- function(input, output, session, params) {
            STRESU  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", "mg/dL", STRESU),
     ) %>% 
     mutate(STRESU = ifelse(TEST == "Systolic Blood Pressure", "pop", STRESU)) %>% 
-    group_by(TEST) %>% 
-    arrange(VISITN) %>% #sort by visit order
-    mutate(BLFL = ifelse(STRESN[1L], TRUE, FALSE)) %>% 
+    #group_by(TEST) %>% 
+    #arrange(VISITN) %>% #sort by visit order
+    mutate(BLFL = ifelse(VISIT == 'Screening', TRUE, FALSE)) %>% 
     ungroup()
   
   
