@@ -1,13 +1,13 @@
 env: safetyGraphics
 label: Nep Explorer - Module
-name: nepexplorerMod
+name: nepexplorerModSG
 type: module
 package: safetyCharts
 domain: 
   - labs
 workflow:
-  ui: nepexplorer_ui
-  server: nepexplorer_server
+  ui: nepexplorer_ui_SG
+  server: nepexplorer_server_SG
 links:
   safetyCharts: https://github.com/SafetyGraphics/safetycharts
   
