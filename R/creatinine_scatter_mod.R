@@ -2,8 +2,8 @@
 creatinineScatterUI <-  function(id){
   ns <- NS(id)
   fluidPage(
-    plotlyOutput(ns("scatterplot")),
-  #  gt_output(ns("summary_table")),
+    column(plotlyOutput(ns("scatterplot")), width=8),
+    column(gt_output(ns("summary_table")), width=4),
   )
 }
 
@@ -23,10 +23,10 @@ creatinineScatterServer <-  function(df, id) {
         select(USUBJID, BASELINE = STRESN)
       
       processed_creatinine_data <- creatinine_data %>% 
-        group_by(USUBJID, TEST) %>% 
+        group_by(USUBJID) %>% 
         arrange(desc(BLFL)) %>% 
         mutate(DELTA_C = STRESN - STRESN[1L],
-               KDIGO = DELTA_C / STRESN[1L]) %>% 
+               KDIGO = STRESN / STRESN[1L]) %>% 
         summarize(KDIGO = max(KDIGO), DELTA_C= max(DELTA_C), STRESN = max(STRESN),  across()) %>%  # get maximum delta creatinine for each subject (same as using delta creatinine)
         mutate(
           KDIGO_STAGE =case_when(
@@ -36,23 +36,71 @@ creatinineScatterServer <-  function(df, id) {
             TRUE ~ "Did not trigger KDIGO Stage"
           ),
           DELTA_STAGE =case_when(
-            DELTA_C > .3  ~ "Stage 3",
+            DELTA_C > .3  ~ "Stage 1",
             DELTA_C > 1.5 ~ "Stage 2",
-            DELTA_C > 2.5  ~ "Stage 1",
+            DELTA_C > 2.5  ~ "Stage 3",
             TRUE ~ "Did not trigger Delta Creatinine Stage"
           ),
         ) %>% 
-        left_join(baseline_creat, by = "USUBJID")
+        left_join(baseline_creat, by = "USUBJID") %>% 
+        filter(BLFL == FALSE)
       
       
+      get_highest_stage <- function(vector_of_stages) {
+        if("Stage 3" %in% vector_of_stages){
+          return("Stage 3")
+        } else if("Stage 2" %in% vector_of_stages){
+          return("Stage 2")
+        } else if("Stage 1" %in% vector_of_stages){
+            return("Stage 1") 
+        } 
+        else{
+          "Stage 0"
+        }
+      }
+        
+      patient_level_stages <- processed_creatinine_data %>% 
+        group_by(USUBJID) %>% 
+        summarize(DELTA_STAGE = get_highest_stage(DELTA_STAGE),
+                  KDIGO_STAGE = get_highest_stage(KDIGO_STAGE),
+          
+        ) 
+    
+      
+      summary_table_template <- tribble(
+        ~ KDIGO_STAGE, ~ DELTA_STAGE,
+        "Stage 3", "Stage 3", 
+        "Stage 2", "Stage 2", 
+        "Stage 1", "Stage 1", 
+        "Stage 0", "Stage 0", 
+      )
+      
+      KDIGO_summary<-patient_level_stages %>% 
+         group_by(KDIGO_STAGE) %>% 
+        summarize(`KDIGO_N` = length(USUBJID),
+                  `KDIGO_%` = length(USUBJID)/nrow(patient_level_stages))
+        
+    DELTA_summary<-patient_level_stages %>% 
+        group_by(DELTA_STAGE) %>% 
+        summarize(`DELTA_N` = length(USUBJID),
+                  `DELTA_%` = length(USUBJID)/nrow(patient_level_stages))
+   
+    
+    summary_table_data <- summary_table_template %>% 
+      left_join(KDIGO_summary) %>% 
+      left_join(DELTA_summary) %>% 
+      replace(is.na(.), 0) %>% 
+      select(-KDIGO_STAGE, Stage = DELTA_STAGE) # only need one stage column
+    
+   
       output$scatterplot <- renderPlotly({
         draw_creatinine_scatter(processed_creatinine_data)
       })
       
-       # output$summary_table <- render_gt({
-       #   draw_summary_table(processed_creatinine_data)
-       # })
-       # 
+        output$summary_table <- render_gt({
+          draw_summary_table(summary_table_data)
+        })
+        
       
     }
   )

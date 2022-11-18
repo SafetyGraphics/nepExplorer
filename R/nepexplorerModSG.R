@@ -6,11 +6,16 @@
 # library(plotly)
 # library(gt)
 
-nepexplorer_ui <- function(id) {
+nepexplorer_ui_SG <- function(id) {
   ns <- NS(id)
 
-  sidebar <- sidebarPanel()
-  
+  sidebar <- sidebarPanel(selectizeInput(
+    ns("measures"),
+    "Select Measures",
+    multiple = TRUE,
+    choices = c("")
+  ))
+
   main <- mainPanel(
      # Scatterplot placeholder
       creatinineScatterUI(ns("scatter")),
@@ -20,23 +25,39 @@ nepexplorer_ui <- function(id) {
       patientProfileUI(ns("patprofile")) 
   )
 
-  ui <- sidebarLayout(
+  ui <- fluidPage(sidebarLayout(
     sidebar,
     main,
     position = c("right"),
     fluid = TRUE
-  )
+  ))
 
   return(ui)
 }
 
-nepexplorer_server <- function(id, params) {
-  moduleServer(
-  id,
-  function(input, output, session){
+nepexplorer_server_SG <- function(input, output, session, params) {
   ns <- session$ns
 
-  
+  # Populate control with measures and select all by default
+  observe({
+    measure_col <- params()$settings$measure_col
+    measures <- unique(params()$data[[measure_col]])
+    updateSelectizeInput(session,
+      "measures",
+      choices = measures,
+      selected = measures
+    )
+    
+  })
+
+  # customize selected measures based on input
+  settingsR <- reactive({
+    settings <- params()$settings
+    settings$measure_values <- input$measures
+
+    return(settings)
+  })
+
   #test data
   adlb <- read.csv('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinical-trials/renderer-specific/adbds.csv') %>% 
     mutate(STRESN  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", STRESN*.0113, STRESN), #Convert μmol/L to mg/dL 
@@ -54,5 +75,4 @@ nepexplorer_server <- function(id, params) {
   
   #Patient Profile (demo tables + lab line charts)
   patientProfileServer("patprofile", df = adlb, subj_id = "04-024") # test subject
-})
 }
