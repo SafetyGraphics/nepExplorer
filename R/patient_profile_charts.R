@@ -57,7 +57,8 @@ drawPercentChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), KDIGO_
   
   
   
-  ggplotly(p, tooltip="text")
+  ggplotly(p, tooltip="text") %>% 
+    config(displayModeBar = F)
 }
 
 # Function for Raw Change from Baseline Line Chart
@@ -116,7 +117,8 @@ drawRawChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), delta_crea
   }
   
   
-  ggplotly(p, tooltip="text")
+  ggplotly(p, tooltip="text") %>% 
+    config(displayModeBar = F)
 }
 
 # Function for Fold Change from ULN Lab Values Line Chart
@@ -146,7 +148,9 @@ drawULNFoldChange <- function(adlb, labs = c("Bicarbonate", "Blood Urea Nitrogen
     geom_hline(yintercept=1, linetype="dashed", color = "gray") +
     annotate("text", x = max(adlb_FC$DY)/10, y = 1, label = "\nULN", color = "gray44", size = 3)
   
-  ggplotly(p, tooltip="text")
+  ggplotly(p, tooltip="text") %>% 
+    config(displayModeBar = F)
+  
 }
 
 drawBloodPressure <- function(adlb, labs = c("Diastolic Blood Pressure", "Systolic Blood Pressure")){
@@ -181,7 +185,8 @@ drawBloodPressure <- function(adlb, labs = c("Diastolic Blood Pressure", "Systol
     geom_hline(yintercept=120, linetype="dashed", color = "gray") + #add systolic dashed line
     annotate("text", x =  max(adlb_bp$DY)/10, y = 120, label = "Ideal Systolic \n Blood Pressure", color = "gray44",  size = 3)
     
-  ggplotly(p, tooltip="text")
+  ggplotly(p, tooltip="text") %>% 
+    config(displayModeBar = F)
 }
 
 # Function for Percent Change from Baseline  Line Chart
@@ -234,7 +239,8 @@ drawNormalizedAlbumin <- function(adlb){
     annotate("text", x = max(adlb_norm$DY)/10, y =  300, label = "\nA3 Albuminuria", color = "gray44", size = 3)
   
   
-  ggplotly(p, tooltip="text")
+  ggplotly(p, tooltip="text") %>% 
+    config(displayModeBar = F)
 }
 
 drawDemoTable <- function(adlb, demo_vars = c("USUBJID", "AGE", "SEX", "RACE", "ARM")){
