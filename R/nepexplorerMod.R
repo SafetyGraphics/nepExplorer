@@ -36,6 +36,7 @@ nepexplorer_server <- function(id, params) {
   function(input, output, session){
   ns <- session$ns
 
+
   
   #test data
   adlb <- read.csv('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinical-trials/renderer-specific/adbds.csv') %>% 
@@ -48,11 +49,15 @@ nepexplorer_server <- function(id, params) {
     mutate(BLFL = ifelse(VISIT == 'Screening', TRUE, FALSE)) %>% 
     ungroup()
   
+  selected_subject <-  reactive({adlb$USUBJID[1]})
   
   #Scatterplot (scatterplot + stage table)
   creatinineScatterServer("scatter", df = adlb) 
   
   #Patient Profile (demo tables + lab line charts)
-  patientProfileServer("patprofile", df = adlb, subj_id = "04-024") # test subject
+  observeEvent(selected_subject(),{
+    patientProfileServer("patprofile", df = adlb, subj_id = selected_subject()) # test subject
+  })
+  
 })
 }

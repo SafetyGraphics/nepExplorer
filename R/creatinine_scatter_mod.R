@@ -22,6 +22,7 @@ creatinineScatterServer <-  function(df, id) {
         filter(BLFL ==TRUE) %>% 
         select(USUBJID, BASELINE = STRESN)
       
+      #calcualte stages at event level
       processed_creatinine_data <- creatinine_data %>% 
         group_by(USUBJID) %>% 
         arrange(desc(BLFL)) %>% 
@@ -59,6 +60,7 @@ creatinineScatterServer <-  function(df, id) {
         }
       }
         
+      #get highest stage by subject
       patient_level_stages <- processed_creatinine_data %>% 
         group_by(USUBJID) %>% 
         summarize(DELTA_STAGE = get_highest_stage(DELTA_STAGE),
@@ -66,7 +68,7 @@ creatinineScatterServer <-  function(df, id) {
           
         ) 
     
-      
+      # create template table with all grades incase not all grades are in data  
       summary_table_template <- tribble(
         ~ KDIGO_STAGE, ~ DELTA_STAGE,
         "Stage 3", "Stage 3", 
@@ -75,6 +77,7 @@ creatinineScatterServer <-  function(df, id) {
         "Stage 0", "Stage 0", 
       )
       
+      #calcualte summaries and generate summary tables
       KDIGO_summary<-patient_level_stages %>% 
          group_by(KDIGO_STAGE) %>% 
         summarize(`KDIGO_N` = length(USUBJID),
@@ -93,13 +96,15 @@ creatinineScatterServer <-  function(df, id) {
       select(-KDIGO_STAGE, Stage = DELTA_STAGE) # only need one stage column
     
    
-      output$scatterplot <- renderPlotly({
-        draw_creatinine_scatter(processed_creatinine_data)
-      })
-      
         output$summary_table <- render_gt({
           draw_summary_table(summary_table_data)
         })
+        
+        #draw scatterplot
+        output$scatterplot <- renderPlotly({
+          draw_creatinine_scatter(processed_creatinine_data)
+        })
+        
         
       
     }
