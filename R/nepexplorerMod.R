@@ -49,15 +49,13 @@ nepexplorer_server <- function(id, params) {
     mutate(BLFL = ifelse(VISIT == 'Screening', TRUE, FALSE)) %>% 
     ungroup()
   
-  selected_subject <-  reactive({adlb$USUBJID[1]})
-  
-  #Scatterplot (scatterplot + stage table)
-  creatinineScatterServer("scatter", df = adlb) 
+  # subject id return from plotly click event
+  selected_subject <- creatinineScatterServer("scatter", df = adlb) 
   
   #Patient Profile (demo tables + lab line charts)
   observeEvent(selected_subject(),{
     patientProfileServer("patprofile", df = adlb, subj_id = selected_subject()) # test subject
-  })
+  },  ignoreInit = TRUE)
   
 })
 }

@@ -5,6 +5,7 @@ library(RColorBrewer)
 library(tidyverse)
 library(plotly)
 library(gt)
+library(htmlwidgets)
 
 # Basic nep-explorer App
 

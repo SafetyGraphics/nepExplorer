@@ -49,11 +49,11 @@ draw_creatinine_scatter <- function(df){
     annotate("text", label = "Stage 1", x= .5, y = 1.3) + # Stage 1
     
     # add points last to prevent them from being covered up
-    geom_point() 
+    geom_point(color="black", alpha=.5) 
 
   #convert to plotly without toolbar
-  ggplotly(p, tooltip="text") %>% 
-    config(displayModeBar = F)
+  ggplotly(p, tooltip="text", source = "scatter") %>% 
+    config(displayModeBar = F) 
 }
 
  draw_summary_table <- function (df ){

@@ -7,11 +7,12 @@ creatinineScatterUI <-  function(id){
   )
 }
 
-creatinineScatterServer <-  function(df, id) {
+#library(htmlwidgets)
+creatinineScatterServer <-  function(id, df) {
   moduleServer(
     id,
     function(input, output, session) {
-      
+   
       ## Prepare data for chart and table
       creatinine_data <- df %>% 
         filter(TEST == "Creatinine") %>% 
@@ -100,12 +101,42 @@ creatinineScatterServer <-  function(df, id) {
           draw_summary_table(summary_table_data)
         })
         
+        javascript <- "
+function(el, x){
+  el.on('plotly_click', function(data) {
+    var colors = [];
+    // check if color is a string or array
+    if(typeof data.points[0].data.marker.color == 'string'){
+      for (var i = 0; i < data.points[0].data.marker.color.length; i++) {
+        colors.push(data.points[0].data.marker.color);
+      }
+    } else {
+      colors = data.points[0].data.marker.color;
+    }
+
+    // set color of selected point
+    colors[data.points[0].pointNumber] = '#FFFFFF';
+    Plotly.restyle(el,
+      {'marker':{color: colors}},
+      [data.points[0].curveNumber]
+    );
+  });
+}
+"
+        
         #draw scatterplot
         output$scatterplot <- renderPlotly({
-          draw_creatinine_scatter(processed_creatinine_data)
-        })
+          draw_creatinine_scatter(processed_creatinine_data) %>% onRender(javascript)
+        }) 
+        
+       
+        selected_subject <- reactive(
+          processed_creatinine_data[event_data("plotly_click", source = "scatter")$pointNumber,]$USUBJID)
         
         
+        
+        
+        return(selected_subject)
       
     }
   )
