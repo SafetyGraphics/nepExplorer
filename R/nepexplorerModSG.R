@@ -9,12 +9,19 @@
 nepexplorer_ui_SG <- function(id) {
   ns <- NS(id)
 
-  sidebar <- sidebarPanel(selectizeInput(
-    ns("measures"),
-    "Select Measures",
-    multiple = TRUE,
-    choices = c("")
-  ))
+  sidebar<-sidebarPanel(
+    selectizeInput(
+      ns("measures"), 
+      "Select Measures", 
+      multiple=TRUE, 
+      choices=c(""),
+      options = list(
+        plugins = list("remove_button"),
+        create = TRUE,
+        persist = TRUE # keep created choices in dropdown
+      )
+    )
+  )
 
   main <- mainPanel(
      # Scatterplot placeholder
@@ -45,7 +52,7 @@ nepexplorer_server_SG <- function(input, output, session, params) {
     updateSelectizeInput(session,
       "measures",
       choices = measures,
-      selected = measures
+      selected = input$measures
     )
     
   })
