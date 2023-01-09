@@ -54,7 +54,10 @@ nepexplorer_server <- function(id, params) {
   
   #Patient Profile (demo tables + lab line charts)
   observeEvent(selected_subject(),{
-    patientProfileServer("patprofile", df = adlb, subj_id = selected_subject()) # test subject
+
+    if(length(selected_subject()) == 1){ # avoid triggering patient profiles if there isn't a subject
+      patientProfileServer("patprofile", df = adlb, subj_id = selected_subject())
+    }
   },  ignoreInit = TRUE)
   
 })

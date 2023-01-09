@@ -2,6 +2,7 @@
 creatinineScatterUI <-  function(id){
   ns <- NS(id)
   fluidPage(
+    p("Click on a point in the scatterplot to view patient profile. Click and drag to zoom-in. Double-click to reset zoom."),
     column(plotlyOutput(ns("scatterplot")), width=8),
     column(gt_output(ns("summary_table")), width=4),
   )
@@ -101,23 +102,28 @@ creatinineScatterServer <-  function(id, df) {
           draw_summary_table(summary_table_data)
         })
         
-        javascript <- "
+        update_color_js <-"
 function(el, x){
   el.on('plotly_click', function(data) {
     var colors = [];
-    // check if color is a string or array
-    if(typeof data.points[0].data.marker.color == 'string'){
-      for (var i = 0; i < data.points[0].data.marker.color.length; i++) {
-        colors.push(data.points[0].data.marker.color);
+    // build color array
+      for (var i = 0; i < data.points[0].data.x.length; i++) {
+        colors.push('#000000');
       }
-    } else {
-      colors = data.points[0].data.marker.color;
-    }
+      
+    // build size array
+    var sizes = [];  
+      for (var i = 0; i < data.points[0].data.x.length; i++) {
+        sizes.push(9);
+      }
+
 
     // set color of selected point
     colors[data.points[0].pointNumber] = '#FFFFFF';
+    sizes[data.points[0].pointNumber] = 12;
+
     Plotly.restyle(el,
-      {'marker':{color: colors}},
+      {'marker':{color: colors, size: sizes}},
       [data.points[0].curveNumber]
     );
   });
@@ -126,12 +132,13 @@ function(el, x){
         
         #draw scatterplot
         output$scatterplot <- renderPlotly({
-          draw_creatinine_scatter(processed_creatinine_data) %>% onRender(javascript)
+          draw_creatinine_scatter(processed_creatinine_data) %>% onRender(update_color_js)
         }) 
         
-       
-        selected_subject <- reactive(
-          processed_creatinine_data[event_data("plotly_click", source = "scatter")$pointNumber,]$USUBJID)
+       # get subject id of subject selected in scatterplot  
+        selected_subject <- reactive({
+          processed_creatinine_data[event_data("plotly_click", source = "scatter")$pointNumber,]$USUBJID
+         })
         
         
         
