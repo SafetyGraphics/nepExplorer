@@ -2,16 +2,18 @@
 creatinineScatterUI <-  function(id){
   ns <- NS(id)
   fluidPage(
+    p("Click on a point in the scatterplot to view patient profile. Click and drag to zoom-in. Double-click to reset zoom."),
     column(plotlyOutput(ns("scatterplot")), width=8),
     column(gt_output(ns("summary_table")), width=4),
   )
 }
 
-creatinineScatterServer <-  function(df, id) {
+#library(htmlwidgets)
+creatinineScatterServer <-  function(id, df) {
   moduleServer(
     id,
     function(input, output, session) {
-      
+   
       ## Prepare data for chart and table
       creatinine_data <- df %>% 
         filter(TEST == "Creatinine") %>% 
@@ -22,6 +24,7 @@ creatinineScatterServer <-  function(df, id) {
         filter(BLFL ==TRUE) %>% 
         select(USUBJID, BASELINE = STRESN)
       
+      #calcualte stages at event level
       processed_creatinine_data <- creatinine_data %>% 
         group_by(USUBJID) %>% 
         arrange(desc(BLFL)) %>% 
@@ -59,6 +62,7 @@ creatinineScatterServer <-  function(df, id) {
         }
       }
         
+      #get highest stage by subject
       patient_level_stages <- processed_creatinine_data %>% 
         group_by(USUBJID) %>% 
         summarize(DELTA_STAGE = get_highest_stage(DELTA_STAGE),
@@ -66,7 +70,7 @@ creatinineScatterServer <-  function(df, id) {
           
         ) 
     
-      
+      # create template table with all grades incase not all grades are in data  
       summary_table_template <- tribble(
         ~ KDIGO_STAGE, ~ DELTA_STAGE,
         "Stage 3", "Stage 3", 
@@ -75,6 +79,7 @@ creatinineScatterServer <-  function(df, id) {
         "Stage 0", "Stage 0", 
       )
       
+      #calcualte summaries and generate summary tables
       KDIGO_summary<-patient_level_stages %>% 
          group_by(KDIGO_STAGE) %>% 
         summarize(`KDIGO_N` = length(USUBJID),
@@ -93,14 +98,52 @@ creatinineScatterServer <-  function(df, id) {
       select(-KDIGO_STAGE, Stage = DELTA_STAGE) # only need one stage column
     
    
-      output$scatterplot <- renderPlotly({
-        draw_creatinine_scatter(processed_creatinine_data)
-      })
-      
         output$summary_table <- render_gt({
           draw_summary_table(summary_table_data)
         })
         
+        update_color_js <-"
+function(el, x){
+  el.on('plotly_click', function(data) {
+    var colors = [];
+    // build color array
+      for (var i = 0; i < data.points[0].data.x.length; i++) {
+        colors.push('#000000');
+      }
+      
+    // build size array
+    var sizes = [];  
+      for (var i = 0; i < data.points[0].data.x.length; i++) {
+        sizes.push(9);
+      }
+
+
+    // set color of selected point
+    colors[data.points[0].pointNumber] = '#FFFFFF';
+    sizes[data.points[0].pointNumber] = 12;
+
+    Plotly.restyle(el,
+      {'marker':{color: colors, size: sizes}},
+      [data.points[0].curveNumber]
+    );
+  });
+}
+"
+        
+        #draw scatterplot
+        output$scatterplot <- renderPlotly({
+          draw_creatinine_scatter(processed_creatinine_data) %>% onRender(update_color_js)
+        }) 
+        
+       # get subject id of subject selected in scatterplot  
+        selected_subject <- reactive({
+          processed_creatinine_data[event_data("plotly_click", source = "scatter")$pointNumber,]$USUBJID
+         })
+        
+        
+        
+        
+        return(selected_subject)
       
     }
   )

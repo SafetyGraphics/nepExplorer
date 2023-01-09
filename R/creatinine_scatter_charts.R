@@ -49,11 +49,34 @@ draw_creatinine_scatter <- function(df){
     annotate("text", label = "Stage 1", x= .5, y = 1.3) + # Stage 1
     
     # add points last to prevent them from being covered up
-    geom_point() 
+    geom_point(color="white",  size=2.5, fill ="black", shape = 21, stroke = .2) 
+  # Want a white border because I'm changing point size on click in plotly which interestingly adds white borders around points
 
   #convert to plotly without toolbar
-  ggplotly(p, tooltip="text") %>% 
-    config(displayModeBar = F)
+  ggply <- ggplotly(p, tooltip="text", source = "scatter") %>% 
+    config(displayModeBar = F) 
+  
+  # remove hover text from everything but the geom points
+  ggply$x$data[[1]]$hoverinfo <- "none"
+  
+  ggply$x$data[[2]]$hoverinfo <- "none"
+  
+  ggply$x$data[[3]]$hoverinfo <- "none"
+  
+  ggply$x$data[[4]]$hoverinfo <- "none"
+  
+  ggply$x$data[[5]]$hoverinfo <- "none"
+  
+  ggply$x$data[[6]]$hoverinfo <- "none"
+  
+  ggply$x$data[[7]]$hoverinfo <- "none"
+  
+  
+  # ggply$x$data[[8]]$selected <- list("marker" = ggply$x$data[[8]]$marker)
+  # ggply$x$data[[8]]$selected$marker$size= 30
+ 
+  ggply
+ 
 }
 
  draw_summary_table <- function (df ){
