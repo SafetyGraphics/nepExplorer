@@ -12,7 +12,6 @@
 #' @import RColorBrewer
 #'
 #' @return ggplot object
-#' @export
 drawPercentChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), KDIGO_reference_ranges = TRUE){
   
   adlb_pct_chg <- adlb %>% 

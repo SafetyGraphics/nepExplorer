@@ -1,0 +1,12 @@
+env: safetyGraphics
+label: Nep Explorer - Module
+name: nepexplorerMod
+type: module
+package: nepExplorer
+domain: 
+  - labs
+workflow:
+  ui: nepexplorer_ui
+  server: nepexplorer_server
+links:
+  nepExplorer: https://github.com/SafetyGraphics/nep-explorer
