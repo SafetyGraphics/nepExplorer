@@ -54,7 +54,10 @@ draw_creatinine_scatter <- function(df){
 
   #convert to plotly without toolbar
   ggply <- ggplotly(p, tooltip="text", source = "scatter") %>% 
+    event_register("plotly_click") %>% 
     config(displayModeBar = F) 
+  
+  
   
   # remove hover text from everything but the geom points
   ggply$x$data[[1]]$hoverinfo <- "none"

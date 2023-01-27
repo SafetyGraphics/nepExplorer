@@ -9,14 +9,14 @@ creatinineScatterUI <-  function(id){
 }
 
 #library(htmlwidgets)
-creatinineScatterServer <-  function(id, df) {
+creatinineScatterServer <-  function(id, df, params) {
   moduleServer(
     id,
     function(input, output, session) {
    
       ## Prepare data for chart and table
       creatinine_data <- df %>% 
-        filter(TEST == "Creatinine") %>% 
+        filter(TEST == params$settings$labs$measure_values$Creatinine) %>% 
         select(USUBJID, DY, VISIT, TEST,  STRESN, BLFL) 
       
       #get baseline creatinine levels for each subject for hover text
@@ -133,17 +133,14 @@ function(el, x){
         #draw scatterplot
         output$scatterplot <- renderPlotly({
           draw_creatinine_scatter(processed_creatinine_data) %>% onRender(update_color_js)
-        }) 
+       
+          }) 
         
-       # get subject id of subject selected in scatterplot  
-        selected_subject <- reactive({
-          processed_creatinine_data[event_data("plotly_click", source = "scatter")$pointNumber,]$USUBJID
-         })
+
         
         
         
-        
-        return(selected_subject)
+        return(processed_creatinine_data)
       
     }
   )

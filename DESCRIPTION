@@ -1,0 +1,24 @@
+Package: nepExplorer
+Type: Package
+Title: Volcano Plot for Clinical Trial Adverse Events
+Version: 1.0.0
+Authors@R: c(
+	person("Billy", "Burns", email = "jwildfire@gmail.com", role = c("cre","aut")))
+Maintainer: Jeremy Wildfire <jwildfire@gmail.com>
+Description: Shiny app showing Volcano Plot for clinical trial adverse events.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
+Imports:
+    shiny,
+    dplyr,
+    ggplot2,
+    RColorBrewer, 
+    tidyverse,
+    plotly,
+    gt,
+    htmlwidgets
+Suggests:
+    safetyGraphics, 
+    safetyData
