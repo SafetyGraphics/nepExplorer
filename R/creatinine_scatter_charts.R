@@ -1,4 +1,11 @@
-
+#' Draw Creatinine Scatter Plot
+#'
+#' @param df lab dataset in tall format with creatinine lab
+#'
+#' @import ggplot2
+#' @import plotly
+#' @importFrom magrittr %>%
+#' 
 draw_creatinine_scatter <- function(df){
 
   #calculate axes to ensure breaks are included
@@ -82,6 +89,14 @@ draw_creatinine_scatter <- function(df){
  
 }
 
+
+#' Draw Creatinine Summary Table
+#'
+#' @param df lab dataset in tall format with creatinine lab
+#'
+#' @import gt
+#' @importFrom magrittr %>%
+#' 
  draw_summary_table <- function (df ){
   
    df %>% 

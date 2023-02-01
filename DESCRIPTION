@@ -1,7 +1,7 @@
 Package: nepExplorer
 Type: Package
-Title: Volcano Plot for Clinical Trial Adverse Events
-Version: 1.0.0
+Title: Interactive Graphic for Exploring Kidney Function Data in Clinical Trials
+Version: 0.1.0
 Authors@R: c(
 	person("Billy", "Burns", email = "jwildfire@gmail.com", role = c("cre","aut")))
 Maintainer: Jeremy Wildfire <jwildfire@gmail.com>
@@ -15,7 +15,7 @@ Imports:
     dplyr,
     ggplot2,
     RColorBrewer, 
-    tidyverse,
+    magrittr,
     plotly,
     gt,
     htmlwidgets

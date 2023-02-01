@@ -1,17 +1,10 @@
 #' Run the core NepExplorer App
 #'
-#' @param lab_df la dataset to be loaded in to the app. Sample adbds data used by default
+#' @param lab_df lab dataset to be loaded in to the app. Sample adbds data used by default
 #' @param settings list specifying the initial mapping values for each data mapping for each domain (e.g. list(aes= list(id_col='USUBJID', seq_col='AESEQ')). 
 #' @param runNow Should the shiny app object created be run directly? Helpful when writing  functions to dispatch to shinyapps, rsconnect, or shinyproxy.
 #'
 #' @import shiny
-#' @import dplyr
-#' @import ggplot2
-#' @import RColorBrewer
-#' @import tidyverse
-#' @import plotly
-#' @import gt
-#' @import htmlwidgets
 #' 
 #' @export
 

@@ -1,4 +1,13 @@
-
+#' Creatine Scatter Plot + Summary Table UI
+#'
+#' @param id module id
+#'
+#' @return returns shiny module UI
+#' 
+#' @import shiny
+#' @importFrom gt gt_output
+#' @importFrom plotly plotlyOutput
+#' 
 creatinineScatterUI <-  function(id){
   ns <- NS(id)
   fluidPage(
@@ -8,7 +17,20 @@ creatinineScatterUI <-  function(id){
   )
 }
 
-#library(htmlwidgets)
+#' Creatine Scatter Plot + Summary Table UI
+#'
+#' @param id module id
+#' @param df lab dataset in tall format with creatinine lab
+#' @param params parameters object with `data` and `settings` options.
+#'
+#' @return returns shiny server module
+#' 
+#' @import shiny
+#' @import dplyr
+#' @importFrom gt render_gt
+#' @importFrom plotly renderPlotly
+#' @importFrom htmlwidgets onRender
+#' 
 creatinineScatterServer <-  function(id, df, params) {
   moduleServer(
     id,

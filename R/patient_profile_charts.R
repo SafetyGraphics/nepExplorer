@@ -1,17 +1,15 @@
-####    add documentation to all of these!!!!!!!
-
-#' drawPercentChange
+#' Draw Time Series Plot for Percent Change in Lab Values from Baseline
 #'
-#' Draw Time Series Plot for Percent Change in Lab Values from Baseline (add dependencies like pipe later)
-#'
-#' @param adlb lab data in long format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param adlb lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value
 #' @param labs character string or character vector specifying which labs from TEST to include
 #'
 #' @import ggplot2
 #' @import dplyr
 #' @import RColorBrewer
+#' @import plotly
 #'
 #' @return ggplot object
+#' 
 drawPercentChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), KDIGO_reference_ranges = TRUE){
   
   adlb_pct_chg <- adlb %>% 
@@ -60,7 +58,18 @@ drawPercentChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), KDIGO_
     config(displayModeBar = F)
 }
 
-# Function for Raw Change from Baseline Line Chart
+#' Draw Time Series Plot for Raw Change in Lab Values from Baseline
+#'
+#' @param adlb lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param labs character string or character vector specifying which labs from TEST to include
+#'
+#' @import ggplot2
+#' @import dplyr
+#' @import RColorBrewer
+#' @import plotly
+#'
+#' @return ggplot object
+#' 
 drawRawChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), delta_creatinine_reference_ranges = TRUE){
   
   adlb_raw_chg <- adlb %>% 
@@ -120,7 +129,18 @@ drawRawChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), delta_crea
     config(displayModeBar = F)
 }
 
-# Function for Fold Change from ULN Lab Values Line Chart
+#' Draw Time Series Plot for Fold Change from ULN
+#'
+#' @param adlb lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param labs character string or character vector specifying which labs from TEST to include
+#'
+#' @import ggplot2
+#' @import dplyr
+#' @import RColorBrewer
+#' @import plotly
+#'
+#' @return ggplot object
+#' 
 drawULNFoldChange <- function(adlb, labs = c("Bicarbonate", "Blood Urea Nitrogen", "Calcium", "Chloride", "Phosphorus","Potassium","Sodium")){
   
   adlb_FC <- adlb %>% 
@@ -152,6 +172,18 @@ drawULNFoldChange <- function(adlb, labs = c("Bicarbonate", "Blood Urea Nitrogen
   
 }
 
+#' Draw Time Series Plot for Blood Pressure
+#'
+#' @param adlb lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param labs character string or character vector specifying which labs from TEST to include
+#'
+#' @import ggplot2
+#' @import dplyr
+#' @import RColorBrewer
+#' @import plotly
+#'
+#' @return ggplot object
+#' 
 drawBloodPressure <- function(adlb, labs = c("Diastolic Blood Pressure", "Systolic Blood Pressure")){
   
   adlb_bp <- adlb %>% 
@@ -188,7 +220,18 @@ drawBloodPressure <- function(adlb, labs = c("Diastolic Blood Pressure", "Systol
     config(displayModeBar = F)
 }
 
-# Function for Percent Change from Baseline  Line Chart
+#' Draw Time Series Plot for Normalized Albumin
+#'
+#' @param adlb lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param labs character string or character vector specifying which labs from TEST to include
+#'
+#' @import ggplot2
+#' @import dplyr
+#' @import RColorBrewer
+#' @import plotly
+#'
+#' @return ggplot object
+#' 
 drawNormalizedAlbumin <- function(adlb){ 
   
   
@@ -242,6 +285,16 @@ drawNormalizedAlbumin <- function(adlb){
     config(displayModeBar = F)
 }
 
+#' Draw Demography Table
+#'
+#' @param adlb lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param demo_vars character vector of column names to include in demography table - those not found in data will be ignored
+#'
+#' @import gt
+#' @import dplyr
+#'
+#' @return gt object
+#' 
 drawDemoTable <- function(adlb, demo_vars = c("USUBJID", "AGE", "SEX", "RACE", "ARM")){
   
   #specs mention: Subject ID, KDIGO Stage, Delta Creatinine Stage, Treatment group, Age, Age group, Sex, Race
