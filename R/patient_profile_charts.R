@@ -2,11 +2,14 @@
 #'
 #' @param adlb lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value
 #' @param labs character string or character vector specifying which labs from TEST to include
+#' @param KDIGO_reference_ranges boolean for whether or not to include horizontal lines denoting KDIGO reference ranges 
 #'
 #' @import ggplot2
 #' @import dplyr
 #' @import RColorBrewer
-#' @import plotly
+#' @importFrom plotly ggplotly
+#' @importFrom plotly config
+#' @importFrom scales percent_format
 #'
 #' @return ggplot object
 #' 
@@ -62,11 +65,13 @@ drawPercentChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), KDIGO_
 #'
 #' @param adlb lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value
 #' @param labs character string or character vector specifying which labs from TEST to include
+#' @param delta_creatinine_reference_ranges boolean for whether or not to include horizontal lines denoting delta creatinine reference ranges 
 #'
 #' @import ggplot2
 #' @import dplyr
 #' @import RColorBrewer
-#' @import plotly
+#' @importFrom plotly ggplotly
+#' @importFrom plotly config
 #'
 #' @return ggplot object
 #' 
@@ -137,7 +142,8 @@ drawRawChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), delta_crea
 #' @import ggplot2
 #' @import dplyr
 #' @import RColorBrewer
-#' @import plotly
+#' @importFrom plotly ggplotly
+#' @importFrom plotly config
 #'
 #' @return ggplot object
 #' 
@@ -180,7 +186,8 @@ drawULNFoldChange <- function(adlb, labs = c("Bicarbonate", "Blood Urea Nitrogen
 #' @import ggplot2
 #' @import dplyr
 #' @import RColorBrewer
-#' @import plotly
+#' @importFrom plotly ggplotly
+#' @importFrom plotly config
 #'
 #' @return ggplot object
 #' 
@@ -223,12 +230,12 @@ drawBloodPressure <- function(adlb, labs = c("Diastolic Blood Pressure", "Systol
 #' Draw Time Series Plot for Normalized Albumin
 #'
 #' @param adlb lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value
-#' @param labs character string or character vector specifying which labs from TEST to include
 #'
 #' @import ggplot2
 #' @import dplyr
 #' @import RColorBrewer
-#' @import plotly
+#' @importFrom plotly ggplotly
+#' @importFrom plotly config
 #'
 #' @return ggplot object
 #' 

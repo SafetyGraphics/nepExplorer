@@ -11,7 +11,7 @@ create_nepexplorer_app(
 )
 }
 \arguments{
-\item{lab_df}{la dataset to be loaded in to the app. Sample adbds data used by default}
+\item{lab_df}{lab dataset to be loaded in to the app. Sample adbds data used by default}
 
 \item{settings}{list specifying the initial mapping values for each data mapping for each domain (e.g. list(aes= list(id_col='USUBJID', seq_col='AESEQ')).}
 

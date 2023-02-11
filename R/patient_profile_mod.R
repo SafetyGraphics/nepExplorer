@@ -24,10 +24,11 @@ patientProfileUI <-  function(id){
 #'
 #' @param id module id
 #' @param df lab dataset in tall format with creatinine lab
-#' @param subjid single subject ID as character string
+#' @param subj_id single subject ID as character string
 #'
 #' @return returns shiny server module
 #' 
+
 #' @import shiny
 #' @import dplyr
 #' @importFrom plotly renderPlotly

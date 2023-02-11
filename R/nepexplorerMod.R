@@ -11,6 +11,7 @@
 nepexplorer_ui <- function(id) {
   ns <- NS(id)
 
+  #future home of settings panel
   sidebar <- sidebarPanel(selectizeInput(
     ns("measures"),
     "Select Measures",
@@ -20,11 +21,11 @@ nepexplorer_ui <- function(id) {
   
   
   main <- mainPanel(
-     # Scatterplot placeholder
+     # Scatter PLot + Summary Table UI
       creatinineScatterUI(ns("scatter")),
       br(),
       br(),
-      # Patient Profile (demo tables + lab line charts)
+      # Patient Profile (demography table + lab line charts) UI
       patientProfileUI(ns("patprofile")) 
   )
 
@@ -67,7 +68,7 @@ nepexplorer_server <- function(input, output, session, params){
         
       })
       
-      # map columns for adbds dataset 
+      # map columns for lab dataset 
       adlb <- reactive({
         
         params()$data$labs %>% 
@@ -85,10 +86,9 @@ nepexplorer_server <- function(input, output, session, params){
         
       })
       
-      # get procossed data - amy not ened this??
+      # get processed data to use for subsetting to subject on scatterplot click
       processed_creatinine_data <- reactive({
         creatinineScatterServer("scatter", df = adlb(), params= params()) 
-        
       })
       
       # subject id return from plotly click event

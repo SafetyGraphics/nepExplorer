@@ -3,8 +3,11 @@
 #' @param df lab dataset in tall format with creatinine lab
 #'
 #' @import ggplot2
-#' @import plotly
+#' @importFrom plotly ggplotly
+#' @importFrom plotly event_register
+#' @importFrom plotly config
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' 
 draw_creatinine_scatter <- function(df){
 
@@ -13,16 +16,16 @@ draw_creatinine_scatter <- function(df){
   
   max_kdigo = max(max(df$KDIGO, na.rm = TRUE), 3.5)
   
-  p <- ggplot(df, aes(x=KDIGO, y=DELTA_C, text = 
-                                 paste0("Subject ID: ", USUBJID, "\n",
-                                        "KDIGO Stage: ",KDIGO_STAGE, "\n",
-                                        "Creatinine Fold Change: " ,format(round(KDIGO, 2), nsmall = 2), "\n",
-                                        "Delta Creatinine Stage: " ,DELTA_STAGE, "\n",
-                                        "Absolute Creatinine Change: " ,format(round(DELTA_C, 2), nsmall = 2), "\n",
-                                        "Baseline Creatinine: " ,format(round(BASELINE, 2), nsmall = 2), "\n",
-                                        "Max Creatinine: " ,format(round(STRESN, 2), nsmall = 2), "\n",
-                                        "Max Creatinine Study Day: " ,DY, "\n",
-                                        "Max Creatinine Visit: " ,VISIT
+  p <- ggplot(df, aes(x=.data$KDIGO, y=.data$DELTA_C, text = 
+                                 paste0("Subject ID: ", .data$USUBJID, "\n",
+                                        "KDIGO Stage: ",.data$KDIGO_STAGE, "\n",
+                                        "Creatinine Fold Change: " ,format(round(.data$KDIGO, 2), nsmall = 2), "\n",
+                                        "Delta Creatinine Stage: " ,.data$DELTA_STAGE, "\n",
+                                        "Absolute Creatinine Change: " ,format(round(.data$DELTA_C, 2), nsmall = 2), "\n",
+                                        "Baseline Creatinine: " ,format(round(.data$BASELINE, 2), nsmall = 2), "\n",
+                                        "Max Creatinine: " ,format(round(.data$STRESN, 2), nsmall = 2), "\n",
+                                        "Max Creatinine Study Day: " ,.data$DY, "\n",
+                                        "Max Creatinine Visit: " ,.data$VISIT
                                         
                                  ))) +
     
