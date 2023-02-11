@@ -11,6 +11,6 @@ a data frame with 16,893 rows and 25 columns. Retrieved from \url{https://raw.gi
 adbds
 }
 \description{
-what even is this ....
+labs dataset in tall format that includes baseline characteristics.
 }
 \keyword{datasets}

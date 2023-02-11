@@ -1,11 +1,14 @@
 Package: nepExplorer
 Type: Package
-Title: Volcano Plot for Clinical Trial Adverse Events
-Version: 1.0.0
+Title: Interactive Graphic for Exploring Kidney Function Data in Clinical Trials
+Version: 0.1.0
 Authors@R: c(
 	person("Billy", "Burns", email = "jwildfire@gmail.com", role = c("cre","aut")))
 Maintainer: Jeremy Wildfire <jwildfire@gmail.com>
-Description: Shiny app showing Volcano Plot for clinical trial adverse events.
+Description: Shiny app of Interactive Creatinine Scatterplot for Exploring Kidney Function Data in Clinical Trials
+URL: https://github.com/SafetyGraphics/nep-explorer
+BugReports: https://github.com/SafetyGraphics/nep-explorer/issues
+Depends: R (>= 4.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -15,10 +18,12 @@ Imports:
     dplyr,
     ggplot2,
     RColorBrewer, 
-    tidyverse,
-    plotly,
+    magrittr,
+    plotly (>= 4.0.0),
     gt,
-    htmlwidgets
+    htmlwidgets,
+    scales,
+    rlang
 Suggests:
     safetyGraphics, 
     safetyData

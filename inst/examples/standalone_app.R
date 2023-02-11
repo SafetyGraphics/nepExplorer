@@ -9,5 +9,5 @@ if (!interactive()) {
   devtools::load_all()
 }
 
-#launch the app
-create_nepexplorer_app() # add additional parameters here
+#launch nepexplorer  stand-alone  app
+create_nepexplorer_app() # see ?create_nepexplorer_app for more info

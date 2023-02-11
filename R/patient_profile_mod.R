@@ -1,4 +1,12 @@
-
+#' Patient Profile Module UI
+#'
+#' @param id module id
+#'
+#' @return returns shiny module UI
+#' 
+#' @import shiny
+#' @importFrom plotly plotlyOutput
+#' 
 patientProfileUI <-  function(id){
   ns <- NS(id)
   fluidPage(
@@ -12,7 +20,21 @@ patientProfileUI <-  function(id){
   )
 }
 
-patientProfileServer <-  function(df, id, subj_id) {
+#' Patient Profile Module Server
+#'
+#' @param id module id
+#' @param df lab dataset in tall format with creatinine lab
+#' @param subj_id single subject ID as character string
+#'
+#' @return returns shiny server module
+#' 
+
+#' @import shiny
+#' @import dplyr
+#' @importFrom plotly renderPlotly
+#' @importFrom magrittr %>%
+#' 
+patientProfileServer <-  function(id, df, subj_id) {
   moduleServer(
     id,
     function(input, output, session) {
