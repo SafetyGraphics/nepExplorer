@@ -4,3 +4,4 @@
 ^data-raw$
 ^outline\.md$
 ^\.github$
+^\.lintr$

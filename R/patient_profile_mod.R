@@ -49,7 +49,7 @@ patientProfileServer <-  function(id, df, subj_id) {
       })
       
       output$raw_change_egfr <- renderPlotly({
-        drawRawChange(patient_df, labs = c("eGFR", "eGFRcys"), delta_creatinine_reference_ranges = FALSE)
+        drawRawChange(patient_df, labs = c("eGFR", "eGFRcys"), delta_creatinine_ref_ranges = FALSE)
       })
       
       output$ULN_FC <- renderPlotly({

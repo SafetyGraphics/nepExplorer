@@ -11,9 +11,11 @@ drawULNFoldChange(
 )
 }
 \arguments{
-\item{adlb}{lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value}
+\item{adlb}{lab data in tall format that must contain DY for study day,
+VISITN for visit number, TEST for lab test, and STRESN for lab value}
 
-\item{labs}{character string or character vector specifying which labs from TEST to include}
+\item{labs}{character string or character vector specifying which labs from
+TEST to include}
 }
 \value{
 ggplot object

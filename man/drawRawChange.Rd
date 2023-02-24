@@ -7,15 +7,18 @@
 drawRawChange(
   adlb,
   labs = c("Creatinine", "Cystatin C"),
-  delta_creatinine_reference_ranges = TRUE
+  delta_creatinine_ref_ranges = TRUE
 )
 }
 \arguments{
-\item{adlb}{lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value}
+\item{adlb}{lab data in tall format that must contain DY for study day,
+VISITN for visit number, TEST for lab test, and STRESN for lab value}
 
-\item{labs}{character string or character vector specifying which labs from TEST to include}
+\item{labs}{character string or character vector specifying which labs from
+TEST to include}
 
-\item{delta_creatinine_reference_ranges}{boolean for whether or not to include horizontal lines denoting delta creatinine reference ranges}
+\item{delta_creatinine_ref_ranges}{boolean for whether or not to
+include horizontal lines denoting delta creatinine reference ranges}
 }
 \value{
 ggplot object

@@ -7,9 +7,11 @@
 drawDemoTable(adlb, demo_vars = c("USUBJID", "AGE", "SEX", "RACE", "ARM"))
 }
 \arguments{
-\item{adlb}{lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value}
+\item{adlb}{lab data in tall format that must contain DY for study day,
+VISITN for visit number, TEST for lab test, and STRESN for lab value}
 
-\item{demo_vars}{character vector of column names to include in demography table - those not found in data will be ignored}
+\item{demo_vars}{character vector of column names to include in demography
+table - those not found in data will be ignored}
 }
 \value{
 gt object

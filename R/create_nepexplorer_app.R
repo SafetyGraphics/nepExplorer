@@ -5,17 +5,16 @@
 #' @param settings list specifying the initial mapping values for each data
 #'   mapping for each domain (e.g. list(aes= list(id_col='USUBJID',
 #'   seq_col='AESEQ')).
-#' @param run_now Should the shiny app object created be run directly? Helpful
+#' @param runNow Should the shiny app object created be run directly? Helpful
 #'   when writing  functions to dispatch to shinyapps, rsconnect, or shinyproxy.
 #'
 #' @import shiny
 #'
 #' @export
-
 create_nepexplorer_app <- function(
   lab_df = nepExplorer::adbds,
   settings = NULL,
-  run_now = TRUE
+  runNow = TRUE
 ) {
   # create default settings when settings is not defined by default
   if (is.null(settings)) {
@@ -42,7 +41,7 @@ app <- shinyApp(
   }
 )
   
-if (run_now)
+if (runNow)
   runApp(app)
 else
   app
