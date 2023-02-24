@@ -1,0 +1,10 @@
+linters: linters_with_defaults(
+    line_length_linter(120),
+    object_usage_linter = NULL,
+    trailing_whitespace_linter(allow_empty_lines = TRUE, allow_in_strings = TRUE),
+    object_name_linter = NULL
+  )
+encoding: "UTF-8"
+exclusions: list(
+    "data-raw/save_adbds.R"
+  )

@@ -3,11 +3,8 @@
 #' @param id module id
 #'
 #' @return returns shiny module UI
-#' 
 #' @import shiny
-#' 
 #' @export
-#' 
 nepexplorer_ui <- function(id) {
   ns <- NS(id)
 
@@ -26,7 +23,7 @@ nepexplorer_ui <- function(id) {
       br(),
       br(),
       # Patient Profile (demography table + lab line charts) UI
-      patientProfileUI(ns("patprofile")) 
+      patientProfileUI(ns("patprofile"))
   )
 
   ui <- sidebarLayout(
@@ -52,7 +49,7 @@ nepexplorer_ui <- function(id) {
 #' @import shiny
 #' @importFrom plotly event_data
 #' @export
-nepexplorer_server <- function(input, output, session, params){
+nepexplorer_server <- function(input, output, session, params) {
       ns <- session$ns
       
       
@@ -67,12 +64,14 @@ nepexplorer_server <- function(input, output, session, params){
         )
         
       })
-      
-      # map columns for lab dataset 
+    
+      # map columns for lab dataset
       adlb <- reactive({
         
-        params()$data$labs %>% 
-          rename( # I suppose this will break if the name already exists in dataframe - can fix this later, you get the idea
+        params()$data$labs %>%
+          # I suppose this will break if the name already exists in dataframe -
+          #can fix this later, you get the idea
+          rename(
             USUBJID = params()$settings$labs$id_col,
             DY = params()$settings$labs$studyday_col,
             TEST = params()$settings$labs$measure_col,
@@ -88,22 +87,18 @@ nepexplorer_server <- function(input, output, session, params){
       
       # get processed data to use for subsetting to subject on scatterplot click
       processed_creatinine_data <- reactive({
-        creatinineScatterServer("scatter", df = adlb(), params= params()) 
+        creatinineScatterServer("scatter", df = adlb(), params = params())
       })
-      
       # subject id return from plotly click event
       selected_subject <- reactive({
-        processed_creatinine_data()[event_data("plotly_click", source = "scatter")$pointNumber,]$USUBJID
+        processed_creatinine_data()[event_data("plotly_click", source = "scatter")$pointNumber, ]$USUBJID
       })
-      
-      
       #Patient Profile (demo tables + lab line charts)
-      observeEvent(selected_subject(),{
+      observeEvent(selected_subject(), {
         
-        if(length(selected_subject()) == 1){ # avoid triggering patient profiles if there isn't a subject
+        if (length(selected_subject()) == 1) { # avoid triggering patient profiles if there isn't a subject
           patientProfileServer("patprofile", df = adlb(), subj_id = selected_subject())
         }
-      },  ignoreInit = TRUE)
+      }, ignoreInit = TRUE)
       
 }
-

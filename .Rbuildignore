@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^docs$
+^data-raw$
+^outline\.md$
+^\.github$

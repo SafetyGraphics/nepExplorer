@@ -3,11 +3,9 @@
 #' @param id module id
 #'
 #' @return returns shiny module UI
-#' 
 #' @import shiny
 #' @importFrom plotly plotlyOutput
-#' 
-patientProfileUI <-  function(id){
+patientProfileUI <-  function(id) {
   ns <- NS(id)
   fluidPage(
     gt_output(ns("demo_table")),
@@ -27,29 +25,25 @@ patientProfileUI <-  function(id){
 #' @param subj_id single subject ID as character string
 #'
 #' @return returns shiny server module
-#' 
-
 #' @import shiny
 #' @import dplyr
 #' @importFrom plotly renderPlotly
 #' @importFrom magrittr %>%
-#' 
 patientProfileServer <-  function(id, df, subj_id) {
   moduleServer(
     id,
     function(input, output, session) {
-      
       patient_df <- df %>%   # filter to selected patient
-        filter(USUBJID == subj_id) 
-      
+        filter(USUBJID == subj_id)
+
       output$demo_table <- render_gt({
         drawDemoTable(patient_df)
       })
-      
+
       output$percent_change <- renderPlotly({
         drawPercentChange(patient_df)
       })
-      
+
       output$raw_change <- renderPlotly({
         drawRawChange(patient_df)
       })
