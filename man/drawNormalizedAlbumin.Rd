@@ -7,7 +7,8 @@
 drawNormalizedAlbumin(adlb)
 }
 \arguments{
-\item{adlb}{lab data in tall format that must contain DY for study day, VISITN for visit number, TEST for lab test, and STRESN for lab value}
+\item{adlb}{lab data in tall format that must contain DY for study day,
+VISITN for visit number, TEST for lab test, and STRESN for lab value}
 }
 \value{
 ggplot object

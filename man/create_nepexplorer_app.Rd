@@ -11,11 +11,15 @@ create_nepexplorer_app(
 )
 }
 \arguments{
-\item{lab_df}{lab dataset to be loaded in to the app. Sample adbds data used by default}
+\item{lab_df}{lab dataset to be loaded in to the app. Sample adbds data used
+by default}
 
-\item{settings}{list specifying the initial mapping values for each data mapping for each domain (e.g. list(aes= list(id_col='USUBJID', seq_col='AESEQ')).}
+\item{settings}{list specifying the initial mapping values for each data
+mapping for each domain (e.g. list(aes= list(id_col='USUBJID',
+seq_col='AESEQ')).}
 
-\item{runNow}{Should the shiny app object created be run directly? Helpful when writing  functions to dispatch to shinyapps, rsconnect, or shinyproxy.}
+\item{runNow}{Should the shiny app object created be run directly? Helpful
+when writing  functions to dispatch to shinyapps, rsconnect, or shinyproxy.}
 }
 \description{
 Run the core NepExplorer App
