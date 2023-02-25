@@ -4,12 +4,14 @@
 \alias{patientProfileServer}
 \title{Patient Profile Module Server}
 \usage{
-patientProfileServer(id, df, subj_id)
+patientProfileServer(id, df, settings, subj_id)
 }
 \arguments{
 \item{id}{module id}
 
 \item{df}{lab dataset in tall format with creatinine lab}
+
+\item{settings}{settings object with column mappings}
 
 \item{subj_id}{single subject ID as character string}
 }

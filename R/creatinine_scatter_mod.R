@@ -37,7 +37,7 @@ creatinineScatterServer <-  function(id, df, settings) {
       creatinine_data <- df %>%
         filter(.data[[settings$measure_col]] == settings$measure_values$Creatinine) %>%
         select(.data[[settings$id_col]], .data[[settings$studyday_col]],
-               .data[[settings$visit_col]], .data[[settings$measure_col]],  
+               .data[[settings$visit_col]], .data[[settings$measure_col]],
                .data[[settings$value_col]], .data[[settings$baseline_flag]])
       
       #get baseline creatinine levels for each subject for hover text
@@ -52,7 +52,8 @@ creatinineScatterServer <-  function(id, df, settings) {
         mutate(DELTA_C = .data[[settings$value_col]] - .data[[settings$value_col]][1L],
                KDIGO = .data[[settings$value_col]] / .data[[settings$value_col]][1L]) %>%
         # get maximum delta creatinine for each subject (same as using delta creatinine)
-        summarize(KDIGO = max(KDIGO), DELTA_C = max(DELTA_C), !!settings$value_col := max(.data[[settings$value_col]]),  across()) %>%
+        summarize(KDIGO = max(KDIGO), DELTA_C = max(DELTA_C),
+                  !!settings$value_col := max(.data[[settings$value_col]]),  across()) %>%
         mutate(
           KDIGO_STAGE = case_when(
             KDIGO > 3 | STRESN >= 4 ~ "Stage 3",
@@ -67,7 +68,7 @@ creatinineScatterServer <-  function(id, df, settings) {
             TRUE ~ "Did not trigger Delta Creatinine Stage"
           ),
         ) %>%
-        left_join(baseline_creat, by = "USUBJID") %>%
+        left_join(baseline_creat, by = .data[[settings$id_col]]) %>%
         filter(.data[[settings$baseline_flag]] == FALSE)
       
       
