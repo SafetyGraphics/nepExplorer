@@ -32,7 +32,7 @@ creatinineScatterServer <-  function(id, df, settings) {
   moduleServer(
     id,
     function(input, output, session) {
-   
+
       ## Prepare data for chart and table
       creatinine_data <- df %>%
         filter(.data[[settings$measure_col]] == settings$measure_values$Creatinine) %>%
@@ -68,7 +68,7 @@ creatinineScatterServer <-  function(id, df, settings) {
             TRUE ~ "Did not trigger Delta Creatinine Stage"
           ),
         ) %>%
-        left_join(baseline_creat, by = .data[[settings$id_col]]) %>%
+        left_join(baseline_creat, by = settings$id_col) %>%
         filter(.data[[settings$baseline_flag]] == FALSE)
       
       
