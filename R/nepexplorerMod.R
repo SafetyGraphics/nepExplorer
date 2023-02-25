@@ -77,7 +77,7 @@ nepexplorer_server <- function(input, output, session, params) {
       observeEvent(selected_subject(), {
         
         if (length(selected_subject()) == 1) { # avoid triggering patient profiles if there isn't a subject
-          patientProfileServer("patprofile", df = params()$data$labs, 
+          patientProfileServer("patprofile", df = params()$data$labs,
                                settings = params()$settings$labs, subj_id = selected_subject())
         }
       }, ignoreInit = TRUE)
