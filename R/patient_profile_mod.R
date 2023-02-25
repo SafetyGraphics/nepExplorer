@@ -22,6 +22,7 @@ patientProfileUI <-  function(id) {
 #'
 #' @param id module id
 #' @param df lab dataset in tall format with creatinine lab
+#' @param settings settings object with column mappings
 #' @param subj_id single subject ID as character string
 #'
 #' @return returns shiny server module
@@ -29,13 +30,14 @@ patientProfileUI <-  function(id) {
 #' @import dplyr
 #' @importFrom plotly renderPlotly
 #' @importFrom magrittr %>%
-patientProfileServer <-  function(id, df, subj_id) {
+patientProfileServer <-  function(id, df, settings, subj_id) {
   moduleServer(
     id,
     function(input, output, session) {
       patient_df <- df %>%   # filter to selected patient
-        filter(USUBJID == subj_id)
+        filter(.data[[settings$id_col]] == subj_id)
 
+      ## TO DO: pass settings object into charts and use names from there in dplyr etc
       output$demo_table <- render_gt({
         drawDemoTable(patient_df)
       })

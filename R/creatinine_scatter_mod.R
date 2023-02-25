@@ -20,7 +20,7 @@ creatinineScatterUI <-  function(id) {
 #'
 #' @param id module id
 #' @param df lab dataset in tall format with creatinine lab
-#' @param params parameters object with `data` and `settings` options.
+#' @param settings settings object with column mappings
 #'
 #' @return returns shiny server module
 #' @import shiny
@@ -28,29 +28,31 @@ creatinineScatterUI <-  function(id) {
 #' @importFrom gt render_gt
 #' @importFrom plotly renderPlotly
 #' @importFrom htmlwidgets onRender
-creatinineScatterServer <-  function(id, df, params) {
+creatinineScatterServer <-  function(id, df, settings) {
   moduleServer(
     id,
     function(input, output, session) {
    
       ## Prepare data for chart and table
       creatinine_data <- df %>%
-        filter(TEST == params$settings$labs$measure_values$Creatinine) %>%
-        select(USUBJID, DY, VISIT, TEST,  STRESN, BLFL)
+        filter(.data[[settings$measure_col]] == settings$measure_values$Creatinine) %>%
+        select(.data[[settings$id_col]], .data[[settings$studyday_col]],
+               .data[[settings$visit_col]], .data[[settings$measure_col]],  
+               .data[[settings$value_col]], .data[[settings$baseline_flag]])
       
       #get baseline creatinine levels for each subject for hover text
       baseline_creat <- creatinine_data %>%
-        filter(BLFL == TRUE) %>%
-        select(USUBJID, BASELINE = STRESN)
+        filter(.data[[settings$baseline_flag]] == TRUE) %>%
+        select(.data[[settings$id_col]], BASELINE = .data[[settings$value_col]])
       
       #calcualte stages at event level
       processed_creatinine_data <- creatinine_data %>%
-        group_by(USUBJID) %>%
-        arrange(desc(BLFL)) %>%
-        mutate(DELTA_C = STRESN - STRESN[1L],
-               KDIGO = STRESN / STRESN[1L]) %>%
+        group_by(.data[[settings$id_col]]) %>%
+        arrange(desc(.data[[settings$baseline_flag]])) %>%
+        mutate(DELTA_C = .data[[settings$value_col]] - .data[[settings$value_col]][1L],
+               KDIGO = .data[[settings$value_col]] / .data[[settings$value_col]][1L]) %>%
         # get maximum delta creatinine for each subject (same as using delta creatinine)
-        summarize(KDIGO = max(KDIGO), DELTA_C = max(DELTA_C), STRESN = max(STRESN),  across()) %>%
+        summarize(KDIGO = max(KDIGO), DELTA_C = max(DELTA_C), !!settings$value_col := max(.data[[settings$value_col]]),  across()) %>%
         mutate(
           KDIGO_STAGE = case_when(
             KDIGO > 3 | STRESN >= 4 ~ "Stage 3",
@@ -66,7 +68,7 @@ creatinineScatterServer <-  function(id, df, params) {
           ),
         ) %>%
         left_join(baseline_creat, by = "USUBJID") %>%
-        filter(BLFL == FALSE)
+        filter(.data[[settings$baseline_flag]] == FALSE)
       
       
       get_highest_stage <- function(vector_of_stages) {
@@ -83,7 +85,7 @@ creatinineScatterServer <-  function(id, df, params) {
         
       #get highest stage by subject
       patient_level_stages <- processed_creatinine_data %>%
-        group_by(USUBJID) %>%
+        group_by(.data[[settings$id_col]]) %>%
         summarize(DELTA_STAGE = get_highest_stage(DELTA_STAGE),
                   KDIGO_STAGE = get_highest_stage(KDIGO_STAGE),
           
@@ -101,13 +103,13 @@ creatinineScatterServer <-  function(id, df, params) {
       #calcualte summaries and generate summary tables
       KDIGO_summary <- patient_level_stages %>%
          group_by(KDIGO_STAGE) %>%
-        summarize(`KDIGO_N` = length(USUBJID),
-                  `KDIGO_%` = length(USUBJID) / nrow(patient_level_stages))
+        summarize(`KDIGO_N` = length(.data[[settings$id_col]]),
+                  `KDIGO_%` = length(.data[[settings$id_col]]) / nrow(patient_level_stages))
         
     DELTA_summary <- patient_level_stages %>%
         group_by(DELTA_STAGE) %>%
-        summarize(`DELTA_N` = length(USUBJID),
-                  `DELTA_%` = length(USUBJID) / nrow(patient_level_stages))
+        summarize(`DELTA_N` = length(.data[[settings$id_col]]),
+                  `DELTA_%` = length(.data[[settings$id_col]]) / nrow(patient_level_stages))
     
     summary_table_data <- summary_table_template %>%
       left_join(KDIGO_summary) %>%
