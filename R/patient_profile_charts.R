@@ -15,22 +15,22 @@
 #' @importFrom scales percent_format
 #'
 #' @return ggplot object
-drawPercentChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), KDIGO_reference_ranges = TRUE) {
+drawPercentChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), KDIGO_reference_ranges = TRUE) {
   
   adlb_pct_chg <- adlb %>%
-    filter(TEST %in% labs) %>%
-    group_by(TEST) %>%
-    arrange(VISITN) %>% #sort by visit order
+    filter(.data[[settings$measure_col]] %in% labs) %>%
+    group_by(.data[[settings$measure_col]]) %>%
+    arrange(.data[[settings$visit_order_col]]) %>% #sort by visit order
     # for each visit, calculate % change from first visit -> have a baseline flag defined
-    mutate(PCT_CHG = (STRESN - STRESN[1L]) / STRESN[1L]) %>%
+    mutate(PCT_CHG = (.data[[settings$value_col]] - .data[[settings$value_col]][1L]) / .data[[settings$value_col]][1L]) %>%
     ungroup() #use baseline column ABLFL baseline flag "Y"
   
   #1) see if i can add that flag to our test data (not good ieda to derive this ourselves as its study dependent)
   #2) --- start conversation around if we don't have that
   # requirement around
-  p <- ggplot(adlb_pct_chg, aes(x = DY, y = PCT_CHG, color = TEST, group = TEST, text =
-                                  paste0("Study Day: ", DY, "\n",
-                                         "Lab Test: ", TEST, "\n",
+  p <- ggplot(adlb_pct_chg, aes(x = .data[[settings$studyday_col]], y = PCT_CHG, color = .data[[settings$measure_col]], group = .data[[settings$measure_col]], text =
+                                  paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
+                                         "Lab Test: ", .data[[settings$measure_col]], "\n",
                                          "Percent Change: ", sprintf("%0.1f%%", PCT_CHG * 100)
                                          ))) +
     geom_line() +
@@ -43,20 +43,20 @@ drawPercentChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), KDIGO_
 
     ## Add Baseline Annotation
     geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
-    annotate("text", x = max(adlb_pct_chg$DY) / 10, y = -.05, label = "Baseline", color = "gray44", size = 3) +
+    annotate("text", x = max(adlb_pct_chg[[settings$studyday_col]]) / 10, y = -.05, label = "Baseline", color = "gray44", size = 3) +
 
     ## Add KDIGO Stage 1 Annotation
     geom_hline(yintercept = 1.5, linetype = "dashed", color = "gray") +
     # newline ensures nice placement beneath line
-    annotate("text", x = max(adlb_pct_chg$DY) / 10, y = 1.5, label = "\nKDIGO Stage 1", color = "gray44", size = 3) +
+    annotate("text", x = max(adlb_pct_chg[[settings$studyday_col]]) / 10, y = 1.5, label = "\nKDIGO Stage 1", color = "gray44", size = 3) +
 
     ## Add KDIGO Stage 2 Annotation
     geom_hline(yintercept = 2, linetype = "dashed", color = "gray") +
-    annotate("text", x = max(adlb_pct_chg$DY) / 10, y = 2, label = "\nKDIGO Stage 2", color = "gray44", size = 3) +
+    annotate("text", x = max(adlb_pct_chg[[settings$studyday_col]]) / 10, y = 2, label = "\nKDIGO Stage 2", color = "gray44", size = 3) +
     
     ## Add KDIGO Stage 3 Annotation (>x3 Baseline rule - not using >= 4 mg/dL rule)
     geom_hline(yintercept = 3, linetype = "dashed", color = "gray") +
-    annotate("text", x = max(adlb_pct_chg$DY) / 10, y = 3, label = "\nKDIGO Stage 3", color = "gray44", size = 3)
+    annotate("text", x = max(adlb_pct_chg[[settings$studyday_col]]) / 10, y = 3, label = "\nKDIGO Stage 3", color = "gray44", size = 3)
   
   ggplotly(p, tooltip = "text") %>%
     config(displayModeBar = FALSE)
@@ -77,21 +77,21 @@ drawPercentChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), KDIGO_
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
 #' @return ggplot object
-drawRawChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), delta_creatinine_ref_ranges = TRUE) {
+drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), delta_creatinine_ref_ranges = TRUE) {
   
   adlb_raw_chg <- adlb %>%
-    filter(TEST %in% labs) %>%
-    group_by(TEST) %>%
-    arrange(VISITN) %>% #sort by visit order
-    mutate(CHG = STRESN - STRESN[1L]) %>% # for each visit, calculate raw change from first visit
+    filter(.data[[settings$measure_col]] %in% labs) %>%
+    group_by(.data[[settings$measure_col]]) %>%
+    arrange(.data[[settings$visit_order_col]]) %>% #sort by visit order
+    mutate(CHG = .data[[settings$value_col]] - .data[[settings$value_col]][1L]) %>% # for each visit, calculate raw change from first visit
     ungroup()
   
-  n_orig_test <- n_distinct(adlb_raw_chg$TEST) #save number of tests for warning information later
+  n_orig_test <- n_distinct(adlb_raw_chg[[settings$measure_col]]) #save number of tests for warning information later
   
   adlb_raw_chg <- adlb_raw_chg %>%
-    mutate(TEST = paste0(TEST, " (", STRESU, ")")) # Add units to Test so that legend includes units for user to see
+    mutate(!!settings$measure_col := paste0(.data[[settings$measure_col]], " (", .data[[settings$unit_col]], ")")) # Add units to Test so that legend includes units for user to see
   
-  n_der_test <- n_distinct(adlb_raw_chg$TEST)
+  n_der_test <- n_distinct(adlb_raw_chg[[settings$measure_col]])
   
   if (n_orig_test != n_der_test) {
     warning(paste0("Some collected tests have multiple units.",
@@ -99,9 +99,9 @@ drawRawChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), delta_crea
                    "Standardization of units is required to achieve one line per test."))
   }
   
-  p <- ggplot(adlb_raw_chg, aes(x = DY, y = CHG, color = TEST, group = TEST,
-                                text = paste0("Study Day: ", DY, "\n",
-                                              "Lab Test: ", TEST, "\n",
+  p <- ggplot(adlb_raw_chg, aes(x = .data[[settings$studyday_col]], y = CHG, color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
+                                text = paste0("Study Day: ",  .data[[settings$studyday_col]], "\n",
+                                              "Lab Test: ", .data[[settings$measure_col]], "\n",
                                               "Raw Change: ", format(round(CHG, 2), nsmall = 2)
                                 ))) +
     geom_line() +
@@ -117,21 +117,21 @@ drawRawChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), delta_crea
     p <- p +
       ## Add Baseline Annotation
       geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
-      annotate("text", x = max(adlb_raw_chg$DY) / 10, y = 0, label = "\nBaseline", color = "gray44", size = 3) +
+      annotate("text", x = max(adlb_raw_chg[[settings$studyday_col]]) / 10, y = 0, label = "\nBaseline", color = "gray44", size = 3) +
       
       ## Add Delta Creatinine Stage 1 Annotation
       geom_hline(yintercept = .3, linetype = "dashed", color = "gray") +
-      annotate("text", x = max(adlb_raw_chg$DY) / 10, y = .3, label = "\n\u0394 Creatinine Stage 1",
+      annotate("text", x = max(adlb_raw_chg[[settings$studyday_col]]) / 10, y = .3, label = "\n\u0394 Creatinine Stage 1",
                color = "gray44", size = 3) +
       
       ## Add Delta Creatinine Stage 2 Annotation
       geom_hline(yintercept = 1.5, linetype = "dashed", color = "gray") +
-      annotate("text", x = max(adlb_raw_chg$DY) / 10, y = 1.5, label = "\n\u0394 Creatinine Stage 2",
+      annotate("text", x = max(adlb_raw_chg[[settings$studyday_col]]) / 10, y = 1.5, label = "\n\u0394 Creatinine Stage 2",
                color = "gray44", size = 3) +
 
       ## Add Delta Creatinine Stage 3 Annotation
       geom_hline(yintercept = 2.5, linetype = "dashed", color = "gray") +
-      annotate("text", x = max(adlb_raw_chg$DY) / 10, y = 2.5, label = "\n\u0394 Creatinine Stage 3",
+      annotate("text", x = max(adlb_raw_chg[[settings$studyday_col]]) / 10, y = 2.5, label = "\n\u0394 Creatinine Stage 3",
                color = "gray44", size = 3)
   }
   
@@ -153,7 +153,7 @@ drawRawChange <- function(adlb, labs = c("Creatinine", "Cystatin C"), delta_crea
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
 #' @return ggplot object
-drawULNFoldChange <- function(adlb,
+drawULNFoldChange <- function(adlb, settings,
                               labs = c("Bicarbonate", "Blood Urea Nitrogen",
                                        "Calcium", "Chloride", "Phosphorus",
                                        "Potassium", "Sodium")) {
@@ -201,7 +201,7 @@ drawULNFoldChange <- function(adlb,
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
 #' @return ggplot object
-drawBloodPressure <- function(adlb, labs = c("Diastolic Blood Pressure", "Systolic Blood Pressure")) {
+drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure", "Systolic Blood Pressure")) {
   
   adlb_bp <- adlb %>%
     filter(TEST %in% labs)
@@ -252,7 +252,7 @@ drawBloodPressure <- function(adlb, labs = c("Diastolic Blood Pressure", "Systol
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
 #' @return ggplot object
-drawNormalizedAlbumin <- function(adlb) {
+drawNormalizedAlbumin <- function(adlb, settings) {
 
   adlb_norm <- adlb %>%
     filter(TEST == "Albumin/Creatinine")
@@ -303,7 +303,7 @@ drawNormalizedAlbumin <- function(adlb) {
 #' @import gt
 #' @import dplyr
 #' @return gt object
-drawDemoTable <- function(adlb, demo_vars = c("USUBJID", "AGE", "SEX", "RACE", "ARM")) {
+drawDemoTable <- function(adlb, settings, demo_vars = c("USUBJID", "AGE", "SEX", "RACE", "ARM")) {
   
   #specs mention: Subject ID, KDIGO Stage, Delta Creatinine Stage, Treatment group, Age, Age group, Sex, Race
   demo_data <- adlb %>%

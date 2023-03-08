@@ -39,31 +39,31 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
 
       ## TO DO: pass settings object into charts and use names from there in dplyr etc
       output$demo_table <- render_gt({
-        drawDemoTable(patient_df)
+        drawDemoTable(patient_df, settings)
       })
 
       output$percent_change <- renderPlotly({
-        drawPercentChange(patient_df)
+        drawPercentChange(adlb = patient_df, labs = c(settings$measure_values$Creatinine, settings$measure_values$`Cystatin C`), settings = settings)
       })
 
       output$raw_change <- renderPlotly({
-        drawRawChange(patient_df)
+        drawRawChange(adlb = patient_df, settings = settings, labs = c(settings$measure_values$Creatinine, settings$measure_values$`Cystatin C`), delta_creatinine_ref_ranges = TRUE)
       })
       
       output$raw_change_egfr <- renderPlotly({
-        drawRawChange(patient_df, labs = c("eGFR", "eGFRcys"), delta_creatinine_ref_ranges = FALSE)
+        drawRawChange(adlb = patient_df, settings = settings, labs = c(settings$measure_values$eGFR, settings$measure_values$eGFRcys), delta_creatinine_ref_ranges = FALSE)
       })
       
       output$ULN_FC <- renderPlotly({
-        drawULNFoldChange(patient_df)
+        drawULNFoldChange(patient_df, settings)
       })
       
       output$blood_pressure <- renderPlotly({
-        drawBloodPressure(patient_df)
+        drawBloodPressure(patient_df, settings)
       })
       
       output$normalized_albumin <- renderPlotly({
-        drawNormalizedAlbumin(patient_df)
+        drawNormalizedAlbumin(patient_df, settings)
       })
       
       
