@@ -153,7 +153,7 @@ function(el, x) {
         
         #draw scatterplot
         output$scatterplot <- renderPlotly({
-          draw_creatinine_scatter(processed_creatinine_data) %>% onRender(update_color_js)
+          draw_creatinine_scatter(df = processed_creatinine_data, settings = settings) %>% onRender(update_color_js)
           })
 
         return(processed_creatinine_data)
