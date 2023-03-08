@@ -12,16 +12,29 @@
 #'
 #' @export
 create_nepexplorer_app <- function(
-  lab_df = nepExplorer::adbds,
-  settings = NULL,
-  runNow = TRUE
+    lab_df = nepExplorer::adbds,
+    settings = NULL,
+    runNow = TRUE
 ) {
   # create default settings when settings is not defined by default
   if (is.null(settings)) {
     settings <- list(
       labs = list("id_col" = "USUBJID", "measure_col" = "TEST",
-                  "measure_values" = list("Creatinine" = "Creatinine"),
-                  "value_col" = "STRESN", "studyday_col" = "DY",
+                  "measure_values" = list("Creatinine" = "Creatinine",
+                                          "Cystatin C" = "Cystatin C",
+                                          "eGFR" = "eGFR",
+                                          "eGFRcys" = "eGFRcys",
+                                          "Albumin" = "Albumin",
+                                          "Bicarbonate" =  "Bicarbonate",
+                                          "Blood Urea Nitrogen" =  "Blood Urea Nitrogen",
+                                          "Calcium" = "Calcium",
+                                          "Chloride" = "Chloride",
+                                          "Phosphorus" = "Phosphorus",
+                                          "Potassium" = "Potassium",
+                                          "Sodium" =  "Sodium",
+                                          "Diastolic Blood Pressure" ="Diastolic Blood Pressure",
+                                          "Systolic Blood Pressure" = "Systolic Blood Pressure"),
+                  "value_col" = "STRESN", "unit_col" = "STRESU", "studyday_col" = "DY",
                   "visit_col" = "VISIT", "visit_order_col" = "VISITN",
                   "baseline_flag" = "BLFL")
     )
@@ -33,17 +46,17 @@ create_nepexplorer_app <- function(
       settings = settings
     )
   })
-
-app <- shinyApp(
+  
+  app <- shinyApp(
     ui =  fluidPage(nepexplorer_ui("nep")),
     server = function(input, output, session) {
       callModule(nepexplorer_server, "nep", params)
-  }
-)
+    }
+  )
   
-if (runNow)
-  runApp(app)
-else
-  app
-
+  if (runNow)
+    runApp(app)
+  else
+    app
+  
 }
