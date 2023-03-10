@@ -26,7 +26,7 @@ create_nepexplorer_app <- function(
                                           "Cystatin C" = "Cystatin C",
                                           "eGFR" = "eGFR",
                                           "eGFRcys" = "eGFRcys",
-                                          "Albumin" = "Albumin",
+                                          "Albumin/Creatinine" = "Albumin/Creatinine",
                                           "Bicarbonate" =  "Bicarbonate",
                                           "Blood Urea Nitrogen" =  "Blood Urea Nitrogen",
                                           "Calcium" = "Calcium",
