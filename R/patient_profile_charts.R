@@ -281,7 +281,7 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
 drawNormalizedAlbumin <- function(adlb, settings) {
 
   adlb_norm <- adlb %>%
-    filter(.data[[settings$measure_col]] == "Albumin/Creatinine") # change to normalize in code?
+    filter(.data[[settings$measure_col]] == settings$measure_values[["Albumin/Creatinine"]])
 
   uacr_unit <- unique(adlb_norm[[settings$unit_col]])
 
