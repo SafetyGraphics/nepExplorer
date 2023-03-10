@@ -28,6 +28,7 @@ creatinineScatterUI <-  function(id) {
 #' @importFrom gt render_gt
 #' @importFrom plotly renderPlotly
 #' @importFrom htmlwidgets onRender
+#' @importFrom rlang :=
 creatinineScatterServer <-  function(id, df, settings) {
   moduleServer(
     id,
@@ -52,19 +53,19 @@ creatinineScatterServer <-  function(id, df, settings) {
         mutate(DELTA_C = .data[[settings$value_col]] - .data[[settings$value_col]][1L],
                KDIGO = .data[[settings$value_col]] / .data[[settings$value_col]][1L]) %>%
         # get maximum delta creatinine for each subject (same as using delta creatinine)
-        summarize(KDIGO = max(KDIGO), DELTA_C = max(DELTA_C),
+        summarize(KDIGO = max(.data$KDIGO), DELTA_C = max(.data$DELTA_C),
                   !!settings$value_col := max(.data[[settings$value_col]]),  across()) %>%
         mutate(
           KDIGO_STAGE = case_when(
-            KDIGO > 3 | STRESN >= 4 ~ "Stage 3",
-            KDIGO > 2 ~ "Stage 2",
-            KDIGO > 1.5  ~ "Stage 1",
+            .data$KDIGO > 3 | STRESN >= 4 ~ "Stage 3",
+            .data$KDIGO > 2 ~ "Stage 2",
+            .data$KDIGO > 1.5  ~ "Stage 1",
             TRUE ~ "Did not trigger KDIGO Stage"
           ),
           DELTA_STAGE = case_when(
-            DELTA_C > .3  ~ "Stage 1",
-            DELTA_C > 1.5 ~ "Stage 2",
-            DELTA_C > 2.5  ~ "Stage 3",
+            .data$DELTA_C > .3  ~ "Stage 1",
+            .data$DELTA_C > 1.5 ~ "Stage 2",
+            .data$DELTA_C > 2.5  ~ "Stage 3",
             TRUE ~ "Did not trigger Delta Creatinine Stage"
           ),
         ) %>%
@@ -87,8 +88,8 @@ creatinineScatterServer <-  function(id, df, settings) {
       #get highest stage by subject
       patient_level_stages <- processed_creatinine_data %>%
         group_by(.data[[settings$id_col]]) %>%
-        summarize(DELTA_STAGE = get_highest_stage(DELTA_STAGE),
-                  KDIGO_STAGE = get_highest_stage(KDIGO_STAGE),
+        summarize(DELTA_STAGE = get_highest_stage(.data$DELTA_STAGE),
+                  KDIGO_STAGE = get_highest_stage(.data$KDIGO_STAGE),
           
         )
   
@@ -103,20 +104,20 @@ creatinineScatterServer <-  function(id, df, settings) {
       
       #calcualte summaries and generate summary tables
       KDIGO_summary <- patient_level_stages %>%
-         group_by(KDIGO_STAGE) %>%
+         group_by(.data$KDIGO_STAGE) %>%
         summarize(`KDIGO_N` = length(.data[[settings$id_col]]),
                   `KDIGO_%` = length(.data[[settings$id_col]]) / nrow(patient_level_stages))
         
     DELTA_summary <- patient_level_stages %>%
-        group_by(DELTA_STAGE) %>%
+        group_by(.data$DELTA_STAGE) %>%
         summarize(`DELTA_N` = length(.data[[settings$id_col]]),
                   `DELTA_%` = length(.data[[settings$id_col]]) / nrow(patient_level_stages))
-    
+
     summary_table_data <- summary_table_template %>%
       left_join(KDIGO_summary) %>%
       left_join(DELTA_summary) %>%
-      replace(is.na(.), 0) %>%
-      select(-KDIGO_STAGE, Stage = DELTA_STAGE) # only need one stage column
+     mutate_if(is.numeric,coalesce,0) %>% 
+      select(-.data$KDIGO_STAGE, Stage = .data$DELTA_STAGE) # only need one stage column
     
    
         output$summary_table <- render_gt({

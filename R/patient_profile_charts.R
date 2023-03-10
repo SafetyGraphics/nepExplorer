@@ -2,6 +2,7 @@
 #'
 #' @param adlb lab data in tall format that must contain DY for study day,
 #'   VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param settings settings object with column mappings
 #' @param labs character string or character vector specifying which labs from
 #'   TEST to include
 #' @param KDIGO_reference_ranges boolean for whether or not to include
@@ -28,10 +29,10 @@ drawPercentChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C
   #1) see if i can add that flag to our test data (not good ieda to derive this ourselves as its study dependent)
   #2) --- start conversation around if we don't have that
   # requirement around
-  p <- ggplot(adlb_pct_chg, aes(x = .data[[settings$studyday_col]], y = PCT_CHG, color = .data[[settings$measure_col]], group = .data[[settings$measure_col]], text =
+  p <- ggplot(adlb_pct_chg, aes(x = .data[[settings$studyday_col]], y = .data$PCT_CHG, color = .data[[settings$measure_col]], group = .data[[settings$measure_col]], text =
                                   paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
                                          "Lab Test: ", .data[[settings$measure_col]], "\n",
-                                         "Percent Change: ", sprintf("%0.1f%%", PCT_CHG * 100)
+                                         "Percent Change: ", sprintf("%0.1f%%", .data$PCT_CHG * 100)
                                          ))) +
     geom_line() +
     geom_point() +
@@ -66,6 +67,7 @@ drawPercentChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C
 #'
 #' @param adlb lab data in tall format that must contain DY for study day,
 #'   VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param settings settings object with column mappings
 #' @param labs character string or character vector specifying which labs from
 #'   TEST to include
 #' @param delta_creatinine_ref_ranges boolean for whether or not to
@@ -76,6 +78,7 @@ drawPercentChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C
 #' @import RColorBrewer
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
+#' @importFrom rlang :=
 #' @return ggplot object
 drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), delta_creatinine_ref_ranges = TRUE) {
   
@@ -99,10 +102,10 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
                    "Standardization of units is required to achieve one line per test."))
   }
   
-  p <- ggplot(adlb_raw_chg, aes(x = .data[[settings$studyday_col]], y = CHG, color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
+  p <- ggplot(adlb_raw_chg, aes(x = .data[[settings$studyday_col]], y = .data$CHG, color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
                                 text = paste0("Study Day: ",  .data[[settings$studyday_col]], "\n",
                                               "Lab Test: ", .data[[settings$measure_col]], "\n",
-                                              "Raw Change: ", format(round(CHG, 2), nsmall = 2)
+                                              "Raw Change: ", format(round(.data$CHG, 2), nsmall = 2)
                                 ))) +
     geom_line() +
     geom_point() +
@@ -144,6 +147,7 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
 #'
 #' @param adlb lab data in tall format that must contain DY for study day,
 #'   VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param settings settings object with column mappings
 #' @param labs character string or character vector specifying which labs from
 #'   TEST to include
 #'
@@ -167,10 +171,10 @@ drawULNFoldChange <- function(adlb, settings,
     mutate(FOLD_CHG = (.data[[settings$value_col]] - .data[[settings$normal_col_high]]) / .data[[settings$normal_col_high]]) %>%
     ungroup()
   
-  p <- ggplot(adlb_FC, aes(x = .data[[settings$studyday_col]], y = FOLD_CHG, color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
+  p <- ggplot(adlb_FC, aes(x = .data[[settings$studyday_col]], y = .data$FOLD_CHG, color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
                            text = paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
                                          "Lab Test: ", .data[[settings$measure_col]], "\n",
-                                         "Fold Change: ", format(round(FOLD_CHG, 2), nsmall = 2)
+                                         "Fold Change: ", format(round(.data$FOLD_CHG, 2), nsmall = 2)
                            ))) +
     geom_line() +
     geom_point() +
@@ -193,6 +197,7 @@ drawULNFoldChange <- function(adlb, settings,
 #'
 #' @param adlb lab data in tall format that must contain DY for study day,
 #'   VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param settings settings object with column mappings
 #' @param labs character string or character vector specifying which labs from
 #'   TEST to include
 #'
@@ -246,6 +251,7 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
 #'
 #' @param adlb lab data in tall format that must contain DY for study day,
 #'   VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param settings settings object with column mappings
 #'
 #' @import ggplot2
 #' @import dplyr
@@ -298,6 +304,7 @@ drawNormalizedAlbumin <- function(adlb, settings) {
 #'
 #' @param adlb lab data in tall format that must contain DY for study day,
 #'   VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param settings settings object with column mappings
 #' @param demo_vars character vector of column names to include in demography
 #'   table - those not found in data will be ignored
 #'

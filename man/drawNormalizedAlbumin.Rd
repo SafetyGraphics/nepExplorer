@@ -4,11 +4,13 @@
 \alias{drawNormalizedAlbumin}
 \title{Draw Time Series Plot for Normalized Albumin}
 \usage{
-drawNormalizedAlbumin(adlb)
+drawNormalizedAlbumin(adlb, settings)
 }
 \arguments{
 \item{adlb}{lab data in tall format that must contain DY for study day,
 VISITN for visit number, TEST for lab test, and STRESN for lab value}
+
+\item{settings}{settings object with column mappings}
 }
 \value{
 ggplot object

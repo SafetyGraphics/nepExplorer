@@ -6,12 +6,15 @@
 \usage{
 drawBloodPressure(
   adlb,
+  settings,
   labs = c("Diastolic Blood Pressure", "Systolic Blood Pressure")
 )
 }
 \arguments{
 \item{adlb}{lab data in tall format that must contain DY for study day,
 VISITN for visit number, TEST for lab test, and STRESN for lab value}
+
+\item{settings}{settings object with column mappings}
 
 \item{labs}{character string or character vector specifying which labs from
 TEST to include}

@@ -1,6 +1,7 @@
 #' Draw Creatinine Scatter Plot
 #'
 #' @param df lab dataset in tall format with creatinine lab
+#' @param settings settings object with column mappings
 #'
 #' @import ggplot2
 #' @importFrom plotly ggplotly
