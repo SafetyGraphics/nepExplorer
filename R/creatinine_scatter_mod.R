@@ -116,7 +116,7 @@ creatinineScatterServer <-  function(id, df, settings) {
     summary_table_data <- summary_table_template %>%
       left_join(KDIGO_summary) %>%
       left_join(DELTA_summary) %>%
-     mutate_if(is.numeric,coalesce,0) %>% 
+     mutate_if(is.numeric, coalesce, 0) %>%
       select(-.data$KDIGO_STAGE, Stage = .data$DELTA_STAGE) # only need one stage column
     
    

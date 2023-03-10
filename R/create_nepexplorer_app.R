@@ -17,7 +17,7 @@ create_nepexplorer_app <- function(
     runNow = TRUE
 ) {
   # create default settings when settings is not defined by default
-  # I kept these consistent with safetycharts metadata, incase we wanto to switch to using default 
+  # I kept these consistent with safetycharts metadata, incase we wanto to switch to using default
   # LAB and DM domains
   if (is.null(settings)) {
     settings <- list(
@@ -34,7 +34,7 @@ create_nepexplorer_app <- function(
                                           "Phosphorus" = "Phosphorus",
                                           "Potassium" = "Potassium",
                                           "Sodium" =  "Sodium",
-                                          "Diastolic Blood Pressure" ="Diastolic Blood Pressure",
+                                          "Diastolic Blood Pressure" = "Diastolic Blood Pressure",
                                           "Systolic Blood Pressure" = "Systolic Blood Pressure"),
                   "value_col" = "STRESN", "unit_col" = "STRESU", "studyday_col" = "DY",
                   "visit_col" = "VISIT", "visit_order_col" = "VISITN",
