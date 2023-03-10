@@ -4,14 +4,14 @@
 \alias{creatinineScatterServer}
 \title{Creatine Scatter Plot + Summary Table UI}
 \usage{
-creatinineScatterServer(id, df, params)
+creatinineScatterServer(id, df, settings)
 }
 \arguments{
 \item{id}{module id}
 
 \item{df}{lab dataset in tall format with creatinine lab}
 
-\item{params}{parameters object with `data` and `settings` options.}
+\item{settings}{settings object with column mappings}
 }
 \value{
 returns shiny server module

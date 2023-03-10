@@ -1,6 +1,7 @@
 #' Draw Creatinine Scatter Plot
 #'
 #' @param df lab dataset in tall format with creatinine lab
+#' @param settings settings object with column mappings
 #'
 #' @import ggplot2
 #' @importFrom plotly ggplotly
@@ -8,7 +9,7 @@
 #' @importFrom plotly config
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-draw_creatinine_scatter <- function(df) {
+draw_creatinine_scatter <- function(df, settings) {
 
   #calculate axes to ensure breaks are included
   max_delta <- max(max(df$DELTA_C, na.rm = TRUE), 3)
@@ -20,15 +21,15 @@ draw_creatinine_scatter <- function(df) {
       x = .data$KDIGO,
       y = .data$DELTA_C,
       text = paste0(
-        "Subject ID: ", .data$USUBJID, "\n",
+        "Subject ID: ", .data[[settings$id_col]], "\n",
         "KDIGO Stage: ", .data$KDIGO_STAGE, "\n",
         "Creatinine Fold Change: ", format(round(.data$KDIGO, 2), nsmall = 2), "\n",
         "Delta Creatinine Stage: ", .data$DELTA_STAGE, "\n",
         "Absolute Creatinine Change: ", format(round(.data$DELTA_C, 2), nsmall = 2), "\n",
         "Baseline Creatinine: ", format(round(.data$BASELINE, 2), nsmall = 2), "\n",
-        "Max Creatinine: ", format(round(.data$STRESN, 2), nsmall = 2), "\n",
-        "Max Creatinine Study Day: ", .data$DY, "\n",
-        "Max Creatinine Visit: ", .data$VISIT
+        "Max Creatinine: ", format(round(.data[[settings$value_col]], 2), nsmall = 2), "\n",
+        "Max Creatinine Study Day: ", .data[[settings$studyday_col]], "\n",
+        "Max Creatinine Visit: ", .data[[settings$visit_col]]
         
       )
     )

@@ -4,10 +4,12 @@
 \alias{draw_creatinine_scatter}
 \title{Draw Creatinine Scatter Plot}
 \usage{
-draw_creatinine_scatter(df)
+draw_creatinine_scatter(df, settings)
 }
 \arguments{
 \item{df}{lab dataset in tall format with creatinine lab}
+
+\item{settings}{settings object with column mappings}
 }
 \description{
 Draw Creatinine Scatter Plot

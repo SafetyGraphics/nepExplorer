@@ -22,6 +22,7 @@ patientProfileUI <-  function(id) {
 #'
 #' @param id module id
 #' @param df lab dataset in tall format with creatinine lab
+#' @param settings settings object with column mappings
 #' @param subj_id single subject ID as character string
 #'
 #' @return returns shiny server module
@@ -29,39 +30,54 @@ patientProfileUI <-  function(id) {
 #' @import dplyr
 #' @importFrom plotly renderPlotly
 #' @importFrom magrittr %>%
-patientProfileServer <-  function(id, df, subj_id) {
+patientProfileServer <-  function(id, df, settings, subj_id) {
   moduleServer(
     id,
     function(input, output, session) {
       patient_df <- df %>%   # filter to selected patient
-        filter(USUBJID == subj_id)
+        filter(.data[[settings$id_col]] == subj_id)
 
+      ## TO DO: pass settings object into charts and use names from there in dplyr etc
       output$demo_table <- render_gt({
-        drawDemoTable(patient_df)
+        drawDemoTable(adlb = patient_df, settings = settings,
+                      demo_vars = c(settings$id_col, settings$age_col, settings$sex_col,
+                                    settings$race_col, settings$treatment_col))
       })
 
       output$percent_change <- renderPlotly({
-        drawPercentChange(patient_df)
+        drawPercentChange(adlb = patient_df,
+                          labs = c(settings$measure_values$Creatinine, settings$measure_values$`Cystatin C`),
+                          settings = settings)
       })
 
       output$raw_change <- renderPlotly({
-        drawRawChange(patient_df)
+        drawRawChange(adlb = patient_df, settings = settings,
+                      labs = c(settings$measure_values$Creatinine, settings$measure_values$`Cystatin C`),
+                      delta_creatinine_ref_ranges = TRUE)
       })
       
       output$raw_change_egfr <- renderPlotly({
-        drawRawChange(patient_df, labs = c("eGFR", "eGFRcys"), delta_creatinine_ref_ranges = FALSE)
+        drawRawChange(adlb = patient_df, settings = settings,
+                      labs = c(settings$measure_values$eGFR, settings$measure_values$eGFRcys),
+                      delta_creatinine_ref_ranges = FALSE)
       })
       
       output$ULN_FC <- renderPlotly({
-        drawULNFoldChange(patient_df)
+        drawULNFoldChange(adlb = patient_df, settings = settings,
+                          labs = c(settings$measure_values$Bicarbonate, settings$measure_values$`Blood Urea Nitrogen`,
+                                                                settings$measure_values$Calcium,
+                                   settings$measure_values$Chloride, settings$measure_values$Phosphorus,
+                                   settings$measure_values$Potassium, settings$measure_values$Sodium))
       })
       
       output$blood_pressure <- renderPlotly({
-        drawBloodPressure(patient_df)
+        drawBloodPressure(adlb = patient_df, settings = settings,
+                          labs = c(settings$measure_values$`Diastolic Blood Pressure`,
+                                   settings$measure_values$`Systolic Blood Pressure`))
       })
       
       output$normalized_albumin <- renderPlotly({
-        drawNormalizedAlbumin(patient_df)
+        drawNormalizedAlbumin(adlb = patient_df, settings = settings)
       })
       
       
