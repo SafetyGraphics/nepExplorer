@@ -93,14 +93,14 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
     filter(.data[[settings$measure_col]] %in% labs) %>%
     group_by(.data[[settings$measure_col]]) %>%
     arrange(.data[[settings$visit_order_col]]) %>% #sort by visit order
-    mutate(CHG = .data[[settings$value_col]] - .data[[settings$value_col]][1L]) %>% # for each visit, 
+    mutate(CHG = .data[[settings$value_col]] - .data[[settings$value_col]][1L]) %>% # for each visit,
     ungroup()                                                                # calculate raw change from first visit
   
   n_orig_test <- n_distinct(adlb_raw_chg[[settings$measure_col]]) #save number of tests for warning information later
   
   # Add units to Test so that legend includes units for user to see
   adlb_raw_chg <- adlb_raw_chg %>%
-    mutate(!!settings$measure_col := paste0(.data[[settings$measure_col]], " (", .data[[settings$unit_col]], ")")) 
+    mutate(!!settings$measure_col := paste0(.data[[settings$measure_col]], " (", .data[[settings$unit_col]], ")"))
   
   n_der_test <- n_distinct(adlb_raw_chg[[settings$measure_col]])
   
@@ -110,7 +110,7 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
                    "Standardization of units is required to achieve one line per test."))
   }
   
-  p <- ggplot(adlb_raw_chg, aes(x = .data[[settings$studyday_col]], y = .data$CHG, 
+  p <- ggplot(adlb_raw_chg, aes(x = .data[[settings$studyday_col]], y = .data$CHG,
                                 color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
                                 text = paste0("Study Day: ",  .data[[settings$studyday_col]], "\n",
                                               "Lab Test: ", .data[[settings$measure_col]], "\n",

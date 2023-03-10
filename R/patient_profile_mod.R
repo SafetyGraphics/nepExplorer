@@ -52,7 +52,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
 
       output$raw_change <- renderPlotly({
         drawRawChange(adlb = patient_df, settings = settings,
-                      labs = c(settings$measure_values$Creatinine, settings$measure_values$`Cystatin C`), 
+                      labs = c(settings$measure_values$Creatinine, settings$measure_values$`Cystatin C`),
                       delta_creatinine_ref_ranges = TRUE)
       })
       
@@ -66,13 +66,13 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
         drawULNFoldChange(adlb = patient_df, settings = settings,
                           labs = c(settings$measure_values$Bicarbonate, settings$measure_values$`Blood Urea Nitrogen`,
                                                                 settings$measure_values$Calcium,
-                                   settings$measure_values$Chloride, settings$measure_values$Phosphorus, 
+                                   settings$measure_values$Chloride, settings$measure_values$Phosphorus,
                                    settings$measure_values$Potassium, settings$measure_values$Sodium))
       })
       
       output$blood_pressure <- renderPlotly({
-        drawBloodPressure(adlb = patient_df, settings = settings, 
-                          labs = c(settings$measure_values$`Diastolic Blood Pressure`, 
+        drawBloodPressure(adlb = patient_df, settings = settings,
+                          labs = c(settings$measure_values$`Diastolic Blood Pressure`,
                                    settings$measure_values$`Systolic Blood Pressure`))
       })
       
