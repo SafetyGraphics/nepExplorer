@@ -17,6 +17,8 @@ create_nepexplorer_app <- function(
     runNow = TRUE
 ) {
   # create default settings when settings is not defined by default
+  # I kept these consistent with safetycharts metadata, incase we wanto to switch to using default 
+  # LAB and DM domains
   if (is.null(settings)) {
     settings <- list(
       labs = list("id_col" = "USUBJID", "measure_col" = "TEST",
@@ -36,7 +38,9 @@ create_nepexplorer_app <- function(
                                           "Systolic Blood Pressure" = "Systolic Blood Pressure"),
                   "value_col" = "STRESN", "unit_col" = "STRESU", "studyday_col" = "DY",
                   "visit_col" = "VISIT", "visit_order_col" = "VISITN",
-                  "baseline_flag" = "BLFL")
+                  "baseline_flag" = "BLFL", "normal_col_high" = "STNRHI",
+                  "id_col" = "USUBJID", "age_col" = "AGE", "sex_col" = "SEX",
+                  "race_col" = "RACE", "treatment_col" = "ARM")
     )
   }
   ## create object containing data and setting to pass to server

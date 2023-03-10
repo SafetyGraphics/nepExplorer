@@ -158,17 +158,18 @@ drawULNFoldChange <- function(adlb, settings,
                                        "Calcium", "Chloride", "Phosphorus",
                                        "Potassium", "Sodium")) {
   
+  
   adlb_FC <- adlb %>%
-    filter(TEST %in% labs) %>%
-    group_by(TEST) %>%
-    arrange(VISITN) %>% #sort by visit order
+    filter(.data[[settings$measure_col]] %in% labs) %>%
+    group_by(.data[[settings$measure_col]]) %>%
+    arrange(.data[[settings$visit_order_col]]) %>% #sort by visit order
     # for each visit, calculate % change from first visit -> have a baseline flag defined
-    mutate(FOLD_CHG = (STRESN - STNRHI) / STNRHI) %>%
+    mutate(FOLD_CHG = (.data[[settings$value_col]] - .data[[settings$normal_col_high]]) / .data[[settings$normal_col_high]]) %>%
     ungroup()
   
-  p <- ggplot(adlb_FC, aes(x = DY, y = FOLD_CHG, color = TEST, group = TEST,
-                           text = paste0("Study Day: ", DY, "\n",
-                                         "Lab Test: ", TEST, "\n",
+  p <- ggplot(adlb_FC, aes(x = .data[[settings$studyday_col]], y = FOLD_CHG, color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
+                           text = paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
+                                         "Lab Test: ", .data[[settings$measure_col]], "\n",
                                          "Fold Change: ", format(round(FOLD_CHG, 2), nsmall = 2)
                            ))) +
     geom_line() +
@@ -181,7 +182,7 @@ drawULNFoldChange <- function(adlb, settings,
 
     ## Add ULN Annotation
     geom_hline(yintercept = 1, linetype = "dashed", color = "gray") +
-    annotate("text", x = max(adlb_FC$DY) / 10, y = 1, label = "\nULN", color = "gray44", size = 3)
+    annotate("text", x = max(adlb_FC[[settings$studyday_col]]) / 10, y = 1, label = "\nULN", color = "gray44", size = 3)
   
   ggplotly(p, tooltip = "text") %>%
     config(displayModeBar = FALSE)
@@ -204,9 +205,9 @@ drawULNFoldChange <- function(adlb, settings,
 drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure", "Systolic Blood Pressure")) {
   
   adlb_bp <- adlb %>%
-    filter(TEST %in% labs)
+    filter(.data[[settings$measure_col]] %in% labs)
   
-  bp_unit <- unique(adlb_bp$STRESU)
+  bp_unit <- unique(adlb_bp[[settings$unit_col]])
   
   if (length(bp_unit) > 1) {
     warning(paste0("Systolic and Diastolic Blood Pressure are not in the same units, ",
@@ -214,11 +215,11 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
                    " to see unit on Y-axis."))
   }
   
-  p <- ggplot(adlb_bp, aes(x = DY, y = STRESN, color = TEST,
-                           group = TEST,
-                           text = paste0("Study Day: ", DY, "\n",
-                                         "Lab Test: ", TEST, "\n",
-                                         "Raw Value: ", format(round(STRESN, 2), nsmall = 2)
+  p <- ggplot(adlb_bp, aes(x = .data[[settings$studyday_col]], y = .data[[settings$value_col]], color = .data[[settings$measure_col]],
+                           group = .data[[settings$measure_col]],
+                           text = paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
+                                         "Lab Test: ", .data[[settings$measure_col]], "\n",
+                                         "Raw Value: ", format(round(.data[[settings$value_col]], 2), nsmall = 2)
                            ))) +
     geom_line() +
     geom_point() +
@@ -230,11 +231,11 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
   
   # Add ideal BP annotations
     geom_hline(yintercept = 80, linetype = "dashed", color = "gray") + #add diastolic dashed line
-    annotate("text", x = max(adlb_bp$DY) / 10, y = 80, label = "Ideal Diastolic \n Blood Pressure",
+    annotate("text", x = max(adlb_bp[[settings$studyday_col]]) / 10, y = 80, label = "Ideal Diastolic \n Blood Pressure",
              color = "gray44",  size = 3) +
     
     geom_hline(yintercept = 120, linetype = "dashed", color = "gray") + #add systolic dashed line
-    annotate("text", x =  max(adlb_bp$DY) / 10, y = 120, label = "Ideal Systolic \n Blood Pressure",
+    annotate("text", x =  max(adlb_bp[[settings$studyday_col]]) / 10, y = 120, label = "Ideal Systolic \n Blood Pressure",
              color = "gray44",  size = 3)
     
   ggplotly(p, tooltip = "text") %>%
@@ -255,18 +256,18 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
 drawNormalizedAlbumin <- function(adlb, settings) {
 
   adlb_norm <- adlb %>%
-    filter(TEST == "Albumin/Creatinine")
+    filter(.data[[settings$measure_col]] == "Albumin/Creatinine") # change to normalize in code rather than used normalized value?
 
-  uacr_unit <- unique(adlb_norm$STRESU)
+  uacr_unit <- unique(adlb_norm[[settings$unit_col]])
 
   if (length(uacr_unit) > 1)
     warning(paste0("Multiple units have been provided for UACR, therefore unit will",
                    " not be displayed on the Y-axis. Standardize units to see unit on Y-axis."))
   
-  p <- ggplot(adlb_norm, aes(x = DY, y = STRESN, color = TEST, group = TEST,
-                             text = paste0("Study Day: ", DY, "\n",
-                                           "Lab Test: ", TEST, "\n",
-                                           "Raw Value: ", format(round(STRESN, 2), nsmall = 2)
+  p <- ggplot(adlb_norm, aes(x = .data[[settings$studyday_col]], y = .data[[settings$value_col]], color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
+                             text = paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
+                                           "Lab Test: ", .data[[settings$measure_col]], "\n",
+                                           "Raw Value: ", format(round(.data[[settings$value_col]], 2), nsmall = 2)
                              ))) +
     geom_line() +
     geom_point() +
@@ -278,15 +279,15 @@ drawNormalizedAlbumin <- function(adlb, settings) {
 
     ## Add KDIGO Albuminuria Stage 1 Annotation
     geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
-    annotate("text", x = max(adlb_norm$DY) / 10, y = 0, label = "\nA1 Albuminuria", color = "gray44", size = 3) +
+    annotate("text", x = max(adlb_norm[[settings$studyday_col]]) / 10, y = 0, label = "\nA1 Albuminuria", color = "gray44", size = 3) +
     
     ## Add KDIGO Albuminuria Stage 2 Annotation
     geom_hline(yintercept = 30, linetype = "dashed", color = "gray") +
-    annotate("text", x = max(adlb_norm$DY) / 10, y = 30, label = "\nA2 Albuminuria", color = "gray44", size = 3) +
+    annotate("text", x = max(adlb_norm[[settings$studyday_col]]) / 10, y = 30, label = "\nA2 Albuminuria", color = "gray44", size = 3) +
     
     ## Add KDIGO Albuminuria Stage 3 Annotation
     geom_hline(yintercept = 300, linetype = "dashed", color = "gray") +
-    annotate("text", x = max(adlb_norm$DY) / 10, y =  300, label = "\nA3 Albuminuria", color = "gray44", size = 3)
+    annotate("text", x = max(adlb_norm[[settings$studyday_col]]) / 10, y =  300, label = "\nA3 Albuminuria", color = "gray44", size = 3)
   
   
   ggplotly(p, tooltip = "text") %>%
@@ -304,7 +305,7 @@ drawNormalizedAlbumin <- function(adlb, settings) {
 #' @import dplyr
 #' @return gt object
 drawDemoTable <- function(adlb, settings, demo_vars = c("USUBJID", "AGE", "SEX", "RACE", "ARM")) {
-  
+
   #specs mention: Subject ID, KDIGO Stage, Delta Creatinine Stage, Treatment group, Age, Age group, Sex, Race
   demo_data <- adlb %>%
     select(any_of(demo_vars)) %>%
