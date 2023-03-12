@@ -1,23 +1,29 @@
-# library(shiny)
-# library(dplyr)
-# library(ggplot2)
-# library(RColorBrewer) <- need to turn these into roxygen documentation e.g. # import RColorBrewer
-# library(tidyverse)
-# library(plotly)
-# library(gt)
-
+#' Nep Explorer Module - UI
+#'
+#' @param id module id
+#'
+#' @return returns shiny module UI
+#' @import shiny
+#' @export
 nepexplorer_ui <- function(id) {
   ns <- NS(id)
 
-  sidebar <- sidebarPanel()
+  #future home of settings panel
+  sidebar <- sidebarPanel(selectizeInput(
+    ns("measures"),
+    "Select Measures",
+    multiple = TRUE,
+    choices = c("")
+  ))
+  
   
   main <- mainPanel(
-     # Scatterplot placeholder
+     # Scatter PLot + Summary Table UI
       creatinineScatterUI(ns("scatter")),
       br(),
       br(),
-      # Patient Profile (demo tables + lab line charts)
-      patientProfileUI(ns("patprofile")) 
+      # Patient Profile (demography table + lab line charts) UI
+      patientProfileUI(ns("patprofile"))
   )
 
   ui <- sidebarLayout(
@@ -30,29 +36,50 @@ nepexplorer_ui <- function(id) {
   return(ui)
 }
 
-nepexplorer_server <- function(id, params) {
-  moduleServer(
-  id,
-  function(input, output, session){
-  ns <- session$ns
 
-  
-  #test data
-  adlb <- read.csv('https://raw.githubusercontent.com/RhoInc/data-library/master/data/clinical-trials/renderer-specific/adbds.csv') %>% 
-    mutate(STRESN  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", STRESN*.0113, STRESN), #Convert μmol/L to mg/dL 
-           STRESU  = ifelse(TEST == "Creatinine" & STRESU == "μmol/L", "mg/dL", STRESU),
-    ) %>% 
-    mutate(STRESU = ifelse(TEST == "Systolic Blood Pressure", "pop", STRESU)) %>% 
-    #group_by(TEST) %>% 
-    #arrange(VISITN) %>% #sort by visit order
-    mutate(BLFL = ifelse(VISIT == 'Screening', TRUE, FALSE)) %>% 
-    ungroup()
-  
-  
-  #Scatterplot (scatterplot + stage table)
-  creatinineScatterServer("scatter", df = adlb) 
-  
-  #Patient Profile (demo tables + lab line charts)
-  patientProfileServer("patprofile", df = adlb, subj_id = "04-024") # test subject
-})
+#' Nep Explorer Module - Server
+#'
+#' @param input module input
+#' @param output module output
+#' @param session module session
+#' @param params parameters object with `data` and `settings` options.
+#'
+#' @return returns shiny module Server function
+#'
+#' @import shiny
+#' @importFrom plotly event_data
+#' @export
+nepexplorer_server <- function(input, output, session, params) {
+      ns <- session$ns
+      
+      
+      # Populate sidebar control with measures and select all by default
+      observe({
+        measure_col <- params()$settings$labs$measure_col
+        measures <- unique(params()$data[[measure_col]])
+        updateSelectizeInput(session,
+                             "measures",
+                             choices = measures,
+                             selected = measures
+        )
+        
+      })
+    
+      # get processed data to use for subsetting to subject on scatterplot click
+      processed_creatinine_data <- reactive({
+        creatinineScatterServer("scatter", df = params()$data$labs, settings = params()$settings$labs)
+      })
+      # subject id return from plotly click event
+      selected_subject <- reactive({
+        processed_creatinine_data()[event_data("plotly_click", source = "scatter")$pointNumber, ]$USUBJID
+      })
+      #Patient Profile (demo tables + lab line charts)
+      observeEvent(selected_subject(), {
+        
+        if (length(selected_subject()) == 1) { # avoid triggering patient profiles if there isn't a subject
+          patientProfileServer("patprofile", df = params()$data$labs,
+                               settings = params()$settings$labs, subj_id = selected_subject())
+        }
+      }, ignoreInit = TRUE)
+      
 }
