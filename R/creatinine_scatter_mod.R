@@ -5,10 +5,7 @@
 #'
 #' @return
 #' @export
-#'
-#' @examples
-#' 
-creatinine_data_fcn <- function(df, settings){
+creatinine_data_fcn <- function(df, settings) {
   
   ## Prepare data for chart and table
   creatinine_data <- df %>%
@@ -69,15 +66,9 @@ creatinine_data_fcn <- function(df, settings){
               
     )
   
-  return(list(patient_level_stages = patient_level_stages, creatine_level_data = processed_creatinine_data))  
+  return(list(patient_level_stages = patient_level_stages, creatine_level_data = processed_creatinine_data))
   
 }
-
-
-
-
-
-
 
 #' Creatine Scatter Plot + Summary Table UI
 #'
@@ -115,7 +106,7 @@ creatinineScatterServer <-  function(id, df, settings) {
     id,
     function(input, output, session) {
       
-      patient_level_stages_data <- creatinine_data_fcn (df = df, settings = settings)
+      patient_level_stages_data <- creatinine_data_fcn(df = df, settings = settings)
       patient_level_stages <- patient_level_stages_data$patient_level_stages
       processed_creatinine_data <- patient_level_stages_data$creatine_level_data
       
