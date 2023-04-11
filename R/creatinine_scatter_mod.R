@@ -29,7 +29,7 @@ creatinineScatterUI <-  function(id) {
 #' @importFrom plotly renderPlotly
 #' @importFrom htmlwidgets onRender
 #' @importFrom rlang :=
-creatinineScatterServer <-  function(id, df, settings) {
+creatinineScatterServer <-  function(id, df, settings, animate, animation_time_unit) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -151,10 +151,12 @@ function(el, x) {
   });
 }
 "
-        
+    
         #draw scatterplot
         output$scatterplot <- renderPlotly({
-          draw_creatinine_scatter(df = processed_creatinine_data, settings = settings) %>% onRender(update_color_js)
+          draw_creatinine_scatter(df = processed_creatinine_data, settings = settings,
+                                  animate_study_day = animate(), 
+                                  animation_time_unit = animation_time_unit()) %>% onRender(update_color_js)
           })
 
         return(processed_creatinine_data)

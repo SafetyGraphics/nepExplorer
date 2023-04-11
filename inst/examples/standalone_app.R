@@ -1,7 +1,7 @@
 if (!interactive()) {
   sink(stderr(), type = "output")
   tryCatch({
-    library(ctpatprofile)
+    library("nepExplorer")
   }, error = function(e) {
     devtools::load_all()
   })

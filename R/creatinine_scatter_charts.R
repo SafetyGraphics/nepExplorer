@@ -2,19 +2,21 @@
 #'
 #' @param df lab dataset in tall format with creatinine lab
 #' @param settings settings object with column mappings
+#' @param animate "off" or "on", "on" shows study day animation 
 #'
 #' @import ggplot2
 #' @importFrom plotly ggplotly
 #' @importFrom plotly event_register
 #' @importFrom plotly config
+#' @importFrom plotly animation_opts
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-draw_creatinine_scatter <- function(df, settings) {
+draw_creatinine_scatter <- function(df, settings, animate_study_day = "off", animation_time_unit) {
 
   #calculate axes to ensure breaks are included
   max_delta <- max(max(df$DELTA_C, na.rm = TRUE), 3)
   max_kdigo <- max(max(df$KDIGO, na.rm = TRUE), 3.5)
-  
+
   p <- ggplot(
     df,
     aes(
@@ -71,17 +73,20 @@ draw_creatinine_scatter <- function(df, settings) {
     annotate("text", label = "Stage 1", x = .5, y = 1.3) + # Stage 1
     
     # add points last to prevent them from being covered up
-    geom_point(color = "white",  size = 2.5, fill = "black", shape = 21, stroke = .2)
+    
+    if (animate_study_day == "on"){ #frame needed for animation
+      geom_point(aes_string(frame = animation_time_unit), color = "white",  size = 2.5, fill = "black", shape = 21, stroke = .2)
+    } else {
+      geom_point(color = "white",  size = 2.5, fill = "black", shape = 21, stroke = .2)
+    }
   # Want a white border because I'm changing point size on click in plotly which
   # interestingly adds white borders around points
 
   #convert to plotly without toolbar
   ggply <- ggplotly(p, tooltip = "text", source = "scatter") %>%
     event_register("plotly_click") %>%
-    config(displayModeBar = FALSE)
-  
-  
-  
+    config(displayModeBar = FALSE) 
+
   # remove hover text from everything but the geom points
   ggply$x$data[[1]]$hoverinfo <- "none"
   
@@ -96,9 +101,13 @@ draw_creatinine_scatter <- function(df, settings) {
   ggply$x$data[[6]]$hoverinfo <- "none"
   
   ggply$x$data[[7]]$hoverinfo <- "none"
- 
-  ggply
- 
+  
+  if (animate_study_day == "on"){
+    ggply %>%  animation_opts(frame = 1000, transition = 500, redraw = FALSE)
+  } else {
+    ggply
+  }
+  
 }
 
 

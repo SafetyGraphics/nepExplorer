@@ -4,6 +4,7 @@
 #'
 #' @return returns shiny module UI
 #' @import shiny
+#' @import shinyjs
 #' @export
 nepexplorer_ui <- function(id) {
   ns <- NS(id)
@@ -14,10 +15,14 @@ nepexplorer_ui <- function(id) {
     "Select Measures",
     multiple = TRUE,
     choices = c("")
-  ))
+  ),
+  radioButtons(ns("animate"),"Study Day Animation:", c("Off" ="off", "On" = "on"), inline= TRUE),
+  radioButtons(ns("animation_time_unit"),"Animation Time Unit:", c("Study Day", "Visit"), inline= TRUE)
+  )
   
   
   main <- mainPanel(
+      useShinyjs(),
      # Scatter PLot + Summary Table UI
       creatinineScatterUI(ns("scatter")),
       br(),
@@ -65,9 +70,28 @@ nepexplorer_server <- function(input, output, session, params) {
         
       })
     
+      observe({
+        if(input$animate == "on") {
+        shinyjs::show(id = "animation_time_unit")
+      } else{
+        shinyjs::hide(id = "animation_time_unit")
+      }
+      })
+    
+      animate <- reactive(input$animate)
+      
+      animation_time_unit <- reactive({
+        if (input$animation_time_unit == "Study Day"){
+          params()$settings$labs$studyday_col
+        } else{
+          params()$settings$labs$visit_col
+        }
+      })
+      
       # get processed data to use for subsetting to subject on scatterplot click
       processed_creatinine_data <- reactive({
-        creatinineScatterServer("scatter", df = params()$data$labs, settings = params()$settings$labs)
+        creatinineScatterServer("scatter", df = params()$data$labs, settings = params()$settings$labs,
+                                animate = animate, animation_time_unit = animation_time_unit )
       })
       # subject id return from plotly click event
       selected_subject <- reactive({
