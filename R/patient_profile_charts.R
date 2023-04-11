@@ -34,9 +34,9 @@ drawPercentChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C
                                 color = .data[[settings$measure_col]],
                                 group = .data[[settings$measure_col]],
                                 text = paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
-                                         "Lab Test: ", .data[[settings$measure_col]], "\n",
-                                         "Percent Change: ", sprintf("%0.1f%%", .data$PCT_CHG * 100)
-                                         ))) +
+                                              "Lab Test: ", .data[[settings$measure_col]], "\n",
+                                              "Percent Change: ", sprintf("%0.1f%%", .data$PCT_CHG * 100)
+                                ))) +
     geom_line() +
     geom_point() +
     theme_bw() +
@@ -44,18 +44,18 @@ drawPercentChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C
                        labels = scales::percent_format(accuracy = 1)) + #format % on y axis
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
-
+    
     ## Add Baseline Annotation
     geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
     annotate("text", x = max(adlb_pct_chg[[settings$studyday_col]]) / 10, y = -.05, label = "Baseline",
              color = "gray44", size = 3) +
-
+    
     ## Add KDIGO Stage 1 Annotation
     geom_hline(yintercept = 1.5, linetype = "dashed", color = "gray") +
     # newline ensures nice placement beneath line
     annotate("text", x = max(adlb_pct_chg[[settings$studyday_col]]) / 10, y = 1.5, label = "\nKDIGO Stage 1",
              color = "gray44", size = 3) +
-
+    
     ## Add KDIGO Stage 2 Annotation
     geom_hline(yintercept = 2, linetype = "dashed", color = "gray") +
     annotate("text", x = max(adlb_pct_chg[[settings$studyday_col]]) / 10, y = 2, label = "\nKDIGO Stage 2",
@@ -123,7 +123,7 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
     ylab("Raw Change") +
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test")  #drop yellow
-
+  
   if (delta_creatinine_ref_ranges) {
     
     p <- p +
@@ -143,7 +143,7 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
       annotate("text", x = max(adlb_raw_chg[[settings$studyday_col]]) / 10, y = 1.5,
                label = "\n\u0394 Creatinine Stage 2",
                color = "gray44", size = 3) +
-
+      
       ## Add Delta Creatinine Stage 3 Annotation
       geom_hline(yintercept = 2.5, linetype = "dashed", color = "gray") +
       annotate("text", x = max(adlb_raw_chg[[settings$studyday_col]]) / 10, y = 2.5,
@@ -198,7 +198,7 @@ drawULNFoldChange <- function(adlb, settings,
     ylab("xULN (Fold Change)") +
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
-
+    
     ## Add ULN Annotation
     geom_hline(yintercept = 1, linetype = "dashed", color = "gray") +
     annotate("text", x = max(adlb_FC[[settings$studyday_col]]) / 10, y = 1, label = "\nULN", color = "gray44",
@@ -250,8 +250,8 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
     ylab(bp_unit) +
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test")  + #drop yellow
-  
-  # Add ideal BP annotations
+    
+    # Add ideal BP annotations
     geom_hline(yintercept = 80, linetype = "dashed", color = "gray") + #add diastolic dashed line
     annotate("text", x = max(adlb_bp[[settings$studyday_col]]) / 10, y = 80,
              label = "Ideal Diastolic \n Blood Pressure",
@@ -261,7 +261,7 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
     annotate("text", x =  max(adlb_bp[[settings$studyday_col]]) / 10, y = 120,
              label = "Ideal Systolic \n Blood Pressure",
              color = "gray44",  size = 3)
-    
+  
   ggplotly(p, tooltip = "text") %>%
     config(displayModeBar = FALSE)
 }
@@ -279,12 +279,12 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
 #' @importFrom plotly config
 #' @return ggplot object
 drawNormalizedAlbumin <- function(adlb, settings) {
-
+  
   adlb_norm <- adlb %>%
     filter(.data[[settings$measure_col]] == settings$measure_values[["Albumin/Creatinine"]])
-
+  
   uacr_unit <- unique(adlb_norm[[settings$unit_col]])
-
+  
   if (length(uacr_unit) > 1)
     warning(paste0("Multiple units have been provided for UACR, therefore unit will",
                    " not be displayed on the Y-axis. Standardize units to see unit on Y-axis."))
@@ -301,23 +301,27 @@ drawNormalizedAlbumin <- function(adlb, settings) {
     theme(legend.title = element_blank()) + #remove legend title
     ylab(uacr_unit) +
     xlab("Study Day") +
-    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
-
-    ## Add KDIGO Albuminuria Stage 1 Annotation
-    geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
-    annotate("text", x = max(adlb_norm[[settings$studyday_col]]) / 10, y = 0, label = "\nA1 Albuminuria",
-             color = "gray44", size = 3) +
-    
-    ## Add KDIGO Albuminuria Stage 2 Annotation
-    geom_hline(yintercept = 30, linetype = "dashed", color = "gray") +
-    annotate("text", x = max(adlb_norm[[settings$studyday_col]]) / 10, y = 30, label = "\nA2 Albuminuria",
-             color = "gray44", size = 3) +
-    
-    ## Add KDIGO Albuminuria Stage 3 Annotation
-    geom_hline(yintercept = 300, linetype = "dashed", color = "gray") +
-    annotate("text", x = max(adlb_norm[[settings$studyday_col]]) / 10, y =  300, label = "\nA3 Albuminuria",
-             color = "gray44", size = 3)
+    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") #drop yellow
   
+  if(tolower(uacr_unit) == "mg/g"){
+    
+    p <- p +
+      ## Add KDIGO Albuminuria Stage 1 Annotation
+      geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
+      annotate("text", x = max(adlb_norm[[settings$studyday_col]]) / 10, y = 0, label = "\nA1 Albuminuria",
+               color = "gray44", size = 3) +
+      
+      ## Add KDIGO Albuminuria Stage 2 Annotation
+      geom_hline(yintercept = 30, linetype = "dashed", color = "gray") +
+      annotate("text", x = max(adlb_norm[[settings$studyday_col]]) / 10, y = 30, label = "\nA2 Albuminuria",
+               color = "gray44", size = 3) +
+      
+      ## Add KDIGO Albuminuria Stage 3 Annotation
+      geom_hline(yintercept = 300, linetype = "dashed", color = "gray") +
+      annotate("text", x = max(adlb_norm[[settings$studyday_col]]) / 10, y =  300, label = "\nA3 Albuminuria",
+               color = "gray44", size = 3)
+    
+  }
   
   ggplotly(p, tooltip = "text") %>%
     config(displayModeBar = FALSE)
@@ -335,18 +339,18 @@ drawNormalizedAlbumin <- function(adlb, settings) {
 #' @import dplyr
 #' @return gt object
 drawDemoTable <- function(adlb, settings, demo_vars = c("USUBJID", "AGE", "SEX", "RACE", "ARM")) {
-
+  
   #specs mention: Subject ID, KDIGO Stage, Delta Creatinine Stage, Treatment group, Age, Age group, Sex, Race
   demo_data <- adlb %>%
     select(any_of(demo_vars)) %>%
     distinct()
-    
-    if (nrow(demo_data) > 1) {
-      warning(paste0("Subject has multiple values for a demographic variable -",
-                     " will display a row for each unique combination of demographic information."))
-    }
+  
+  if (nrow(demo_data) > 1) {
+    warning(paste0("Subject has multiple values for a demographic variable -",
+                   " will display a row for each unique combination of demographic information."))
+  }
   
   demo_data %>%
     gt()
   
-    }
+}
