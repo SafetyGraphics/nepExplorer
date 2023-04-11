@@ -17,7 +17,9 @@ nepexplorer_ui <- function(id) {
     choices = c("")
   ),
   radioButtons(ns("animate"),"Study Day Animation:", c("Off" ="off", "On" = "on"), inline= TRUE),
-  radioButtons(ns("animation_time_unit"),"Animation Time Unit:", c("Study Day", "Visit"), inline= TRUE)
+  hidden(
+    radioButtons(ns("animation_time_unit"),"Animation Time Unit:", c("Study Day", "Visit"), inline= TRUE)
+  )
   )
   
   
@@ -57,6 +59,13 @@ nepexplorer_ui <- function(id) {
 nepexplorer_server <- function(input, output, session, params) {
       ns <- session$ns
       
+      observe({
+        if(input$animate == "on") {
+          shinyjs::show(id = "animation_time_unit")
+        } else{
+          shinyjs::hide(id = "animation_time_unit")
+        }
+      })
       
       # Populate sidebar control with measures and select all by default
       observe({
@@ -68,14 +77,6 @@ nepexplorer_server <- function(input, output, session, params) {
                              selected = measures
         )
         
-      })
-    
-      observe({
-        if(input$animate == "on") {
-        shinyjs::show(id = "animation_time_unit")
-      } else{
-        shinyjs::hide(id = "animation_time_unit")
-      }
       })
     
       animate <- reactive(input$animate)
