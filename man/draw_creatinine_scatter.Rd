@@ -4,7 +4,12 @@
 \alias{draw_creatinine_scatter}
 \title{Draw Creatinine Scatter Plot}
 \usage{
-draw_creatinine_scatter(df, settings, animate_study_day = "off")
+draw_creatinine_scatter(
+  df,
+  settings,
+  animate_study_day = "off",
+  animation_time_unit
+)
 }
 \arguments{
 \item{df}{lab dataset in tall format with creatinine lab}

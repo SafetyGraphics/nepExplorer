@@ -12,10 +12,15 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 draw_creatinine_scatter <- function(df, settings, animate_study_day = "off", animation_time_unit) {
-
+  
   #calculate axes to ensure breaks are included
   max_delta <- max(max(df$DELTA_C, na.rm = TRUE), 3)
   max_kdigo <- max(max(df$KDIGO, na.rm = TRUE), 3.5)
+  
+  # place visit number in front of visit column so that it is proper sorted in plotly animation
+  df <- df %>%  mutate(original_visit = .data[[settings$visit_col]],
+                       !!settings$visit_col := paste(.data[[settings$visit_order_col]], .data[[settings$visit_col]])
+  )
 
   p <- ggplot(
     df,
@@ -31,7 +36,7 @@ draw_creatinine_scatter <- function(df, settings, animate_study_day = "off", ani
         "Baseline Creatinine: ", format(round(.data$BASELINE, 2), nsmall = 2), "\n",
         "Max Creatinine: ", format(round(.data[[settings$value_col]], 2), nsmall = 2), "\n",
         "Max Creatinine Study Day: ", .data[[settings$studyday_col]], "\n",
-        "Max Creatinine Visit: ", .data[[settings$visit_col]]
+        "Max Creatinine Visit: ", original_visit
         
       )
     )
@@ -81,12 +86,12 @@ draw_creatinine_scatter <- function(df, settings, animate_study_day = "off", ani
     }
   # Want a white border because I'm changing point size on click in plotly which
   # interestingly adds white borders around points
-
+  
   #convert to plotly without toolbar
   ggply <- ggplotly(p, tooltip = "text", source = "scatter") %>%
     event_register("plotly_click") %>%
     config(displayModeBar = FALSE) 
-
+  
   # remove hover text from everything but the geom points
   ggply$x$data[[1]]$hoverinfo <- "none"
   
@@ -117,49 +122,49 @@ draw_creatinine_scatter <- function(df, settings, animate_study_day = "off", ani
 #'
 #' @import gt
 #' @importFrom magrittr %>%
- draw_summary_table <- function(df) {
+draw_summary_table <- function(df) {
   
-   df %>%
-     gt(rowname_col = "Stage") %>% #move stage to rowname
-     tab_spanner_delim(
-       delim = "_"
-     ) %>%
-     fmt_percent(ends_with("%"), decimals = 0) %>% #format percentage
-     tab_style( #add red fill to stage 1 rowname
-       style = list(
-         cell_fill(color = "red")
-       ),
-       locations = cells_stub(rows = 1
-     )) %>%
-     tab_style(  #add orange fill to stage 1 rowname
-       style = list(
-         cell_fill(color = "orange")
-       ),
-       locations = cells_stub(rows = 2
-       )) %>%
-     tab_style(  #add yellow fill to stage 1 rowname
-       style = list(
-         cell_fill(color = "yellow")
-       ),
-       locations = cells_stub(rows = 3
-       )) %>%
-     tab_style(
-       locations = cells_column_labels(columns = everything()),
-       style     = list(
-         #Make text bold
-         cell_text(weight = "bold")
-       )
-     ) %>%
-     tab_style(
-       locations = cells_column_spanners(),
-       style     = list(
-         #Make text bold
-         cell_text(weight = "bold")
-       )
-     ) %>%
-     cols_width(
-       everything() ~ px(70)
-     )
-       
-    
- }
+  df %>%
+    gt(rowname_col = "Stage") %>% #move stage to rowname
+    tab_spanner_delim(
+      delim = "_"
+    ) %>%
+    fmt_percent(ends_with("%"), decimals = 0) %>% #format percentage
+    tab_style( #add red fill to stage 1 rowname
+      style = list(
+        cell_fill(color = "red")
+      ),
+      locations = cells_stub(rows = 1
+      )) %>%
+    tab_style(  #add orange fill to stage 1 rowname
+      style = list(
+        cell_fill(color = "orange")
+      ),
+      locations = cells_stub(rows = 2
+      )) %>%
+    tab_style(  #add yellow fill to stage 1 rowname
+      style = list(
+        cell_fill(color = "yellow")
+      ),
+      locations = cells_stub(rows = 3
+      )) %>%
+    tab_style(
+      locations = cells_column_labels(columns = everything()),
+      style     = list(
+        #Make text bold
+        cell_text(weight = "bold")
+      )
+    ) %>%
+    tab_style(
+      locations = cells_column_spanners(),
+      style     = list(
+        #Make text bold
+        cell_text(weight = "bold")
+      )
+    ) %>%
+    cols_width(
+      everything() ~ px(70)
+    )
+  
+  
+}

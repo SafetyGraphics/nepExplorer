@@ -4,7 +4,7 @@
 \alias{creatinineScatterServer}
 \title{Creatine Scatter Plot + Summary Table UI}
 \usage{
-creatinineScatterServer(id, df, settings, animate)
+creatinineScatterServer(id, df, settings, animate, animation_time_unit)
 }
 \arguments{
 \item{id}{module id}

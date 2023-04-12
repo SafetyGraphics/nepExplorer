@@ -38,7 +38,8 @@ creatinineScatterServer <-  function(id, df, settings, animate, animation_time_u
       creatinine_data <- df %>%
         filter(.data[[settings$measure_col]] == settings$measure_values$Creatinine) %>%
         select(.data[[settings$id_col]], .data[[settings$studyday_col]],
-               .data[[settings$visit_col]], .data[[settings$measure_col]],
+               .data[[settings$visit_col]], .data[[settings$visit_order_col]],
+               .data[[settings$measure_col]],
                .data[[settings$value_col]], .data[[settings$baseline_flag]])
       
       #get baseline creatinine levels for each subject for hover text
