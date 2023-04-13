@@ -16,7 +16,7 @@ nepexplorer_ui <- function(id) {
     multiple = TRUE,
     choices = c("")
   ),
-  radioButtons(ns("animate"),"Study Day Animation:", c("Off" ="off", "On" = "on"), inline= TRUE),
+  radioButtons(ns("animate"), "Study Day Animation:", c("Off" = "off", "On" = "on"), inline= TRUE),
   hidden(
     radioButtons(ns("animation_time_unit"),"Animation Time Unit:", c("Study Day", "Visit"), inline= TRUE)
   )

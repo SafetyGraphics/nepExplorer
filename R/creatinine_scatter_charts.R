@@ -2,7 +2,8 @@
 #'
 #' @param df lab dataset in tall format with creatinine lab
 #' @param settings settings object with column mappings
-#' @param animate "off" or "on", "on" shows study day animation 
+#' @param animate "off" or "on", "on" displays time animation
+#' @param animation_time_unit column for study day or visit to be used as time variable for animation
 #'
 #' @import ggplot2
 #' @importFrom plotly ggplotly
@@ -11,7 +12,7 @@
 #' @importFrom plotly animation_opts
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-draw_creatinine_scatter <- function(df, settings, animate_study_day = "off", animation_time_unit) {
+draw_creatinine_scatter <- function(df, settings, animate = "off", animation_time_unit) {
   
   #calculate axes to ensure breaks are included
   max_delta <- max(max(df$DELTA_C, na.rm = TRUE), 3)
@@ -36,7 +37,7 @@ draw_creatinine_scatter <- function(df, settings, animate_study_day = "off", ani
         "Baseline Creatinine: ", format(round(.data$BASELINE, 2), nsmall = 2), "\n",
         "Max Creatinine: ", format(round(.data[[settings$value_col]], 2), nsmall = 2), "\n",
         "Max Creatinine Study Day: ", .data[[settings$studyday_col]], "\n",
-        "Max Creatinine Visit: ", original_visit
+        "Max Creatinine Visit: ", .data$original_visit
         
       )
     )
@@ -79,8 +80,9 @@ draw_creatinine_scatter <- function(df, settings, animate_study_day = "off", ani
     
     # add points last to prevent them from being covered up
     
-    if (animate_study_day == "on"){ #frame needed for animation
-      geom_point(aes_string(frame = animation_time_unit), color = "white",  size = 2.5, fill = "black", shape = 21, stroke = .2)
+    if (animate == "on") { #frame needed for animation
+      geom_point(aes_string(frame = animation_time_unit), color = "white",  size = 2.5,
+                 fill = "black", shape = 21, stroke = .2)
     } else {
       geom_point(color = "white",  size = 2.5, fill = "black", shape = 21, stroke = .2)
     }
@@ -90,7 +92,7 @@ draw_creatinine_scatter <- function(df, settings, animate_study_day = "off", ani
   #convert to plotly without toolbar
   ggply <- ggplotly(p, tooltip = "text", source = "scatter") %>%
     event_register("plotly_click") %>%
-    config(displayModeBar = FALSE) 
+    config(displayModeBar = FALSE)
   
   # remove hover text from everything but the geom points
   ggply$x$data[[1]]$hoverinfo <- "none"
@@ -107,7 +109,7 @@ draw_creatinine_scatter <- function(df, settings, animate_study_day = "off", ani
   
   ggply$x$data[[7]]$hoverinfo <- "none"
   
-  if (animate_study_day == "on"){
+  if (animate == "on") {
     ggply %>%  animation_opts(frame = 1000, transition = 500, redraw = FALSE)
   } else {
     ggply

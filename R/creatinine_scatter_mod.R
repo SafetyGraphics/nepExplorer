@@ -21,6 +21,8 @@ creatinineScatterUI <-  function(id) {
 #' @param id module id
 #' @param df lab dataset in tall format with creatinine lab
 #' @param settings settings object with column mappings
+#' @param animate "off" or "on", "on" displays time animation
+#' @param animation_time_unit column for study day or visit to be used as time variable for animation
 #'
 #' @return returns shiny server module
 #' @import shiny
@@ -156,7 +158,7 @@ function(el, x) {
         #draw scatterplot
         output$scatterplot <- renderPlotly({
           draw_creatinine_scatter(df = processed_creatinine_data, settings = settings,
-                                  animate_study_day = animate(), 
+                                  animate = animate(),
                                   animation_time_unit = animation_time_unit()) %>% onRender(update_color_js)
           })
 
