@@ -4,7 +4,8 @@
 #'
 #' @return returns shiny module UI
 #' @import shiny
-#' @import shinyjs
+#' @importFrom shinyjs useShinyjs
+#' @importFrom shinyjs hidden
 #' @export
 nepexplorer_ui <- function(id) {
   ns <- NS(id)
@@ -18,7 +19,7 @@ nepexplorer_ui <- function(id) {
   ),
   radioButtons(ns("animate"), "Study Day Animation:", c("Off" = "off", "On" = "on"), inline = TRUE),
   hidden(
-    radioButtons(ns("animation_time_unit"),"Animation Time Unit:", c("Study Day", "Visit"), inline = TRUE)
+    radioButtons(ns("animation_time_unit"), "Animation Time Unit:", c("Study Day", "Visit"), inline = TRUE)
   )
   )
   
@@ -54,6 +55,8 @@ nepexplorer_ui <- function(id) {
 #' @return returns shiny module Server function
 #'
 #' @import shiny
+#' @importFrom shinyjs show
+#' @importFrom shinyjs hide
 #' @importFrom plotly event_data
 #' @export
 nepexplorer_server <- function(input, output, session, params) {

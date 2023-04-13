@@ -303,7 +303,7 @@ drawNormalizedAlbumin <- function(adlb, settings) {
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") #drop yellow
   
-  if (tolower(uacr_unit) == "mg/g"){
+  if (tolower(uacr_unit) == "mg/g") {
     
     p <- p +
       ## Add KDIGO Albuminuria Stage 1 Annotation

@@ -49,7 +49,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
        default_labs <- c(settings$measure_values$Creatinine, settings$measure_values$`Cystatin C`)
        available_labs <- intersect(patient_df[[settings$measure_col]] %>%  unique(), default_labs)
 
-        if( length(available_labs) > 0 ){
+        if (length(available_labs) > 0) {
             drawPercentChange(adlb = patient_df,
                               labs = available_labs,
                               settings = settings)
@@ -63,7 +63,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
         default_labs <- c(settings$measure_values$Creatinine, settings$measure_values$`Cystatin C`)
         available_labs <- intersect(patient_df[[settings$measure_col]] %>%  unique(), default_labs)
         
-        if( length(available_labs) > 0 ){
+        if (length(available_labs) > 0) {
           drawRawChange(adlb = patient_df, settings = settings,
                         labs = available_labs,
                         delta_creatinine_ref_ranges = TRUE)
@@ -77,7 +77,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
         default_labs <- c(settings$measure_values$eGFR, settings$measure_values$eGFRcys)
         available_labs <- intersect(patient_df[[settings$measure_col]] %>%  unique(), default_labs)
         
-        if( length(available_labs) > 0 ){
+        if (length(available_labs) > 0) {
           drawRawChange(adlb = patient_df, settings = settings,
                         labs = available_labs,
                         delta_creatinine_ref_ranges = FALSE)
@@ -94,7 +94,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
                            settings$measure_values$Potassium, settings$measure_values$Sodium)
         available_labs <- intersect(patient_df[[settings$measure_col]] %>%  unique(), default_labs)
         
-        if( length(available_labs) > 0 ){
+        if (length(available_labs) > 0) {
           drawULNFoldChange(adlb = patient_df, settings = settings,
                             labs = available_labs)
         } else {
@@ -108,7 +108,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
                           settings$measure_values$`Systolic Blood Pressure`)
         available_labs <- intersect(patient_df[[settings$measure_col]] %>%  unique(), default_labs)
         
-        if( length(available_labs) > 0 ){
+        if (length(available_labs) > 0) {
           drawBloodPressure(adlb = patient_df, settings = settings,
                         labs = available_labs)
         } else {
@@ -118,7 +118,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
       
       output$normalized_albumin <- renderUI({
         
-        if(  settings$measure_values[["Albumin/Creatinine"]] %in% patient_df[[settings$measure_col]] %>%  unique()){
+        if (settings$measure_values[["Albumin/Creatinine"]] %in% patient_df[[settings$measure_col]] %>%  unique()) {
           drawNormalizedAlbumin(adlb = patient_df, settings = settings)
         } else {
           div()
