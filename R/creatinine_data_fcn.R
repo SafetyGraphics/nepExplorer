@@ -6,7 +6,6 @@
 #' @return
 #' @export
 creatinine_data_fcn <- function(df, settings) {
-  
   ## Prepare data for chart and table
   creatinine_data <- df %>%
     filter(.data[[settings$measure_col]] == settings$measure_values$Creatinine) %>%
@@ -26,8 +25,12 @@ creatinine_data_fcn <- function(df, settings) {
     mutate(DELTA_C = .data[[settings$value_col]] - .data[[settings$value_col]][1L],
            KDIGO = .data[[settings$value_col]] / .data[[settings$value_col]][1L]) %>%
     # get maximum delta creatinine for each subject (same as using delta creatinine)
-    summarize(KDIGO = max(.data$KDIGO), DELTA_C = max(.data$DELTA_C),
-              !!settings$value_col := max(.data[[settings$value_col]]),  across()) %>%
+    summarize(
+      KDIGO = max(.data$KDIGO),
+      DELTA_C = max(.data$DELTA_C),
+      !!settings$value_col := max(.data[[settings$value_col]]),
+      across()
+    ) %>%
     mutate(
       KDIGO_STAGE = case_when(
         .data$KDIGO > 3 | STRESN >= 4 ~ "Stage 3",
@@ -61,11 +64,17 @@ creatinine_data_fcn <- function(df, settings) {
   #get highest stage by subject
   patient_level_stages <- processed_creatinine_data %>%
     group_by(.data[[settings$id_col]]) %>%
-    summarize(DELTA_STAGE = get_highest_stage(.data$DELTA_STAGE),
-              KDIGO_STAGE = get_highest_stage(.data$KDIGO_STAGE),
-              
+    summarize(
+      DELTA_STAGE = get_highest_stage(.data$DELTA_STAGE),
+      KDIGO_STAGE = get_highest_stage(.data$KDIGO_STAGE),
+      
     )
   
-  return(list(patient_level_stages = patient_level_stages, creatine_level_data = processed_creatinine_data))
+  return(
+    list(
+      patient_level_stages = patient_level_stages,
+      creatine_level_data = processed_creatinine_data
+    )
+  )
   
 }
