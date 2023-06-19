@@ -3,7 +3,8 @@
 #' @param df lab dataset in tall format with creatinine lab
 #' @param settings settings object with column mappings
 #'
-#' @return
+#' @import dplyr
+#' @importFrom rlang :=
 #' @export
 creatinine_data_fcn <- function(df, settings) {
   ## Prepare data for chart and table
