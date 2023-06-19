@@ -23,7 +23,8 @@ Imports:
     gt,
     htmlwidgets,
     scales,
-    rlang
+    rlang,
+    shinyjs
 Suggests:
     safetyGraphics, 
     safetyData

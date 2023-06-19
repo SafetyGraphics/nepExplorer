@@ -4,7 +4,14 @@
 \alias{creatinineScatterServer}
 \title{Creatine Scatter Plot + Summary Table UI}
 \usage{
-creatinineScatterServer(id, df, settings)
+creatinineScatterServer(
+  id,
+  df,
+  settings,
+  animate,
+  animation_transition_time,
+  animation_time_unit
+)
 }
 \arguments{
 \item{id}{module id}
@@ -12,6 +19,12 @@ creatinineScatterServer(id, df, settings)
 \item{df}{lab dataset in tall format with creatinine lab}
 
 \item{settings}{settings object with column mappings}
+
+\item{animate}{"off" or "on", "on" displays time animation}
+
+\item{animation_transition_time}{frame transition speed in seconds}
+
+\item{animation_time_unit}{column for study day or visit to be used as time variable for animation}
 }
 \value{
 returns shiny server module
