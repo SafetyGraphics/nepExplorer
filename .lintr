@@ -6,5 +6,8 @@ linters: linters_with_defaults(
   )
 encoding: "UTF-8"
 exclusions: list(
-    "data-raw/save_adbds.R"
+    "data-raw/save_adbds.R",
+    "data-raw/save_adlb.R",
+    "data-raw/save_advs.R",
+    "data-raw/save_adsl.R"
   )

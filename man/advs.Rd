@@ -13,7 +13,7 @@ a data frame with 3170 rows and 26 columns. Retrieved from
 advs
 }
 \description{
-labs dataset in tall format that includes baseline
+vital signs dataset in tall format that includes baseline
   characteristics.
 }
 \keyword{datasets}

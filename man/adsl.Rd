@@ -13,7 +13,6 @@ a data frame with 150 rows and 14 columns. Retrieved from
 adsl
 }
 \description{
-labs dataset in tall format that includes baseline
-  characteristics.
+subject-level dataset that includes demographic information.
 }
 \keyword{datasets}
