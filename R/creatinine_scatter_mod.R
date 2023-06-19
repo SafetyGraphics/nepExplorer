@@ -9,8 +9,10 @@
 creatinineScatterUI <-  function(id) {
   ns <- NS(id)
   fluidPage(
-    p(paste0("Click on a point in the scatterplot to view patient profile.",
-             "Click and drag to zoom-in. Double-click to reset zoom.")),
+    p(paste0("Each point in scatterplot corresponds to a single patient and their highest creatinine value during",
+    " the study. Turn on time animation to see creatinine values at particular timepoints during the study.")),
+      p("Click on a point in the scatterplot to view the relevant patient's longitudinal profile."),
+             p("Click and drag to zoom-in. Double-click to reset zoom."),
     column(plotlyOutput(ns("scatterplot")), width = 8),
     column(gt_output(ns("summary_table")), width = 4),
   )
@@ -21,6 +23,9 @@ creatinineScatterUI <-  function(id) {
 #' @param id module id
 #' @param df lab dataset in tall format with creatinine lab
 #' @param settings settings object with column mappings
+#' @param animate "off" or "on", "on" displays time animation
+#' @param animation_transition_time frame transition speed in seconds
+#' @param animation_time_unit column for study day or visit to be used as time variable for animation
 #'
 #' @return returns shiny server module
 #' @import shiny
@@ -29,7 +34,7 @@ creatinineScatterUI <-  function(id) {
 #' @importFrom plotly renderPlotly
 #' @importFrom htmlwidgets onRender
 #' @importFrom rlang :=
-creatinineScatterServer <-  function(id, df, settings) {
+creatinineScatterServer <-  function(id, df, settings, animate, animation_transition_time, animation_time_unit) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -38,7 +43,8 @@ creatinineScatterServer <-  function(id, df, settings) {
       creatinine_data <- df %>%
         filter(.data[[settings$measure_col]] == settings$measure_values$Creatinine) %>%
         select(.data[[settings$id_col]], .data[[settings$studyday_col]],
-               .data[[settings$visit_col]], .data[[settings$measure_col]],
+               .data[[settings$visit_col]], .data[[settings$visit_order_col]],
+               .data[[settings$measure_col]],
                .data[[settings$value_col]], .data[[settings$baseline_flag]])
       
       #get baseline creatinine levels for each subject for hover text
@@ -151,10 +157,14 @@ function(el, x) {
   });
 }
 "
-        
+    
+    
         #draw scatterplot
         output$scatterplot <- renderPlotly({
-          draw_creatinine_scatter(df = processed_creatinine_data, settings = settings) %>% onRender(update_color_js)
+          draw_creatinine_scatter(df = processed_creatinine_data, settings = settings,
+                                  animate = animate(),
+                                  animation_transition_time = animation_transition_time(),
+                                  animation_time_unit = animation_time_unit()) %>% onRender(update_color_js)
           })
 
         return(processed_creatinine_data)

@@ -2,19 +2,29 @@
 #'
 #' @param df lab dataset in tall format with creatinine lab
 #' @param settings settings object with column mappings
+#' @param animate "off" or "on", "on" displays time animation
+#' @param animation_transition_time frame transition speed in seconds
+#' @param animation_time_unit column for study day or visit to be used as time variable for animation
 #'
 #' @import ggplot2
 #' @importFrom plotly ggplotly
 #' @importFrom plotly event_register
 #' @importFrom plotly config
+#' @importFrom plotly animation_opts
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-draw_creatinine_scatter <- function(df, settings) {
-
+draw_creatinine_scatter <- function(df, settings, animate = "off",
+                                    animation_transition_time = .5, animation_time_unit) {
+  
   #calculate axes to ensure breaks are included
   max_delta <- max(max(df$DELTA_C, na.rm = TRUE), 3)
   max_kdigo <- max(max(df$KDIGO, na.rm = TRUE), 3.5)
   
+  # place visit number in front of visit column so that it is proper sorted in plotly animation
+  df <- df %>%  mutate(original_visit = .data[[settings$visit_col]],
+                       !!settings$visit_col := paste(.data[[settings$visit_order_col]], .data[[settings$visit_col]])
+  )
+
   p <- ggplot(
     df,
     aes(
@@ -29,7 +39,7 @@ draw_creatinine_scatter <- function(df, settings) {
         "Baseline Creatinine: ", format(round(.data$BASELINE, 2), nsmall = 2), "\n",
         "Max Creatinine: ", format(round(.data[[settings$value_col]], 2), nsmall = 2), "\n",
         "Max Creatinine Study Day: ", .data[[settings$studyday_col]], "\n",
-        "Max Creatinine Visit: ", .data[[settings$visit_col]]
+        "Max Creatinine Visit: ", .data$original_visit
         
       )
     )
@@ -71,16 +81,20 @@ draw_creatinine_scatter <- function(df, settings) {
     annotate("text", label = "Stage 1", x = .5, y = 1.3) + # Stage 1
     
     # add points last to prevent them from being covered up
-    geom_point(color = "white",  size = 2.5, fill = "black", shape = 21, stroke = .2)
+    
+    if (animate == "on") { #frame needed for animation
+      geom_point(aes_string(frame = animation_time_unit), color = "white",  size = 2.5,
+                 fill = "black", shape = 21, stroke = .2)
+    } else {
+      geom_point(color = "white",  size = 2.5, fill = "black", shape = 21, stroke = .2)
+    }
   # Want a white border because I'm changing point size on click in plotly which
   # interestingly adds white borders around points
-
+  
   #convert to plotly without toolbar
   ggply <- ggplotly(p, tooltip = "text", source = "scatter") %>%
     event_register("plotly_click") %>%
     config(displayModeBar = FALSE)
-  
-  
   
   # remove hover text from everything but the geom points
   ggply$x$data[[1]]$hoverinfo <- "none"
@@ -96,9 +110,14 @@ draw_creatinine_scatter <- function(df, settings) {
   ggply$x$data[[6]]$hoverinfo <- "none"
   
   ggply$x$data[[7]]$hoverinfo <- "none"
- 
-  ggply
- 
+
+  if (animate == "on") {
+    ggply %>%  animation_opts(frame = animation_transition_time * 1000 + 500,
+                              transition = animation_transition_time * 1000, redraw = FALSE)
+  } else {
+    ggply
+  }
+  
 }
 
 
@@ -108,49 +127,49 @@ draw_creatinine_scatter <- function(df, settings) {
 #'
 #' @import gt
 #' @importFrom magrittr %>%
- draw_summary_table <- function(df) {
+draw_summary_table <- function(df) {
   
-   df %>%
-     gt(rowname_col = "Stage") %>% #move stage to rowname
-     tab_spanner_delim(
-       delim = "_"
-     ) %>%
-     fmt_percent(ends_with("%"), decimals = 0) %>% #format percentage
-     tab_style( #add red fill to stage 1 rowname
-       style = list(
-         cell_fill(color = "red")
-       ),
-       locations = cells_stub(rows = 1
-     )) %>%
-     tab_style(  #add orange fill to stage 1 rowname
-       style = list(
-         cell_fill(color = "orange")
-       ),
-       locations = cells_stub(rows = 2
-       )) %>%
-     tab_style(  #add yellow fill to stage 1 rowname
-       style = list(
-         cell_fill(color = "yellow")
-       ),
-       locations = cells_stub(rows = 3
-       )) %>%
-     tab_style(
-       locations = cells_column_labels(columns = everything()),
-       style     = list(
-         #Make text bold
-         cell_text(weight = "bold")
-       )
-     ) %>%
-     tab_style(
-       locations = cells_column_spanners(),
-       style     = list(
-         #Make text bold
-         cell_text(weight = "bold")
-       )
-     ) %>%
-     cols_width(
-       everything() ~ px(70)
-     )
-       
-    
- }
+  df %>%
+    gt(rowname_col = "Stage") %>% #move stage to rowname
+    tab_spanner_delim(
+      delim = "_"
+    ) %>%
+    fmt_percent(ends_with("%"), decimals = 0) %>% #format percentage
+    tab_style( #add red fill to stage 1 rowname
+      style = list(
+        cell_fill(color = "red")
+      ),
+      locations = cells_stub(rows = 1
+      )) %>%
+    tab_style(  #add orange fill to stage 1 rowname
+      style = list(
+        cell_fill(color = "orange")
+      ),
+      locations = cells_stub(rows = 2
+      )) %>%
+    tab_style(  #add yellow fill to stage 1 rowname
+      style = list(
+        cell_fill(color = "yellow")
+      ),
+      locations = cells_stub(rows = 3
+      )) %>%
+    tab_style(
+      locations = cells_column_labels(columns = everything()),
+      style     = list(
+        #Make text bold
+        cell_text(weight = "bold")
+      )
+    ) %>%
+    tab_style(
+      locations = cells_column_spanners(),
+      style     = list(
+        #Make text bold
+        cell_text(weight = "bold")
+      )
+    ) %>%
+    cols_width(
+      everything() ~ px(70)
+    )
+  
+  
+}
