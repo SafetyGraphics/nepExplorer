@@ -3,6 +3,7 @@
 #' @param df lab dataset in tall format with creatinine lab
 #' @param settings settings object with column mappings
 #' @param animate "off" or "on", "on" displays time animation
+#' @param animation_transition_time frame transition speed in seconds
 #' @param animation_time_unit column for study day or visit to be used as time variable for animation
 #'
 #' @import ggplot2
@@ -12,7 +13,8 @@
 #' @importFrom plotly animation_opts
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
-draw_creatinine_scatter <- function(df, settings, animate = "off", animation_time_unit) {
+draw_creatinine_scatter <- function(df, settings, animate = "off",
+                                    animation_transition_time = .5, animation_time_unit) {
   
   #calculate axes to ensure breaks are included
   max_delta <- max(max(df$DELTA_C, na.rm = TRUE), 3)
@@ -108,9 +110,10 @@ draw_creatinine_scatter <- function(df, settings, animate = "off", animation_tim
   ggply$x$data[[6]]$hoverinfo <- "none"
   
   ggply$x$data[[7]]$hoverinfo <- "none"
-  
+
   if (animate == "on") {
-    ggply %>%  animation_opts(frame = 1000, transition = 500, redraw = FALSE)
+    ggply %>%  animation_opts(frame = animation_transition_time * 1000 + 500,
+                              transition = animation_transition_time * 1000, redraw = FALSE)
   } else {
     ggply
   }

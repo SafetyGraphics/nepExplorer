@@ -17,9 +17,11 @@ nepexplorer_ui <- function(id) {
     multiple = TRUE,
     choices = c("")
   ),
-  radioButtons(ns("animate"), "Study Day Animation:", c("Off" = "off", "On" = "on"), inline = TRUE),
+  radioButtons(ns("animate"), "Time Animation:", c("Off" = "off", "On" = "on"), inline = TRUE),
   hidden(
-    radioButtons(ns("animation_time_unit"), "Animation Time Unit:", c("Study Day", "Visit"), inline = TRUE)
+    radioButtons(ns("animation_time_unit"), "Animation Time Unit:", c("Study Day", "Visit"), inline = TRUE),
+    sliderInput(ns("animation_transition_time"), "Animation Transition Speed (secs):",
+                min = .1, max = 2, value = .5, ticks = FALSE)
   )
   )
   
@@ -65,8 +67,10 @@ nepexplorer_server <- function(input, output, session, params) {
       observe({
         if (input$animate == "on") {
           shinyjs::show(id = "animation_time_unit")
+          shinyjs::show(id = "animation_transition_time")
         } else {
           shinyjs::hide(id = "animation_time_unit")
+          shinyjs::hide(id = "animation_transition_time")
         }
       })
       
@@ -95,7 +99,9 @@ nepexplorer_server <- function(input, output, session, params) {
       # get processed data to use for subsetting to subject on scatterplot click
       processed_creatinine_data <- reactive({
         creatinineScatterServer("scatter", df = params()$data$labs, settings = params()$settings$labs,
-                                animate = animate, animation_time_unit = animation_time_unit)
+                                animate = animate,
+                                animation_transition_time = reactive(input$animation_transition_time),
+                                animation_time_unit = animation_time_unit)
       })
       # subject id return from plotly click event
       selected_subject <- reactive({
