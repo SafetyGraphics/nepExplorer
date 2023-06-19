@@ -9,8 +9,10 @@
 creatinineScatterUI <-  function(id) {
   ns <- NS(id)
   fluidPage(
-    p(paste0("Click on a point in the scatterplot to view patient profile.",
-             "Click and drag to zoom-in. Double-click to reset zoom.")),
+    p(paste0("Each point in scatterplot corresponds to a single patient and their highest creatinine value during",
+    " the study. Turn on time animation to see creatinine values at particular timepoints during the study.")),
+      p("Click on a point in the scatterplot to view the relevant patient's longitudinal profile."),
+             p("Click and drag to zoom-in. Double-click to reset zoom."),
     column(plotlyOutput(ns("scatterplot")), width = 8),
     column(gt_output(ns("summary_table")), width = 4),
   )

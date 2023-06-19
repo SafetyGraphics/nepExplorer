@@ -4,7 +4,13 @@
 \alias{draw_creatinine_scatter}
 \title{Draw Creatinine Scatter Plot}
 \usage{
-draw_creatinine_scatter(df, settings, animate = "off", animation_time_unit)
+draw_creatinine_scatter(
+  df,
+  settings,
+  animate = "off",
+  animation_transition_time = 0.5,
+  animation_time_unit
+)
 }
 \arguments{
 \item{df}{lab dataset in tall format with creatinine lab}
@@ -12,6 +18,8 @@ draw_creatinine_scatter(df, settings, animate = "off", animation_time_unit)
 \item{settings}{settings object with column mappings}
 
 \item{animate}{"off" or "on", "on" displays time animation}
+
+\item{animation_transition_time}{frame transition speed in seconds}
 
 \item{animation_time_unit}{column for study day or visit to be used as time variable for animation}
 }
