@@ -58,6 +58,7 @@ nepexplorer_ui <- function(id) {
 #'
 #' @import shiny
 #' @importFrom shinyjs show
+#' @importFrom shinyjs runjs
 #' @importFrom shinyjs hide
 #' @importFrom plotly event_data
 #' @export
@@ -107,6 +108,16 @@ nepexplorer_server <- function(input, output, session, params) {
       selected_subject <- reactive({
         processed_creatinine_data()[event_data("plotly_click", source = "scatter")$pointNumber, ]$USUBJID
       })
+      
+      observeEvent(selected_subject(),{
+        ##TODO: add appropriate namespacing once integrated with SG 
+        paste0(
+          "Shiny.setInputValue('participants_selected',",
+          selected_subject(),
+          ");") %>% 
+        runjs()
+      })
+      
       #Patient Profile (demo tables + lab line charts)
       observeEvent(selected_subject(), {
         
