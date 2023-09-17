@@ -12,10 +12,13 @@
 #'
 #' @export
 create_nepexplorer_app <- function(
-    lab_df = nepExplorer::adbds,
+    labs = nepExplorer::adlb,
+    vitals = nepExplorer::advs,
+    demo = nepExplorer::adsl,
     settings = NULL,
     runNow = TRUE
 ) {
+  
   # create default settings when settings is not defined by default
   # I kept these consistent with safetycharts metadata, incase we wanto to switch to using default
   # LAB and DM domains
@@ -42,7 +45,11 @@ create_nepexplorer_app <- function(
                   "id_col" = "USUBJID", "age_col" = "AGE", "sex_col" = "SEX",
                   "race_col" = "RACE", "treatment_col" = "ARM")
     )
+
+    ## Data Merge:
+    lab_df <- rbind(vitals, labs) |> inner_join(demo [settings$labs[["id_col"]]], settings$labs[["id_col"]])
   }
+  
   ## create object containing data and setting to pass to server
   params <- reactive({
     list(
