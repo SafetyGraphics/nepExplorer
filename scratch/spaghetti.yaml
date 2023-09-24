@@ -1,0 +1,10 @@
+env: safetyGraphics
+label: Spaghetti Plot
+name: spaghettiPlot
+type: plot
+domain:
+    - labs
+workflow:
+    main: spaghettiPlot
+links:
+    safetyCharts: https://github.com/SafetyGraphics/safetycharts
