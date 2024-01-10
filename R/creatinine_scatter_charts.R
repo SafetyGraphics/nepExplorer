@@ -67,11 +67,11 @@ draw_creatinine_scatter <- function(df, settings, animate = "off",
     
     # add colored stage rectangles
     annotate("rect", xmin = 0, xmax = max_kdigo, ymin = 0,
-             ymax = max_delta, fill = "red") + # Stage 3
+             ymax = max_delta, fill = "#f03b20") + # Stage 3
     annotate("rect", xmin = 0, xmax = 3, ymin = 0, ymax = 2.5, # Stage 2
-             fill = "orange") +
+             fill = "#feb24c") +
     annotate("rect", xmin = 0, xmax = 2, ymin = 0, ymax = 1.5, # Stage 1
-             fill = "yellow") +
+             fill = "#ffeda0") +
     annotate("rect", xmin = 0, xmax = 1.5, ymin = 0, ymax = .3, # No stage
              fill = "white") +
     
@@ -137,19 +137,19 @@ draw_summary_table <- function(df) {
     fmt_percent(ends_with("%"), decimals = 0) %>% #format percentage
     tab_style( #add red fill to stage 1 rowname
       style = list(
-        cell_fill(color = "red")
+        cell_fill(color = "#f03b20")
       ),
       locations = cells_stub(rows = 1
       )) %>%
     tab_style(  #add orange fill to stage 1 rowname
       style = list(
-        cell_fill(color = "orange")
+        cell_fill(color = "#feb24c")
       ),
       locations = cells_stub(rows = 2
       )) %>%
     tab_style(  #add yellow fill to stage 1 rowname
       style = list(
-        cell_fill(color = "yellow")
+        cell_fill(color = "#ffeda0")
       ),
       locations = cells_stub(rows = 3
       )) %>%
