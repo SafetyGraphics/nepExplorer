@@ -155,21 +155,21 @@ draw_summary_table <- function(df) {
       )) %>%
     tab_spanner(
       label = "Fold Change in Serum Creatinine",
-      level= 1,
+      level = 1,
       columns  = starts_with("KDIGO"),
       replace = TRUE
-    ) %>% 
+    ) %>%
     tab_spanner(
       label = "Absolute Change in Serum Creatinine",
-      level= 1,
+      level = 1,
       columns  = starts_with("DELTA"),
       replace = TRUE
-    ) %>% 
-    tab_stubhead("KDIGO") %>% 
+    ) %>%
+    tab_stubhead("KDIGO") %>%
     tab_style(
       style = cell_text(weight = "bold", v_align = "middle"),
       locations = cells_stubhead()
-    ) %>% 
+    ) %>%
     tab_style(
       locations = cells_column_labels(columns = everything()),
       style     = list(
