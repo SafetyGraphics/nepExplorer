@@ -11,9 +11,9 @@ creatinineScatterUI <-  function(id) {
   fluidPage(
     p(paste0("Each point in scatterplot corresponds to a single patient and their highest creatinine value during",
     " the study. Turn on time animation to see creatinine values at particular timepoints during the study.")),
-      p("Click on a point in the scatterplot to view the relevant patient's longitudinal profile."),
-             p("Click and drag to zoom-in. Double-click to reset zoom."),
-    column(plotlyOutput(ns("scatterplot")), width = 8),
+    p("Click on a point in the scatterplot to view the relevant patient's longitudinal profile."),
+    p("Click and drag to zoom-in. Double-click to reset zoom."),
+    column(plotlyOutput(ns("scatterplot"), height = "600px"), width = 8),
     column(gt_output(ns("summary_table")), width = 4),
   )
 }
@@ -68,7 +68,6 @@ creatinineScatterServer <-  function(id, df, settings, animate, animation_transi
         left_join(DELTA_summary) %>%
         mutate_if(is.numeric, coalesce, 0) %>%
         select(-.data$KDIGO_STAGE, Stage = .data$DELTA_STAGE) # only need one stage column
-      
       
       output$summary_table <- render_gt({
         draw_summary_table(summary_table_data)

@@ -11,18 +11,33 @@ nepexplorer_ui <- function(id) {
   ns <- NS(id)
 
   #future home of settings panel
-  sidebar <- sidebarPanel(selectizeInput(
-    ns("measures"),
-    "Select Measures",
-    multiple = TRUE,
-    choices = c("")
-  ),
-  radioButtons(ns("animate"), "Time Animation:", c("Off" = "off", "On" = "on"), inline = TRUE),
-  hidden(
-    radioButtons(ns("animation_time_unit"), "Animation Time Unit:", c("Study Day", "Visit"), inline = TRUE),
-    sliderInput(ns("animation_transition_time"), "Animation Transition Speed (secs):",
-                min = .1, max = 2, value = .5, ticks = FALSE)
-  )
+  sidebar <- sidebarPanel(
+    selectizeInput(
+      ns("measures"),
+      "Select Measures",
+      multiple = TRUE,
+      choices = c("")
+    ),
+    radioButtons(
+      ns("animate"),
+      "Time Animation:",
+      c("Off" = "off", "On" = "on"),
+      inline = TRUE),
+    hidden(
+      radioButtons(
+        ns("animation_time_unit"),
+        "Animation Time Unit:",
+        c("Study Day", "Visit"),
+        inline = TRUE),
+      sliderInput(
+        ns("animation_transition_time"),
+        "Animation Transition Speed (secs):",
+        min = .1,
+        max = 2,
+        value = .5,
+        ticks = FALSE)
+    ),
+    width = 3
   )
   
   
@@ -33,7 +48,8 @@ nepexplorer_ui <- function(id) {
       br(),
       br(),
       # Patient Profile (demography table + lab line charts) UI
-      patientProfileUI(ns("patprofile"))
+      patientProfileUI(ns("patprofile")),
+      width = 9
   )
 
   ui <- sidebarLayout(
