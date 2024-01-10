@@ -58,7 +58,7 @@ draw_creatinine_scatter <- function(df, settings, animate = "off",
                        labels = c("1.5x", "2.0x", "2.5x", "3.0x*"),
                        expand = c(0, 0)) +
     
-    scale_y_continuous(name = "Absolue Change in Serum Creatinine",
+    scale_y_continuous(name = "Absolute Change in Serum Creatinine",
                        breaks = c(.3, 1.5, 2.5),
                        limits = c(0, max_delta),
                        labels = c("0.3 mg/dL", "1.5 mg/dL", "2.5 mg/dL"),
