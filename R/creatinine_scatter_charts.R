@@ -185,7 +185,9 @@ draw_summary_table <- function(df) {
       )
     ) %>%
     cols_width(
-      everything() ~ px(80)
+      starts_with("KDIGO") ~ px(76),
+      starts_with("DELTA") ~ px(76),
+      everything() ~ px(68)
     )
   
   

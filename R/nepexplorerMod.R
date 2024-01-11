@@ -37,7 +37,7 @@ nepexplorer_ui <- function(id) {
         value = .5,
         ticks = FALSE)
     ),
-    width = 3
+    width = 2
   )
   
   
@@ -49,7 +49,7 @@ nepexplorer_ui <- function(id) {
     br(),
     # Patient Profile (demography table + lab line charts) UI
     patientProfileUI(ns("patprofile")),
-    width = 9
+    width = 10
   )
   
   ui <- sidebarLayout(
