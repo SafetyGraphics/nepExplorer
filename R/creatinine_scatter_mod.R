@@ -90,8 +90,8 @@ function(el, x) {
 
 
     // set color of selected point
-    colors[data.points[0].pointNumber] = '#FFFFFF';
-    sizes[data.points[0].pointNumber] = 12;
+    colors[data.points[0].pointNumber] = '#000000';
+    sizes[data.points[0].pointNumber] = 14;
 
     Plotly.restyle(el,
       {'marker':{color: colors, size: sizes}},
