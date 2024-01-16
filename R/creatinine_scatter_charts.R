@@ -52,13 +52,13 @@ draw_creatinine_scatter <- function(df, settings, animate = "off",
           panel.grid.minor = element_blank(),
           axis.line = element_line(colour = "black")) +
     
-    scale_x_continuous(name = "KDIGO (Fold increase from baseline (or \u2265 4 mg/dL))",
+    scale_x_continuous(name = "Fold Change in Serum Creatinine (*or \u2265 4 mg/dL))",
                        breaks = c(1.5, 2, 2.5, 3),
                        limits = c(0, max_kdigo),
                        labels = c("1.5x", "2.0x", "2.5x", "3.0x*"),
                        expand = c(0, 0)) +
     
-    scale_y_continuous(name = "Delta Creatinine (Absolute increase from baseline)",
+    scale_y_continuous(name = "Absolute Change in Serum Creatinine",
                        breaks = c(.3, 1.5, 2.5),
                        limits = c(0, max_delta),
                        labels = c("0.3 mg/dL", "1.5 mg/dL", "2.5 mg/dL"),
@@ -67,11 +67,11 @@ draw_creatinine_scatter <- function(df, settings, animate = "off",
     
     # add colored stage rectangles
     annotate("rect", xmin = 0, xmax = max_kdigo, ymin = 0,
-             ymax = max_delta, fill = "red") + # Stage 3
+             ymax = max_delta, fill = "#f03b20") + # Stage 3
     annotate("rect", xmin = 0, xmax = 3, ymin = 0, ymax = 2.5, # Stage 2
-             fill = "orange") +
+             fill = "#feb24c") +
     annotate("rect", xmin = 0, xmax = 2, ymin = 0, ymax = 1.5, # Stage 1
-             fill = "yellow") +
+             fill = "#ffeda0") +
     annotate("rect", xmin = 0, xmax = 1.5, ymin = 0, ymax = .3, # No stage
              fill = "white") +
     
@@ -128,7 +128,7 @@ draw_creatinine_scatter <- function(df, settings, animate = "off",
 #' @import gt
 #' @importFrom magrittr %>%
 draw_summary_table <- function(df) {
-  
+
   df %>%
     gt(rowname_col = "Stage") %>% #move stage to rowname
     tab_spanner_delim(
@@ -137,22 +137,39 @@ draw_summary_table <- function(df) {
     fmt_percent(ends_with("%"), decimals = 0) %>% #format percentage
     tab_style( #add red fill to stage 1 rowname
       style = list(
-        cell_fill(color = "red")
+        cell_fill(color = "#f03b20")
       ),
       locations = cells_stub(rows = 1
       )) %>%
     tab_style(  #add orange fill to stage 1 rowname
       style = list(
-        cell_fill(color = "orange")
+        cell_fill(color = "#feb24c")
       ),
       locations = cells_stub(rows = 2
       )) %>%
     tab_style(  #add yellow fill to stage 1 rowname
       style = list(
-        cell_fill(color = "yellow")
+        cell_fill(color = "#ffeda0")
       ),
       locations = cells_stub(rows = 3
       )) %>%
+    tab_spanner(
+      label = "Fold Change in Serum Creatinine",
+      level = 1,
+      columns  = starts_with("KDIGO"),
+      replace = TRUE
+    ) %>%
+    tab_spanner(
+      label = "Absolute Change in Serum Creatinine",
+      level = 1,
+      columns  = starts_with("DELTA"),
+      replace = TRUE
+    ) %>%
+    tab_stubhead("KDIGO") %>%
+    tab_style(
+      style = cell_text(weight = "bold", v_align = "middle"),
+      locations = cells_stubhead()
+    ) %>%
     tab_style(
       locations = cells_column_labels(columns = everything()),
       style     = list(
@@ -168,7 +185,9 @@ draw_summary_table <- function(df) {
       )
     ) %>%
     cols_width(
-      everything() ~ px(70)
+      starts_with("KDIGO") ~ px(76),
+      starts_with("DELTA") ~ px(76),
+      everything() ~ px(68)
     )
   
   
