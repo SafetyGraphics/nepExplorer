@@ -4,11 +4,10 @@ Title: Interactive Graphic for Exploring Kidney Function Data in Clinical Trials
 Version: 0.1.0
 Authors@R: c(
 	person("Preston", "Burns", email = "s.preston.burns@gmail.com", role = c("cre","aut")),
-	person("Lovemore", "Gakava", email = "lovemore.gakava@gmail.com", role = c("cre","aut")),
-	person("Jared", "Woolfork", email = "jaredwoolfolk@gmail.com", role = c("cre","aut")),
-	person("Eli", "Miller", email = "eli.miller@atorusresearch.com", role = c("cre","aut")),
-	person("James", "Buchanan", email = "jbuchanan@covilance.com", role = c("cre","aut")))
-Maintainer: Preston Burns <s.preston.burns@gmail.com>
+	person("Lovemore", "Gakava", email = "lovemore.gakava@gmail.com", role = "aut"),
+	person("Jared", "Woolfork", email = "jaredwoolfolk@gmail.com", role = "aut"),
+	person("Eli", "Miller", email = "eli.miller@atorusresearch.com", role = "aut"),
+	person("James", "Buchanan", email = "jbuchanan@covilance.com", role = "aut"))
 Description: Shiny app of interactive creatinine scatterplot for exploring kidney function data in clinical trials.
 URL: https://github.com/SafetyGraphics/nep-explorer
 BugReports: https://github.com/SafetyGraphics/nep-explorer/issues
