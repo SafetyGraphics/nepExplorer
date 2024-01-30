@@ -1,4 +1,4 @@
-# nep-explorer
+# nepExplorer
 Interactive Graphic for Exploring Kidney Function Data in Clinical Trials
 
   <!-- badges: start -->
