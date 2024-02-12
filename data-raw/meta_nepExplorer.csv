@@ -1,0 +1,13 @@
+text_key,domain,col_key,field_key,type,label,description,multiple,standard_adam,standard_sdtm
+id_col,vitals,id_col,,column,ID column,Unique subject identifier variable name.,FALSE,USUBJID,USUBJID
+value_col,vitals,value_col,,column,Value column,Vitals result variable name.,FALSE,AVAL,VSSTRESN
+measure_col,vitals,measure_col,,column,Measure column,Vitals measure variable name,FALSE,PARAM,VSTEST
+studyday_col,vitals,studyday_col,,column,Study Day column,Visit day variable name,FALSE,ADY,VSDY
+visit_col,vitals,visit_col,,column,Visit column,Visit variable name,FALSE,AVISIT,VISIT
+visitn_col,vitals,visitn_col,,column,Visit Number column,Visit number variable name,FALSE,AVISITN,VISITNUM
+measure_values--SYSBP,vitals,measure_col,SYSBP,field,Systolic value,Value used for Systolic Blood Pressure in the specified measure column,FALSE,Systolic Blood Pressure (mmHg),Systolic Blood Pressure 
+measure_values--DIABP,vitals,measure_col,DIABP,field,Diastolic value,Value used for Diastolic  Blood Pressure in the specified measure column,FALSE,Diastolic Blood Pressure (mmHg),Diastolic Blood Pressure
+unit_col,vitals,unit_col,,column,Unit column,Unit of measure variable name,FALSE,,VSSTRESU
+measure_values--CREAT,labs,measure_col,CREAT,field,Creatinine value,Value used for Creatinine in the specified measure column,FALSE,Creatinine (umol/L),Creatinine
+visit_order_col,labs,visit_order_col,,column,Nep Visit Number column,Nep Visit number variable name,FALSE,AVISITN,VISITNUM
+baseline_flag,labs,baseline_flag,,column,Baseline Flag,Column for assigning baseline visits,FALSE,ABLFL,LBBLFL
