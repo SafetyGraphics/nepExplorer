@@ -2,6 +2,7 @@
 
 export(create_nepexplorer_app)
 export(creatinine_data_fcn)
+export(init_nepExplorer)
 export(nepexplorer_server)
 export(nepexplorer_ui)
 import(RColorBrewer)
