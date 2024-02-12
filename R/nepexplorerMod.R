@@ -9,7 +9,7 @@
 #' @export
 nepexplorer_ui <- function(id) {
   ns <- NS(id)
-  
+
   #future home of settings panel
   sidebar <- sidebarPanel(
     selectizeInput(
@@ -39,8 +39,8 @@ nepexplorer_ui <- function(id) {
     ),
     width = 2
   )
-  
-  
+
+
   main <- mainPanel(
     useShinyjs(),
     # Scatter PLot + Summary Table UI
@@ -51,14 +51,14 @@ nepexplorer_ui <- function(id) {
     patientProfileUI(ns("patprofile")),
     width = 10
   )
-  
+
   ui <- sidebarLayout(
     sidebar,
     main,
     position = c("right"),
     fluid = TRUE
   )
-  
+
   return(ui)
 }
 
@@ -79,7 +79,12 @@ nepexplorer_ui <- function(id) {
 #' @export
 nepexplorer_server <- function(input, output, session, params) {
   ns <- session$ns
-  
+
+  param <- reactive({
+    init_nepExplorer(data = params()$data,
+                     settings = params()$settings)
+  })
+
   observe({
     if (input$animate == "on") {
       shinyjs::show(id = "animation_time_unit")
@@ -89,32 +94,32 @@ nepexplorer_server <- function(input, output, session, params) {
       shinyjs::hide(id = "animation_transition_time")
     }
   })
-  
+
   # Populate sidebar control with measures and select all by default
   observe({
-    measure_col <- params()$settings$labs$measure_col
-    measures <- unique(params()$data[[measure_col]])
+    measure_col <- param()$settings$labs$measure_col
+    measures <- unique(param()$data$labs[[measure_col]])
     updateSelectizeInput(session,
                          "measures",
                          choices = measures,
                          selected = measures
     )
-    
+
   })
-  
+
   animate <- reactive(input$animate)
-  
+
   animation_time_unit <- reactive({
     if (input$animation_time_unit == "Study Day") {
-      params()$settings$labs$studyday_col
+      param()$settings$labs$studyday_col
     } else {
-      params()$settings$labs$visit_col
+      param()$settings$labs$visit_col
     }
   })
-  
+
   # get processed data to use for subsetting to subject on scatterplot click
   processed_creatinine_data <- reactive({
-    creatinineScatterServer("scatter", df = params()$data$labs, settings = params()$settings$labs,
+    creatinineScatterServer("scatter", df = param()$data$labs, settings = param()$settings$labs,
                             animate = animate,
                             animation_transition_time = reactive(input$animation_transition_time),
                             animation_time_unit = animation_time_unit)
@@ -125,11 +130,11 @@ nepexplorer_server <- function(input, output, session, params) {
   })
   #Patient Profile (demo tables + lab line charts)
   observeEvent(selected_subject(), {
-    
+
     if (length(selected_subject()) == 1) { # avoid triggering patient profiles if there isn't a subject
-      patientProfileServer("patprofile", df = params()$data$labs,
-                           settings = params()$settings$labs, subj_id = selected_subject())
+      patientProfileServer("patprofile", df = param()$data$labs,
+                           settings = param()$settings$labs, subj_id = selected_subject())
     }
   }, ignoreInit = TRUE)
-  
+
 }
