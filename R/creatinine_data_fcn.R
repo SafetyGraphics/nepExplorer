@@ -9,17 +9,19 @@
 creatinine_data_fcn <- function(df, settings) {
   ## Prepare data for chart and table
   creatinine_data <- df %>%
-    filter(.data[[settings$measure_col]] == settings$measure_values$Creatinine) %>%
+    filter(.data[[settings$measure_col]] == settings$measure_values$CREAT) %>%
     select(.data[[settings$id_col]], .data[[settings$studyday_col]],
            .data[[settings$visit_col]], .data[[settings$visit_order_col]],
            .data[[settings$measure_col]],
            .data[[settings$value_col]], .data[[settings$baseline_flag]])
-  
+
+
   #get baseline creatinine levels for each subject for hover text
   baseline_creat <- creatinine_data %>%
-    filter(.data[[settings$baseline_flag]] == TRUE) %>%
+    filter(.data[[settings$baseline_flag]] == "Y") %>%
     select(.data[[settings$id_col]], BASELINE = .data[[settings$value_col]])
-  
+
+
   #calcualte stages at event level
   processed_creatinine_data <- creatinine_data %>%
     group_by(.data[[settings$id_col]]) %>%
@@ -35,7 +37,7 @@ creatinine_data_fcn <- function(df, settings) {
     ) %>%
     mutate(
       KDIGO_STAGE = case_when(
-        .data$KDIGO > 3 | STRESN >= 4 ~ "Stage 3",
+        .data$KDIGO > 3 | .data[[settings$value_col]]   >= 4 ~ "Stage 3",
         .data$KDIGO > 2 ~ "Stage 2",
         .data$KDIGO > 1.5  ~ "Stage 1",
         TRUE ~ "Did not trigger KDIGO Stage"
@@ -48,9 +50,9 @@ creatinine_data_fcn <- function(df, settings) {
       ),
     ) %>%
     left_join(baseline_creat, by = settings$id_col) %>%
-    filter(.data[[settings$baseline_flag]] == FALSE)
-  
-  
+    filter(.data[[settings$baseline_flag]] != "Y")
+
+
   get_highest_stage <- function(vector_of_stages) {
     if ("Stage 3" %in% vector_of_stages) {
       return("Stage 3")
@@ -62,21 +64,21 @@ creatinine_data_fcn <- function(df, settings) {
       "Stage 0"
     }
   }
-  
+
   #get highest stage by subject
   patient_level_stages <- processed_creatinine_data %>%
     group_by(.data[[settings$id_col]]) %>%
     summarize(
       DELTA_STAGE = get_highest_stage(.data$DELTA_STAGE),
       KDIGO_STAGE = get_highest_stage(.data$KDIGO_STAGE),
-      
+
     )
-  
+
   return(
     list(
       patient_level_stages = patient_level_stages,
       creatine_level_data = processed_creatinine_data
     )
   )
-  
+
 }
