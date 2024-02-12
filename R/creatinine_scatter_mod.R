@@ -10,7 +10,7 @@ creatinineScatterUI <-  function(id) {
   ns <- NS(id)
   fluidPage(
     p(paste0("Each point in scatterplot corresponds to a single patient and their highest creatinine value during",
-      " the study. Turn on time animation to see creatinine values at particular timepoints during the study.")),
+             " the study. Turn on time animation to see creatinine values at particular timepoints during the study.")),
     p("Click on a point in the scatterplot to view the relevant patient's longitudinal profile."),
     p("Click and drag to zoom-in. Double-click to reset zoom."),
     column(plotlyOutput(ns("scatterplot"), height = "600px"), width = 8),
@@ -38,11 +38,11 @@ creatinineScatterServer <-  function(id, df, settings, animate, animation_transi
   moduleServer(
     id,
     function(input, output, session) {
-      
+
       patient_level_stages_data <- creatinine_data_fcn(df = df, settings = settings)
       patient_level_stages <- patient_level_stages_data$patient_level_stages
       processed_creatinine_data <- patient_level_stages_data$creatine_level_data
-      
+
       # create template table with all grades incase not all grades are in data
       summary_table_template <- tribble(
         ~ KDIGO_STAGE, ~ DELTA_STAGE,
@@ -51,28 +51,28 @@ creatinineScatterServer <-  function(id, df, settings, animate, animation_transi
         "Stage 1", "Stage 1",
         "Stage 0", "Stage 0",
       )
-      
+
       #calcualte summaries and generate summary tables
       KDIGO_summary <- patient_level_stages %>%
         group_by(.data$KDIGO_STAGE) %>%
         summarize(`KDIGO_N` = length(.data[[settings$id_col]]),
                   `KDIGO_%` = length(.data[[settings$id_col]]) / nrow(patient_level_stages))
-      
+
       DELTA_summary <- patient_level_stages %>%
         group_by(.data$DELTA_STAGE) %>%
         summarize(`DELTA_N` = length(.data[[settings$id_col]]),
                   `DELTA_%` = length(.data[[settings$id_col]]) / nrow(patient_level_stages))
-      
+
       summary_table_data <- summary_table_template %>%
         left_join(KDIGO_summary) %>%
         left_join(DELTA_summary) %>%
         mutate_if(is.numeric, coalesce, 0) %>%
         select(-.data$KDIGO_STAGE, Stage = .data$DELTA_STAGE) # only need one stage column
-      
+
       output$summary_table <- render_gt({
         draw_summary_table(summary_table_data)
       })
-      
+
       update_color_js <- "
 function(el, x) {
   el.on('plotly_click', function(data) {
@@ -81,9 +81,9 @@ function(el, x) {
       for (var i = 0; i < data.points[0].data.x.length; i++) {
         colors.push('#000000');
       }
-      
+
     // build size array
-    var sizes = [];  
+    var sizes = [];
       for (var i = 0; i < data.points[0].data.x.length; i++) {
         sizes.push(9);
       }
@@ -101,15 +101,15 @@ function(el, x) {
 }
 "
 
-        #draw scatterplot
-        output$scatterplot <- renderPlotly({
-          draw_creatinine_scatter(df = processed_creatinine_data, settings = settings,
-                                  animate = animate(),
-                                  animation_transition_time = animation_transition_time(),
-                                  animation_time_unit = animation_time_unit()) %>% onRender(update_color_js)
-          })
+    #draw scatterplot
+    output$scatterplot <- renderPlotly({
+      draw_creatinine_scatter(df = processed_creatinine_data, settings = settings,
+                              animate = animate(),
+                              animation_transition_time = animation_transition_time(),
+                              animation_time_unit = animation_time_unit()) %>% onRender(update_color_js)
+    })
 
-return(processed_creatinine_data)
+    return(processed_creatinine_data)
 
     }
   )
