@@ -3,8 +3,11 @@ label: Nep Explorer - Module
 name: nepexplorerMod
 type: module
 package: nepExplorer
-domain: 
+order: 9
+domain:
   - labs
+  - vitals
+  - dm
 workflow:
   ui: nepexplorer_ui
   server: nepexplorer_server
