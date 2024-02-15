@@ -19,7 +19,10 @@ neplab <- nepExplorer::adlb %>%
 
 nepvitals <- nepExplorer::advs %>%
   mutate(
-    PARAM = ifelse(TEST=="Systolic Blood Pressure", "Systolic Blood Pressure (mmHg)", ifelse(TEST=="Diastolic Blood Pressure", "Diastolic Blood Pressure (mmHg)", TEST)),
+    PARAM = ifelse(TEST=="Systolic Blood Pressure", 
+                         "Systolic Blood Pressure (mmHg)", 
+            ifelse(TEST=="Diastolic Blood Pressure", 
+                         "Diastolic Blood Pressure (mmHg)", TEST)),
     BLFL = ifelse(BLFL==TRUE, "Y", BLFL)
   )
 
