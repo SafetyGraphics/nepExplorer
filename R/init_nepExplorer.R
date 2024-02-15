@@ -33,7 +33,8 @@ init_nepExplorer <- function(data, settings) {
   anly <- dm_sub %>%
     dplyr::left_join(
       vs_labs,
-      by= c(settings[["labs"]][['id_col']],settings[["labs"]][["treatment_col"]])
+      by= c(settings[["labs"]][['id_col']],
+            settings[["labs"]][["treatment_col"]])
     )
 
   labs_settings <- settings

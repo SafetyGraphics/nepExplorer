@@ -119,6 +119,9 @@ nepexplorer_server <- function(input, output, session, params) {
 
   # get processed data to use for subsetting to subject on scatterplot click
   processed_creatinine_data <- reactive({
+    
+    ## UPDATE NEEDED - Include Settings for Vitals for SYSBP / DIABP
+    
     creatinineScatterServer("scatter", df = param()$data$labs, settings = param()$settings$labs,
                             animate = animate,
                             animation_transition_time = reactive(input$animation_transition_time),

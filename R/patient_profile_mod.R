@@ -46,7 +46,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
 
       output$percent_change <- renderUI({
 
-       default_labs <- c(settings$measure_values$CREAT, settings$measure_values$`Cystatin C`)
+       default_labs <- c(settings$measure_values$CREAT, settings$measure_values$CYSTC)
        available_labs <- intersect(patient_df[[settings$measure_col]] %>%  unique(), default_labs)
 
         if (length(available_labs) > 0) {
@@ -60,7 +60,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
 
       output$raw_change <- renderUI({
 
-        default_labs <- c(settings$measure_values$CREAT, settings$measure_values$`Cystatin C`)
+        default_labs <- c(settings$measure_values$CREAT, settings$measure_values$CYSTC)
         available_labs <- intersect(patient_df[[settings$measure_col]] %>%  unique(), default_labs)
 
         if (length(available_labs) > 0) {
@@ -88,10 +88,14 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
 
       output$ULN_FC <- renderUI({
 
-        default_labs <-  c(settings$measure_values$Bicarbonate, settings$measure_values$`Blood Urea Nitrogen`,
-                           settings$measure_values$Calcium,
-                           settings$measure_values$Chloride, settings$measure_values$Phosphorus,
-                           settings$measure_values$Potassium, settings$measure_values$Sodium)
+        default_labs <-  c(settings$measure_values$BICARB, 
+                           settings$measure_values$BUN,
+                           settings$measure_values$CA,
+                           settings$measure_values$CL, 
+                           settings$measure_values$PHOS,
+                           settings$measure_values$K, 
+                           settings$measure_values$SODIUM)
+        
         available_labs <- intersect(patient_df[[settings$measure_col]] %>%  unique(), default_labs)
 
         if (length(available_labs) > 0) {
@@ -104,8 +108,20 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
 
       output$blood_pressure <- renderUI({
 
-        default_labs <- c(settings$measure_values$`Diastolic Blood Pressure`,
-                          settings$measure_values$`Systolic Blood Pressure`)
+        
+        
+        default_labs <- c(settings$measure_values$DIABP,
+                          settings$measure_values$SYSBP)
+
+        # Check 1:
+        print("Check for Settings in Measure")
+        print(settings$measure_values)
+        
+        # Check 2: 
+        print("Check 1 for Blood Pressure")
+        print(default_labs)
+        
+        
         available_labs <- intersect(patient_df[[settings$measure_col]] %>%  unique(), default_labs)
 
         if (length(available_labs) > 0) {

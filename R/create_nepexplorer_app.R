@@ -21,28 +21,41 @@ create_nepexplorer_app <- function(
 if (is.null(mapping)) {
     mapping <- list(labs =list("id_col" = "USUBJID", "measure_col" = "PARAM",
                                "measure_values" = list("CREAT" = "Creatinine",
-                                                       "Cystatin C" = "Cystatin C",
+                                                       "CYSTC" = "Cystatin C",
                                                        "eGFR" = "eGFR",
                                                        "eGFRcys" = "eGFRcys",
                                                        "Albumin/Creatinine" = "Albumin/Creatinine",
-                                                       "Bicarbonate" =  "Bicarbonate",
-                                                       "Blood Urea Nitrogen" =  "Blood Urea Nitrogen",
-                                                       "Calcium" = "Calcium",
-                                                       "Chloride" = "Chloride",
-                                                       "Phosphorus" = "Phosphorus",
-                                                       "Potassium" = "Potassium",
-                                                       "Sodium" =  "Sodium",
-                                                       "Diastolic Blood Pressure" = "Diastolic Blood Pressure",
-                                                       "Systolic Blood Pressure" = "Systolic Blood Pressure"),
-                               "value_col" = "STRESN", "unit_col" = "STRESU", "studyday_col" = "DY",
-                               "visit_col" = "VISIT", "visit_order_col" = "VISITN",
-                               "baseline_flag" = "BLFL", "normal_col_high" = "STNRHI",
-                               "id_col" = "USUBJID", "age_col" = "AGE", "sex_col" = "SEX",
-                               "race_col" = "RACE", "treatment_col" = "ARM"),
+                                                       "BICARB" =  "Bicarbonate",
+                                                       "BUN" =  "Blood Urea Nitrogen",
+                                                       "CA" = "Calcium",
+                                                       "CL" = "Chloride",
+                                                       "PHOS" = "Phosphorus",
+                                                       "K" = "Potassium",
+                                                       "SODIUM" =  "Sodium",
+                                                       "DIABP" = "Diastolic Blood Pressure (mmHg)",
+                                                       "SYSBP" = "Systolic Blood Pressure (mmHg)"
+                                                       ),
+                               "value_col" = "STRESN", 
+                               "unit_col" = "STRESU", 
+                               "studyday_col" = "DY",
+                               "visit_col" = "VISIT", 
+                               "visit_order_col" = "VISITN",
+                               "baseline_flag" = "BLFL", 
+                               "normal_col_high" = "STNRHI",
+                               "id_col" = "USUBJID", 
+                               "age_col" = "AGE", 
+                               "sex_col" = "SEX",
+                               "race_col" = "RACE", 
+                               "treatment_col" = "ARM"
+                               ),
+                    
                     dm = list("id_col" = "USUBJID", "treatment_col" = "ARM" ),
+                    
                     vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM","measure_col" = "PARAM",
-                                  "measure_values" = list(  "DIABP" = "Diastolic Blood Pressure (mmHg)",
-                                                            "SYSBP" = "Systolic Blood Pressure (mmHg)") )
+                                  "measure_values" = list("DIABP" = "Diastolic Blood Pressure (mmHg)",
+                                                          "SYSBP" = "Systolic Blood Pressure (mmHg)"
+                                                          ) 
+                                  )
     )
   }
   ## create object containing data and setting to pass to server
