@@ -11,10 +11,11 @@
 #' @export
 
 init_nepExplorer <- function(data, settings) {
-  vs_sub <-
+
+vs_sub <-
     data$vitals %>%
     filter(
-      settings[["vitals"]][['measure_col']] %in%
+      .data[[settings[["vitals"]]$measure_col]] %in%
         c(
           settings[["vitals"]]$measure_values$DIABP,
           settings[["vitals"]]$measure_values$SYSBP

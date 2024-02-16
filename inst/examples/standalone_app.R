@@ -13,17 +13,22 @@ if (!interactive()) {
 
 neplab <- nepExplorer::adlb %>%
   mutate(
-    PARAM = TEST,
-    BLFL = ifelse(BLFL==TRUE, "Y", BLFL)
-  )
+    PARAM = TEST, BLFL = ifelse(BLFL==TRUE, "Y", BLFL)
+        )
 
 nepvitals <- nepExplorer::advs %>%
   mutate(
-    PARAM = ifelse(TEST=="Systolic Blood Pressure", 
-                         "Systolic Blood Pressure (mmHg)", 
-            ifelse(TEST=="Diastolic Blood Pressure", 
-                         "Diastolic Blood Pressure (mmHg)", TEST)),
-    BLFL = ifelse(BLFL==TRUE, "Y", BLFL)
+    PARAM = 
+      ifelse(
+      TEST == "Systolic Blood Pressure",
+      "Systolic Blood Pressure",
+      ifelse(
+        TEST == "Diastolic Blood Pressure",
+        "Diastolic Blood Pressure",
+        TEST
+      )
+    ),
+    BLFL = ifelse(BLFL == TRUE, "Y", BLFL)
   )
 
 unique(neplab$BLFL)

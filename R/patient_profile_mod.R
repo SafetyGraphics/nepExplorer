@@ -108,19 +108,8 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
 
       output$blood_pressure <- renderUI({
 
-        
-        
         default_labs <- c(settings$measure_values$DIABP,
                           settings$measure_values$SYSBP)
-
-        # Check 1:
-        print("Check for Settings in Measure")
-        print(settings$measure_values)
-        
-        # Check 2: 
-        print("Check 1 for Blood Pressure")
-        print(default_labs)
-        
         
         available_labs <- intersect(patient_df[[settings$measure_col]] %>%  unique(), default_labs)
 

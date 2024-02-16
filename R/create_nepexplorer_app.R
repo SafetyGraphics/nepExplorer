@@ -32,8 +32,8 @@ if (is.null(mapping)) {
                                                        "PHOS" = "Phosphorus",
                                                        "K" = "Potassium",
                                                        "SODIUM" =  "Sodium",
-                                                       "DIABP" = "Diastolic Blood Pressure (mmHg)",
-                                                       "SYSBP" = "Systolic Blood Pressure (mmHg)"
+                                                       "DIABP" = "Diastolic Blood Pressure",
+                                                       "SYSBP" = "Systolic Blood Pressure"
                                                        ),
                                "value_col" = "STRESN", 
                                "unit_col" = "STRESU", 
@@ -52,8 +52,8 @@ if (is.null(mapping)) {
                     dm = list("id_col" = "USUBJID", "treatment_col" = "ARM" ),
                     
                     vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM","measure_col" = "PARAM",
-                                  "measure_values" = list("DIABP" = "Diastolic Blood Pressure (mmHg)",
-                                                          "SYSBP" = "Systolic Blood Pressure (mmHg)"
+                                  "measure_values" = list("DIABP" = "Diastolic Blood Pressure",
+                                                          "SYSBP" = "Systolic Blood Pressure"
                                                           ) 
                                   )
     )
@@ -77,5 +77,4 @@ if (is.null(mapping)) {
     runApp(app)
   else
     app
-
 }
