@@ -18,7 +18,7 @@ neplab <- nepExplorer::adlb %>%
 
 nepvitals <- nepExplorer::advs %>%
   mutate(
-    PARAM = 
+    PARAM =
       ifelse(
       TEST == "Systolic Blood Pressure",
       "Systolic Blood Pressure",
@@ -31,7 +31,5 @@ nepvitals <- nepExplorer::advs %>%
     BLFL = ifelse(BLFL == TRUE, "Y", BLFL)
   )
 
-unique(neplab$BLFL)
 
 create_nepexplorer_app(data = list(dm = nepExplorer::adsl, labs = neplab, vitals = nepvitals))
-# create_nepexplorer_app() # see ?create_nepexplorer_app for more info

@@ -31,30 +31,28 @@ if (is.null(mapping)) {
                                                        "CL" = "Chloride",
                                                        "PHOS" = "Phosphorus",
                                                        "K" = "Potassium",
-                                                       "SODIUM" =  "Sodium",
-                                                       "DIABP" = "Diastolic Blood Pressure",
-                                                       "SYSBP" = "Systolic Blood Pressure"
+                                                       "SODIUM" =  "Sodium"
                                                        ),
-                               "value_col" = "STRESN", 
-                               "unit_col" = "STRESU", 
+                               "value_col" = "STRESN",
+                               "unit_col" = "STRESU",
                                "studyday_col" = "DY",
-                               "visit_col" = "VISIT", 
+                               "visit_col" = "VISIT",
                                "visit_order_col" = "VISITN",
-                               "baseline_flag" = "BLFL", 
+                               "baseline_flag" = "BLFL",
                                "normal_col_high" = "STNRHI",
-                               "id_col" = "USUBJID", 
-                               "age_col" = "AGE", 
+                               "id_col" = "USUBJID",
+                               "age_col" = "AGE",
                                "sex_col" = "SEX",
-                               "race_col" = "RACE", 
+                               "race_col" = "RACE",
                                "treatment_col" = "ARM"
                                ),
-                    
+
                     dm = list("id_col" = "USUBJID", "treatment_col" = "ARM" ),
-                    
+
                     vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM","measure_col" = "PARAM",
                                   "measure_values" = list("DIABP" = "Diastolic Blood Pressure",
                                                           "SYSBP" = "Systolic Blood Pressure"
-                                                          ) 
+                                                          )
                                   )
     )
   }

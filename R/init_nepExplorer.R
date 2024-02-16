@@ -1,7 +1,7 @@
 #' Initialize Settings for nepExplorer
 #'
 #' @param data `list` Named list of data frames that includes participant-level subject data (`dm`)
-#' and event-level adverse event data (`aes`).
+#' labs(`labs`) and vital signs data (`vitals`).
 #' @param settings `list` Named list of settings.
 #'
 #' @return returns list with data and settings
@@ -30,13 +30,15 @@ vs_sub <-
       settings[["dm"]][["treatment_col"]]
     )
 
-  # left join to keep all rows in dm (even if there were no AEs)
+  # left join to keep all rows in dm
   anly <- dm_sub %>%
     dplyr::left_join(
       vs_labs,
       by= c(settings[["labs"]][['id_col']],
             settings[["labs"]][["treatment_col"]])
     )
+
+  settings$labs$measure_values <- c(settings$labs$measure_values, settings$vitals$measure_values)
 
   labs_settings <- settings
 
