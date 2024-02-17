@@ -8,7 +8,7 @@ init_nepExplorer(data, settings)
 }
 \arguments{
 \item{data}{`list` Named list of data frames that includes participant-level subject data (`dm`)
-and event-level adverse event data (`aes`).}
+labs(`labs`) and vital signs data (`vitals`).}
 
 \item{settings}{`list` Named list of settings.}
 }
