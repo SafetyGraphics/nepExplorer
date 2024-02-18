@@ -86,12 +86,14 @@ nepexplorer_server <- function(input, output, session, params) {
   })
 
   observe({
-    if (input$animate == "on") {
-      shinyjs::show(id = "animation_time_unit")
-      shinyjs::show(id = "animation_transition_time")
-    } else {
-      shinyjs::hide(id = "animation_time_unit")
-      shinyjs::hide(id = "animation_transition_time")
+    if (!is.null(input$animate)) {
+      if (input$animate == "on") {
+        shinyjs::show(id = "animation_time_unit")
+        shinyjs::show(id = "animation_transition_time")
+      } else {
+        shinyjs::hide(id = "animation_time_unit")
+        shinyjs::hide(id = "animation_transition_time")
+      }
     }
   })
 
