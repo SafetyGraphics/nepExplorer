@@ -104,3 +104,7 @@ dist
 .tern-port
 .Rproj.user
 *.Rproj
+
+# Ignoring R History and R Data Root:
+.Rhistory
+.RData

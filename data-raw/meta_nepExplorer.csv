@@ -21,5 +21,5 @@ measure_values--PHOS,labs,measure_col,PHOS,field,Phosphate value,Value used for 
 measure_values--K,labs,measure_col,K,field,Potassium value,Value used for Potassium in the specified measure column,FALSE,Potassium (mmol/L),Potassium
 measure_values--SODIUM,labs,measure_col,SODIUM,field,Sodium value,Value used for Sodium in the specified measure column,FALSE,Sodium (mmol/L),Sodium
 visit_order_col,labs,visit_order_col,,column,Nep Visit Number column,Nep Visit number variable name,FALSE,AVISITN,VISITNUM
-baseline_flag,labs,baseline_flag,,column,Baseline Flag,Column for assigning baseline visits,FALSE,ABLFL,LBBLFL
+baseline_flag,labs,baseline_flag,,column,Baseline Flag column,Column for assigning baseline visits,FALSE,ABLFL,LBBLFL
 baseline_values--Y,labs,baseline_flag,Y,field,Baseline Flag value,Value used for Baseline in the specified baseline column,FALSE,Y,Y
