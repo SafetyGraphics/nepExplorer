@@ -19,7 +19,7 @@ create_nepexplorer_app <- function(
     ...
 ) {
 if (is.null(mapping)) {
-    mapping <- list(labs =list("id_col" = "USUBJID", "measure_col" = "PARAM",
+    mapping <- list(labs = list("id_col" = "USUBJID", "measure_col" = "PARAM",
                                "measure_values" = list("CREAT" = "Creatinine",
                                                        "CYSTC" = "Cystatin C",
                                                        "eGFR" = "eGFR",
@@ -47,9 +47,9 @@ if (is.null(mapping)) {
                                "treatment_col" = "ARM"
                                ),
 
-                    dm = list("id_col" = "USUBJID", "treatment_col" = "ARM" ),
+                    dm = list("id_col" = "USUBJID", "treatment_col" = "ARM"),
 
-                    vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM","measure_col" = "PARAM",
+                    vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM", "measure_col" = "PARAM",
                                   "measure_values" = list("DIABP" = "Diastolic Blood Pressure",
                                                           "SYSBP" = "Systolic Blood Pressure"
                                                           )
@@ -59,7 +59,7 @@ if (is.null(mapping)) {
   ## create object containing data and setting to pass to server
   params <- reactive({
     list(
-      data =data,
+      data = data,
       settings = mapping
     )
   })

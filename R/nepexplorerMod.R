@@ -85,15 +85,15 @@ nepexplorer_server <- function(input, output, session, params) {
                      settings = params()$settings)
   })
 
-  # observe({
-  #   if (input$animate == "on") {
-  #     shinyjs::show(id = "animation_time_unit")
-  #     shinyjs::show(id = "animation_transition_time")
-  #   } else {
-  #     shinyjs::hide(id = "animation_time_unit")
-  #     shinyjs::hide(id = "animation_transition_time")
-  #   }
-  # })
+  observe({
+    if (input$animate == "on") {
+      shinyjs::show(id = "animation_time_unit")
+      shinyjs::show(id = "animation_transition_time")
+    } else {
+      shinyjs::hide(id = "animation_time_unit")
+      shinyjs::hide(id = "animation_transition_time")
+    }
+  })
 
   # Populate sidebar control with measures and select all by default
   observe({

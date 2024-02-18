@@ -13,7 +13,7 @@ if (!interactive()) {
 
 neplab <- nepExplorer::adlb %>%
   mutate(
-    PARAM = TEST, BLFL = ifelse(BLFL==TRUE, "Y", BLFL)
+    PARAM = TEST, BLFL = ifelse(BLFL == TRUE, "Y", BLFL)
         )
 
 nepvitals <- nepExplorer::advs %>%
