@@ -9,7 +9,7 @@ if (!interactive()) {
   devtools::load_all()
 }
 
-mapping_new <- list(labs = list("id_col" = "USUBJID", "measure_col" = "TEST",
+new_mapping <- list(labs = list("id_col" = "USUBJID", "measure_col" = "TEST",
                             "measure_values" = list("CREAT" = "Creatinine",
                                                     "CYSTC" = "Cystatin C",
                                                     "eGFR" = "eGFR",
@@ -48,30 +48,5 @@ vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM", "measure_col" = "TE
 )
 )
 
-#launch nepexplorer  stand-alone  app
-#
-# neplab <- nepExplorer::adlb %>%
-#   mutate(
-#     PARAM = TEST, BLFL = ifelse(BLFL == TRUE, "Y", BLFL)
-#         )
-#
-# nepvitals <- nepExplorer::advs %>%
-#   mutate(
-#     PARAM =
-#       ifelse(
-#       TEST == "Systolic Blood Pressure",
-#       "Systolic Blood Pressure",
-#       ifelse(
-#         TEST == "Diastolic Blood Pressure",
-#         "Diastolic Blood Pressure",
-#         TEST
-#       )
-#     ),
-#     BLFL = ifelse(BLFL == TRUE, "Y", BLFL)
-#   )
-
-
-# create_nepexplorer_app(data = list(dm = nepExplorer::adsl, labs = neplab, vitals = nepvitals))
-
 create_nepexplorer_app(data = list(dm = nepExplorer::adsl, labs = nepExplorer::adlb,
-                                   vitals = nepExplorer::advs), mapping = mapping_new)
+                                   vitals = nepExplorer::advs), mapping = new_mapping)
