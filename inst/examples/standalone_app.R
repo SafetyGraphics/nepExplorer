@@ -41,9 +41,10 @@ mapping_new <- list(labs = list("id_col" = "USUBJID", "measure_col" = "TEST",
 dm = list("id_col" = "USUBJID", "treatment_col" = "ARM"),
 
 vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM", "measure_col" = "TEST",
+              "vs_baseline_values" = list("Y" = "TRUE"),
+              "vs_baseline_flag" = "BLFL",
               "measure_values" = list("DIABP" = "Diastolic Blood Pressure",
-                                      "SYSBP" = "Systolic Blood Pressure"
-              )
+                                      "SYSBP" = "Systolic Blood Pressure")
 )
 )
 
