@@ -6,5 +6,5 @@ library(usethis)
 
 #Chart-level metadata
 #nepExplorer
-meta_nepExplorer<-read_csv("data-raw/meta_nepExplorer.csv")[]
+meta_nepExplorer <- read_csv("data-raw/meta_nepExplorer.csv")[]
 usethis::use_data(meta_nepExplorer, overwrite = TRUE)

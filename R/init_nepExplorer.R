@@ -28,7 +28,7 @@ init_nepExplorer <- function(data, settings) {
   # left join to keep all rows in dm
   anly <- dm_sub %>%
     dplyr::left_join(vs_labs,
-                     by = c(settings[["labs"]][['id_col']],
+                     by = c(settings[["labs"]][["id_col"]],
                             settings[["labs"]][["treatment_col"]]))
 
   settings$labs$measure_values <-
