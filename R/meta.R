@@ -1,4 +1,6 @@
-#' Metadata data frame containing information about the data mapping used to configure safetyGraphics for the hepExplorer Chart. One record per unique data mapping
+#' Metadata data frame containing information about the data mapping used to
+#' configure safetyGraphics for the hepExplorer Chart. One record per unique
+#' data mapping
 #'
 #' @format A data frame with X rows and 10 columns
 #' \describe{
