@@ -123,7 +123,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
 
       output$normalized_albumin <- renderUI({
 
-        if (settings$measure_values[["Albumin/Creatinine"]] %in% patient_df[[settings$measure_col]] %>%  unique()) {
+        if (settings$measure_values[["ALB/CREAT"]] %in% patient_df[[settings$measure_col]] %>%  unique()) {
           drawNormalizedAlbumin(adlb = patient_df, settings = settings)
         } else {
           div()
