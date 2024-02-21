@@ -17,8 +17,7 @@ create_nepexplorer_app <- function(
                 vitals = nepExplorer::advs
                 ),
     mapping = NULL,
-    runNow = TRUE,
-    ...
+    runNow = TRUE
 ) {
 if (is.null(mapping)) {
     mapping <- list(labs = list("id_col" = "USUBJID", "measure_col" = "PARAM",
