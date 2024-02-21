@@ -1,8 +1,8 @@
 #' Run the core NepExplorer App
 #'
-#' @param lab_df lab dataset to be loaded in to the app. Sample adbds data used
+#' @param data datasets to be loaded in to the app. Sample nepExplorer data used
 #'   by default
-#' @param settings list specifying the initial mapping values for each data
+#' @param mapping list specifying the initial mapping values for each data
 #'   mapping for each domain (e.g. list(aes= list(id_col='USUBJID',
 #'   seq_col='AESEQ')).
 #' @param runNow Should the shiny app object created be run directly? Helpful
@@ -12,8 +12,10 @@
 #'
 #' @export
 create_nepexplorer_app <- function(
-    data = list(dm = nepExplorer::adsl, labs = nepExplorer::adlb),
-    settings = NULL,
+    data = list(dm = nepExplorer::adsl,
+                labs = nepExplorer::adlb,
+                vitals = nepExplorer::advs
+                ),
     mapping = NULL,
     runNow = TRUE,
     ...
