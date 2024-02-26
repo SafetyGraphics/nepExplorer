@@ -15,14 +15,14 @@
 #' @importFrom rlang .data
 draw_creatinine_scatter <- function(df, settings, animate = "off",
                                     animation_transition_time = .5, animation_time_unit) {
-  
+
   #calculate axes to ensure breaks are included
   max_delta <- max(max(df$DELTA_C, na.rm = TRUE), 3)
   max_kdigo <- max(max(df$KDIGO, na.rm = TRUE), 3.5)
-  
+
   # place visit number in front of visit column so that it is proper sorted in plotly animation
   df <- df %>%  mutate(original_visit = .data[[settings$visit_col]],
-                       !!settings$visit_col := paste(.data[[settings$visit_order_col]], .data[[settings$visit_col]])
+                       !!settings$visit_col := paste(.data[[settings$visitn_col]], .data[[settings$visit_col]])
   )
 
   p <- ggplot(
@@ -40,31 +40,31 @@ draw_creatinine_scatter <- function(df, settings, animate = "off",
         "Max Creatinine: ", format(round(.data[[settings$value_col]], 2), nsmall = 2), "\n",
         "Max Creatinine Study Day: ", .data[[settings$studyday_col]], "\n",
         "Max Creatinine Visit: ", .data$original_visit
-        
+
       )
     )
   ) +
-    
+
     theme_bw() +
-    
+
     theme(panel.border = element_blank(),
           panel.grid.major = element_blank(), # minimalist
           panel.grid.minor = element_blank(),
           axis.line = element_line(colour = "black")) +
-    
+
     scale_x_continuous(name = "Fold Change in Serum Creatinine (*or \u2265 4 mg/dL))",
                        breaks = c(1.5, 2, 2.5, 3),
                        limits = c(0, max_kdigo),
                        labels = c("1.5x", "2.0x", "2.5x", "3.0x*"),
                        expand = c(0, 0)) +
-    
+
     scale_y_continuous(name = "Absolute Change in Serum Creatinine",
                        breaks = c(.3, 1.5, 2.5),
                        limits = c(0, max_delta),
                        labels = c("0.3 mg/dL", "1.5 mg/dL", "2.5 mg/dL"),
                        expand = c(0, 0)) +
-    
-    
+
+
     # add colored stage rectangles
     annotate("rect", xmin = 0, xmax = max_kdigo, ymin = 0,
              ymax = max_delta, fill = "#f03b20") + # Stage 3
@@ -74,14 +74,14 @@ draw_creatinine_scatter <- function(df, settings, animate = "off",
              fill = "#ffeda0") +
     annotate("rect", xmin = 0, xmax = 1.5, ymin = 0, ymax = .3, # No stage
              fill = "white") +
-    
+
     #add annotations for stage rectangles
     annotate("text", label = "Stage 3", x = .5, y = max_delta - .2) + # Stage 3
     annotate("text", label = "Stage 2", x = .5, y = 2.3) + # Stage 2
     annotate("text", label = "Stage 1", x = .5, y = 1.3) + # Stage 1
-    
+
     # add points last to prevent them from being covered up
-    
+
     if (animate == "on") { #frame needed for animation
       geom_point(aes_string(frame = animation_time_unit), color = "white",  size = 2.5,
                  fill = "black", shape = 21, stroke = .2)
@@ -90,25 +90,25 @@ draw_creatinine_scatter <- function(df, settings, animate = "off",
     }
   # Want a white border because I'm changing point size on click in plotly which
   # interestingly adds white borders around points
-  
+
   #convert to plotly without toolbar
   ggply <- ggplotly(p, tooltip = "text", source = "scatter") %>%
     event_register("plotly_click") %>%
     config(displayModeBar = FALSE)
-  
+
   # remove hover text from everything but the geom points
   ggply$x$data[[1]]$hoverinfo <- "none"
-  
+
   ggply$x$data[[2]]$hoverinfo <- "none"
-  
+
   ggply$x$data[[3]]$hoverinfo <- "none"
-  
+
   ggply$x$data[[4]]$hoverinfo <- "none"
-  
+
   ggply$x$data[[5]]$hoverinfo <- "none"
-  
+
   ggply$x$data[[6]]$hoverinfo <- "none"
-  
+
   ggply$x$data[[7]]$hoverinfo <- "none"
 
   if (animate == "on") {
@@ -117,7 +117,7 @@ draw_creatinine_scatter <- function(df, settings, animate = "off",
   } else {
     ggply
   }
-  
+
 }
 
 
@@ -189,6 +189,6 @@ draw_summary_table <- function(df) {
       starts_with("DELTA") ~ px(76),
       everything() ~ px(68)
     )
-  
-  
+
+
 }

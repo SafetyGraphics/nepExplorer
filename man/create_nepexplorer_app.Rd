@@ -5,16 +5,17 @@
 \title{Run the core NepExplorer App}
 \usage{
 create_nepexplorer_app(
-  lab_df = nepExplorer::adbds,
-  settings = NULL,
+  data = list(dm = nepExplorer::adsl, labs = nepExplorer::adlb, vitals =
+    nepExplorer::advs),
+  mapping = NULL,
   runNow = TRUE
 )
 }
 \arguments{
-\item{lab_df}{lab dataset to be loaded in to the app. Sample adbds data used
+\item{data}{datasets to be loaded in to the app. Sample nepExplorer data used
 by default}
 
-\item{settings}{list specifying the initial mapping values for each data
+\item{mapping}{list specifying the initial mapping values for each data
 mapping for each domain (e.g. list(aes= list(id_col='USUBJID',
 seq_col='AESEQ')).}
 
