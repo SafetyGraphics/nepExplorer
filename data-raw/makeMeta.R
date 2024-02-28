@@ -1,5 +1,5 @@
 # Note: expected to be run from the root package directory
-library(tidyverse)
+library(readr)
 library(usethis)
 
 #Copy metadata to /data
