@@ -1,3 +1,4 @@
+devtools::load_all()
 library(dplyr)
 library(safetyGraphics)
 
@@ -10,7 +11,10 @@ library(safetyGraphics)
   charts$nepexplorerMod$meta <- nepExplorer::meta_nepExplorer
   
   adam_adlbc <- safetyData::adam_adlbc |>
-    mutate(STRESU = gsub("[\\(\\)]", "", regmatches(PARAM, gregexpr("\\(.*?\\)", PARAM))[[1]]))
+    mutate(STRESU = gsub("[\\(\\)]", "", regmatches(PARAM, gregexpr("\\(.*?\\)", PARAM))[[1]]),
+           STRESU = ifelse(PARAM == "Creatinine (umol/L)", "mg/dL", STRESU), # convert creatine to mg/dL
+           AVAL = ifelse(PARAM == "Creatinine (umol/L)", AVAL * .0113, AVAL), 
+           PARAM = ifelse(PARAM == "Creatinine (umol/L)", "Creatinine (mg/dL)", PARAM))
   
   safetyGraphics::safetyGraphicsApp(domainData = list(
     labs = adam_adlbc,
