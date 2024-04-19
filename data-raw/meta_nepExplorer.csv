@@ -16,7 +16,7 @@ measure_values--BICARB,labs,measure_col,BICARB,field,Bicarbonate value,Value use
 measure_values--BUN,labs,measure_col,BUN,field,Blood Urea Nitrogen value,Value used for Blood Urea Nitrogen in the specified measure column,FALSE,Blood Urea Nitrogen (mmol/L),Blood Urea Nitrogen
 measure_values--CA,labs,measure_col,CA,field,Calcium value,Value used for Calcium in the specified measure column,FALSE,Calcium (mmol/L),Calcium
 measure_values--CL,labs,measure_col,CL,field,Chloride value,Value used for Chloride in the specified measure column,FALSE,Chloride (mmol/L),Chloride
-measure_values--CREAT,labs,measure_col,CREAT,field,Creatinine value,Value used for Creatinine in the specified measure column,FALSE,Creatinine (umol/L),Creatinine
+measure_values--CREAT,labs,measure_col,CREAT,field,Creatinine value,Value used for Creatinine in the specified measure column,FALSE,Creatinine (mg/dL),Creatinine
 measure_values--CYSTC,labs,measure_col,CYSTC,field,Cystatin C value,Value used for Cystatin C in the specified measure column,FALSE,Cystatin C (umol/L),Cystatin C
 measure_values--eGFR,labs,measure_col,eGFR,field,eGFR value,Value used for the Estimated Glomerular Filtration Rate in the specified measure column,FALSE,eGFR (mL/min),eGFR
 measure_values--eGFRcys,labs,measure_col,eGFRcys,field,eGFRcys value,Value used for the Cystatic C-based Estimated Glomerular Filtration Rate in the specified measure column,FALSE,eGFRcys (mL/min),eGFRcys
