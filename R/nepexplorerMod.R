@@ -100,7 +100,7 @@ nepexplorer_server <- function(input, output, session, params) {
   # Populate sidebar control with measures and select all by default
   observe({
     measure_col <- param()$settings$labs$measure_col
-    measures <- unique(param()$data$labs[[measure_col]])
+    measures <- unique(param()$data[[measure_col]])
     updateSelectizeInput(session,
                          "measures",
                          choices = measures,
@@ -122,7 +122,7 @@ nepexplorer_server <- function(input, output, session, params) {
   # get processed data to use for subsetting to subject on scatterplot click
   processed_creatinine_data <- reactive({
 
-    creatinineScatterServer("scatter", df = param()$data$labs, settings = param()$settings$labs,
+    creatinineScatterServer("scatter", df = param()$data, settings = param()$settings$labs,
                             animate = animate,
                             animation_transition_time = reactive(input$animation_transition_time),
                             animation_time_unit = animation_time_unit)
@@ -133,10 +133,9 @@ nepexplorer_server <- function(input, output, session, params) {
   })
   #Patient Profile (demo tables + lab line charts)
   observeEvent(selected_subject(), {
-
     if (length(selected_subject()) == 1) { # avoid triggering patient profiles if there isn't a subject
-      patientProfileServer("patprofile", df = param()$data$labs,
-                           settings = param()$settings$labs, subj_id = selected_subject())
+      patientProfileServer("patprofile", df = param()$data,
+                           settings = param()$settings, subj_id = selected_subject())
     }
   }, ignoreInit = TRUE)
 

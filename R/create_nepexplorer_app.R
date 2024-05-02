@@ -48,7 +48,8 @@ if (is.null(mapping)) {
                                "treatment_col" = "ARM"
                                ),
 
-                    dm = list("id_col" = "USUBJID", "treatment_col" = "ARM"),
+                    dm = list("id_col" = "USUBJID", "treatment_col" = "ARM",
+                              "race_col" = "RACE", "age_col" = "AGE"),
 
                     vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM", "measure_col" = "PARAM",
                                   "measure_values" = list("DIABP" = "Diastolic Blood Pressure",
