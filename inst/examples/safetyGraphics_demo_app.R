@@ -5,7 +5,7 @@ library(safetyGraphics)
   # Safety Graphics app with nep-explorer included
   charts <- c(
     safetyGraphics::makeChartConfig(),
-    safetyGraphics::makeChartConfig(packages = "nepExplorer")
+    safetyGraphics::makeChartConfig(packages = "nepExplorer", packageLocation = "./inst/config", sourceFiles = TRUE)
   )
   
   charts$nepexplorerMod$meta <- nepExplorer::meta_nepExplorer
