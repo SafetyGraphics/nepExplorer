@@ -98,10 +98,15 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
 
   n_orig_test <- n_distinct(adlb_raw_chg[[settings$measure_col]]) #save number of tests for warning information later
 
-  # Add units to Test so that legend includes units for user to see
+  # Add units to Test so that legend includes units for user to see, if units provided in data
+  
+  if (settings$unit_col != "") {
+  
   adlb_raw_chg <- adlb_raw_chg %>%
     mutate(!!settings$measure_col := paste0(.data[[settings$measure_col]], " (", .data[[settings$unit_col]], ")"))
 
+  }
+  
   n_der_test <- n_distinct(adlb_raw_chg[[settings$measure_col]])
 
   if (n_orig_test != n_der_test) {

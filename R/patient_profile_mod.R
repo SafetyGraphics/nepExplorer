@@ -36,12 +36,12 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
     function(input, output, session) {
       
       #grab settings from each domain
-      dm_settings <-settings$dm
-      lab_settings <-settings$labs
-      vitals_settings <-settings$vitals
+      dm_settings <- settings$dm
+      lab_settings <- settings$labs
+      vitals_settings <- settings$vitals
       
       # filter to selected patient
-      patient_df <- df %>%   
+      patient_df <- df %>%
         filter(.data[[dm_settings$id_col]] == subj_id)
       
       ## TO DO: pass settings object into charts and use names from there in dplyr etc
@@ -66,7 +66,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
       })
 
       output$raw_change <- renderUI({
-        
+
         default_labs <- c(lab_settings$measure_values$CREAT, lab_settings$measure_values$CYSTC)
         available_labs <- intersect(patient_df[[lab_settings$measure_col]] %>%  unique(), default_labs)
 
@@ -118,7 +118,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
         default_vitals <- c(vitals_settings$measure_values$DIABP,
                           vitals_settings$measure_values$SYSBP)
 
-        available_vitals <- intersect(patient_df[[vitals_settings$measure_col]] %>%  unique(), default_labs)
+        available_vitals <- intersect(patient_df[[vitals_settings$measure_col]] %>%  unique(), default_vitals)
 
         if (length(available_vitals) > 0) {
           drawBloodPressure(adlb = patient_df, settings = vitals_settings,
@@ -130,7 +130,8 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
 
       output$normalized_albumin <- renderUI({
 
-        if (lab_settings$measure_values[["ALB/CREAT"]] %in% patient_df[[lab_settings$measure_col]] %>%  unique()) {
+        if (length(lab_settings$measure_values[["ALB/CREAT"]] %in%
+                   patient_df[[lab_settings$measure_col]] %>%  unique()) > 0) {
           drawNormalizedAlbumin(adlb = patient_df, settings = lab_settings)
         } else {
           div()
