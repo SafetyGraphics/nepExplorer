@@ -40,6 +40,7 @@ if (is.null(mapping)) {
                                "visit_col" = "VISIT",
                                "visitn_col" = "VISITN",
                                "baseline_flag" = "BLFL",
+                               "baseline_values" = "Y",
                                "normal_col_high" = "STNRHI",
                                "id_col" = "USUBJID",
                                "age_col" = "AGE",
