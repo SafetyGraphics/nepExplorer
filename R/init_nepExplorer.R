@@ -22,8 +22,10 @@ init_nepExplorer <- function(data, settings) {
   vs_labs <- data$labs %>% bind_rows(vs_sub)
 
   dm_sub <- data$dm %>%
-    dplyr::select(settings[["dm"]][["id_col"]],
-                  settings[["dm"]][["treatment_col"]])
+    dplyr::select(any_of(c(settings[["dm"]][["id_col"]],
+                  settings[["dm"]][["treatment_col"]],
+                  settings[["dm"]][["race_col"]],
+                  settings[["dm"]][["age_col"]])))
 
   # left join to keep all rows in dm
   anly <- dm_sub %>%
@@ -31,11 +33,5 @@ init_nepExplorer <- function(data, settings) {
                      by = c(settings[["labs"]][["id_col"]],
                             settings[["labs"]][["treatment_col"]]))
 
-  settings$labs$measure_values <-
-    c(settings$labs$measure_values,
-      settings$vitals$measure_values)
-
-  labs_settings <- settings
-
-  return(list(data = list(labs = anly), settings = labs_settings))
+  return(list(data = anly, settings = settings))
 }
