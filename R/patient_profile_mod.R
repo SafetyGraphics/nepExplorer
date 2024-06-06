@@ -30,7 +30,7 @@ patientProfileUI <-  function(id) {
 #' @import dplyr
 #' @importFrom plotly renderPlotly
 #' @importFrom magrittr %>%
-patientProfileServer <-  function(id, df, settings, subj_id) {
+patientProfileServer <-  function(id, df, selected_measures, settings, subj_id) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -95,15 +95,7 @@ patientProfileServer <-  function(id, df, settings, subj_id) {
 
       output$ULN_FC <- renderUI({
 
-        default_labs <-  c(lab_settings$measure_values$BICARB,
-                           lab_settings$measure_values$BUN,
-                           lab_settings$measure_values$CA,
-                           lab_settings$measure_values$CL,
-                           lab_settings$measure_values$PHOS,
-                           lab_settings$measure_values$K,
-                           lab_settings$measure_values$SODIUM)
-
-        available_labs <- intersect(patient_df[[lab_settings$measure_col]] %>%  unique(), default_labs)
+        available_labs <- intersect(patient_df[[lab_settings$measure_col]] %>%  unique(), selected_measures)
 
         if (length(available_labs) > 0) {
           drawULNFoldChange(adlb = patient_df, settings = lab_settings,
