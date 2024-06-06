@@ -4,7 +4,7 @@
 \alias{patientProfileServer}
 \title{Patient Profile Module Server}
 \usage{
-patientProfileServer(id, df, settings, subj_id)
+patientProfileServer(id, df, selected_measures, settings, subj_id)
 }
 \arguments{
 \item{id}{module id}
