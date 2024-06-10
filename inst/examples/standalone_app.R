@@ -10,18 +10,18 @@ if (!interactive()) {
 }
 
 new_mapping <- list(labs = list("id_col" = "USUBJID", "measure_col" = "TEST",
-                            "measure_values" = list("CREAT" = "Creatinine",
+                            "measure_values" = list("CREAT" = "Creatinine", #specified measures
                                                     "CYSTC" = "Cystatin C",
                                                     "eGFR" = "eGFR",
                                                     "eGFRcys" = "eGFRcys",
                                                     "ALB/CREAT" = "Albumin/Creatinine",
-                                                    "BICARB" =  "Bicarbonate",
-                                                    "BUN" =  "Blood Urea Nitrogen",
-                                                    "CA" = "Calcium",
-                                                    "CL" = "Chloride",
-                                                    "PHOS" = "Phosphorus",
-                                                    "K" = "Potassium",
-                                                    "SODIUM" =  "Sodium"
+                                                    "nepFC_BICARB" =  "Bicarbonate", #foldchange measures
+                                                    "nepFC_BUN" =  "Blood Urea Nitrogen",
+                                                    "nepFC_CA" = "Calcium",
+                                                    "nepFC_CL" = "Chloride",
+                                                    "nepFC_PHOS" = "Phosphorus",
+                                                    "nepFC_K" = "Potassium",
+                                                    "nepFC_SODIUM" =  "Sodium"
                             ),
                             "value_col" = "STRESN",
                             "unit_col" = "STRESU",
@@ -45,6 +45,9 @@ vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM", "measure_col" = "TE
               "vs_baseline_flag" = "BLFL",
               "visit_col" = "VISIT",
               "visitn_col" = "VISITN",
+              "studyday_col" = "DY",
+              "value_col" = "STRESN",
+              "unit_col" = "STRESU",
               "measure_values" = list("DIABP" = "Diastolic Blood Pressure",
                                       "SYSBP" = "Systolic Blood Pressure")
 )
