@@ -11,6 +11,8 @@ patientProfileServer(id, df, selected_measures, settings, subj_id)
 
 \item{df}{lab dataset in tall format with creatinine lab}
 
+\item{selected_measures}{vector of tests to include in fold change chart}
+
 \item{settings}{settings object with column mappings}
 
 \item{subj_id}{single subject ID as character string}

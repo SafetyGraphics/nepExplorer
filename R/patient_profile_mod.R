@@ -22,6 +22,7 @@ patientProfileUI <-  function(id) {
 #'
 #' @param id module id
 #' @param df lab dataset in tall format with creatinine lab
+#' @param selected_measures vector of tests to include in fold change chart
 #' @param settings settings object with column mappings
 #' @param subj_id single subject ID as character string
 #'
