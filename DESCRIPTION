@@ -1,6 +1,6 @@
 Package: nepExplorer
 Type: Package
-Title: Interactive Graphic for Exploring Kidney Function Data in Clinical Trials.\
+Title: Interactive Graphic for Exploring Kidney Function Data in Clinical Trials.
 Version: 0.1.0
 Authors@R: c(
 	person("Preston", "Burns", email = "s.preston.burns@gmail.com", role = c("cre","aut")),
