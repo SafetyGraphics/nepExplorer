@@ -9,7 +9,7 @@ Authors@R: c(
 	person("Eli", "Miller", email = "eli.miller@atorusresearch.com", role = "aut"),
 	person("James", "Buchanan", email = "jbuchanan@covilance.com", role = "aut"))
 Description: Shiny app of interactive creatinine scatterplot for exploring kidney function data in clinical trials.
-URL: https://github.com/SafetyGraphics/nep-explorer
+URL: https://github.com/SafetyGraphics/nep-explorer, https://safetygraphics.github.io/nepExplorer/
 BugReports: https://github.com/SafetyGraphics/nep-explorer/issues
 Depends: R (>= 4.0)
 License: MIT + file LICENSE

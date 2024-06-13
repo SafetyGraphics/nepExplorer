@@ -5,3 +5,5 @@
 ^outline\.md$
 ^\.github$
 ^\.lintr$
+^_pkgdown\.yml$
+^pkgdown$
