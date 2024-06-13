@@ -14,7 +14,7 @@ nepexplorer_ui <- function(id) {
   sidebar <- sidebarPanel(
     selectizeInput(
       ns("measures"),
-      "Select Measures",
+      "Select Patient Profile Fold Change Measures",
       multiple = TRUE,
       choices = c("")
     ),
@@ -42,6 +42,14 @@ nepexplorer_ui <- function(id) {
 
 
   main <- mainPanel(
+    # HTML header with style specifications.
+    tags$head(
+      tags$style(
+        # hide measure values from mappings tab that we want controlled within "measure" dropdown
+        HTML("div.field-wrap:has(label[id^='sg-mapping-labs-measure_col-measure_values--nepFC_']) { display: none; }"
+        )
+      )
+    ),
     useShinyjs(),
     # Scatter PLot + Summary Table UI
     creatinineScatterUI(ns("scatter")),
@@ -98,15 +106,21 @@ nepexplorer_server <- function(input, output, session, params) {
   })
 
   # Populate sidebar control with measures and select all by default
-  observe({
+  observeEvent(param(), {
     measure_col <- param()$settings$labs$measure_col
     measures <- unique(param()$data[[measure_col]])
+    measure_values <- param()$settings$labs$measure_values
+
+    # go through metadata file and grab measure values with prefix "nepFC"
+    fold_change_measures <- intersect(measures,
+                                      measure_values[grep("nepFC", names(measure_values))])
+    
+    # update selectize to reflect what's specific in metadata
     updateSelectizeInput(session,
                          "measures",
                          choices = measures,
-                         selected = measures
+                         selected = fold_change_measures
     )
-
   })
 
   animate <- reactive(input$animate)
@@ -134,7 +148,7 @@ nepexplorer_server <- function(input, output, session, params) {
   #Patient Profile (demo tables + lab line charts)
   observeEvent(selected_subject(), {
     if (length(selected_subject()) == 1) { # avoid triggering patient profiles if there isn't a subject
-      patientProfileServer("patprofile", df = param()$data,
+      patientProfileServer("patprofile", df = param()$data, selected_measures = input$measures,
                            settings = param()$settings, subj_id = selected_subject())
     }
   }, ignoreInit = TRUE)

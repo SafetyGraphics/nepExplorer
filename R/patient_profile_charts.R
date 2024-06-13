@@ -180,7 +180,6 @@ drawULNFoldChange <- function(adlb, settings,
                                        "Calcium", "Chloride", "Phosphorus",
                                        "Potassium", "Sodium")) {
 
-
   adlb_FC <- adlb %>%
     filter(.data[[settings$measure_col]] %in% labs) %>%
     group_by(.data[[settings$measure_col]]) %>%
