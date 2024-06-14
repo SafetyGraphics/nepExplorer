@@ -108,3 +108,4 @@ dist
 # Ignoring R History and R Data Root:
 .Rhistory
 .RData
+docs
