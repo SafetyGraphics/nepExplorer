@@ -15,6 +15,7 @@ patientProfileUI <-  function(id) {
     uiOutput(ns("ULN_FC")),
     uiOutput(ns("blood_pressure")),
     uiOutput(ns("normalized_albumin")),
+    uiOutput(ns("bun_creat"))
   )
 }
 
@@ -126,6 +127,16 @@ patientProfileServer <-  function(id, df, selected_measures, settings, subj_id) 
         if (length(lab_settings$measure_values[["ALB/CREAT"]] %in%
                    patient_df[[lab_settings$measure_col]] %>%  unique()) > 0) {
           drawNormalizedAlbumin(adlb = patient_df, settings = lab_settings)
+        } else {
+          div()
+        }
+      })
+      
+      output$bun_creat <- renderUI({
+        
+        if (length(lab_settings$measure_values[["ALB/CREAT"]] %in%
+                   patient_df[[lab_settings$measure_col]] %>%  unique()) > 0) {
+          drawBunCreat(adlb = patient_df, settings = lab_settings)
         } else {
           div()
         }

@@ -109,3 +109,6 @@ dist
 .Rhistory
 .RData
 docs
+nepExplorer.Rcheck/
+nepExplorer*.tar.gz
+nepExplorer*.tgz
