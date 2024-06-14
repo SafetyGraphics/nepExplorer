@@ -401,12 +401,8 @@ drawBunCreat <- function(adlb, settings) {
     p <- p +
       ## Add two threshold lines, one at 10 and one at 20.
       geom_hline(yintercept = 10, linetype = "dashed", color = "gray") +
-      annotate("text", x = max(adlb_norm[[settings$studyday_col]]) / 10, y = 10, 
-               color = "gray44", size = 3) +
-    
-      geom_hline(yintercept = 20, linetype = "dashed", color = "gray") +
-      annotate("text", x = max(adlb_norm[[settings$studyday_col]]) / 10, y = 20,
-               color = "gray44", size = 3) 
+      geom_hline(yintercept = 20, linetype = "dashed", color = "gray") 
+
   }
   
   ggplotly(p, tooltip = "text") %>%
