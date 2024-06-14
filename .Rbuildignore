@@ -7,3 +7,6 @@
 ^\.lintr$
 ^_pkgdown\.yml$
 ^pkgdown$
+^nepExplorer\.Rcheck$
+^nepExplorer.*\.tar\.gz$
+^nepExplorer.*\.tgz$
