@@ -407,4 +407,3 @@ drawBunCreat <- function(adlb, settings) {
   ggplotly(p, tooltip = "text") %>%
     config(displayModeBar = FALSE)
 }
-

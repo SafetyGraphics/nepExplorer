@@ -10,19 +10,18 @@ library(safetyGraphics)
   
   charts$nepexplorerMod$meta <- nepExplorer::meta_nepExplorer
   
-  # Helper functions for unit conversions
-  convert_creatinine_umolL_to_mgdL <- function(value) {
+  # Helper functions for unit conversions - shortened names
+  convert_creat_to_mgdl <- function(value) {
     value / 88.4
   }
   
-  convert_bun_mmolL_to_mgdL <- function(value) {
+  convert_bun_to_mgdl <- function(value) {
     value * 2.86
   }
   
-  convert_alb_gL_to_mgdL <- function(value) {
+  convert_alb_to_mgdl <- function(value) {
     value * 100
   }
-  
   
   # Apply unit conversions and data cleaning
   adam_adlbc_ <- safetyData::adam_adlbc |>
@@ -30,50 +29,49 @@ library(safetyGraphics)
       STRESU = gsub("[\\(\\)]", "", regmatches(PARAM, gregexpr("\\(.*?\\)", PARAM))[[1]]),
       # Use case_when for clearer conditional logic
       AVAL = case_when(
-        PARAMCD == "CREAT" ~ convert_creatinine_umolL_to_mgdL(AVAL),
-        PARAMCD == "BUN"   ~ convert_bun_mmolL_to_mgdL(AVAL),
-        PARAMCD == "ALB"   ~ convert_alb_gL_to_mgdL(AVAL),
+        PARAMCD == "CREAT" ~ convert_creat_to_mgdl(AVAL),
+        PARAMCD == "BUN"   ~ convert_bun_to_mgdl(AVAL),
+        PARAMCD == "ALB"   ~ convert_alb_to_mgdl(AVAL),
         TRUE               ~ AVAL
       ),
       BASE = case_when(
-        PARAMCD == "CREAT" ~ convert_creatinine_umolL_to_mgdL(BASE),
-        PARAMCD == "BUN"   ~ convert_bun_mmolL_to_mgdL(BASE),
-        PARAMCD == "ALB"   ~ convert_alb_gL_to_mgdL(BASE),
+        PARAMCD == "CREAT" ~ convert_creat_to_mgdl(BASE),
+        PARAMCD == "BUN"   ~ convert_bun_to_mgdl(BASE),
+        PARAMCD == "ALB"   ~ convert_alb_to_mgdl(BASE),
         TRUE               ~ BASE
       ),
       CHG = case_when(
-        PARAMCD == "CREAT" ~ convert_creatinine_umolL_to_mgdL(CHG),
-        PARAMCD == "BUN"   ~ convert_bun_mmolL_to_mgdL(CHG),
-        PARAMCD == "ALB"   ~ convert_alb_gL_to_mgdL(CHG),
+        PARAMCD == "CREAT" ~ convert_creat_to_mgdl(CHG),
+        PARAMCD == "BUN"   ~ convert_bun_to_mgdl(CHG),
+        PARAMCD == "ALB"   ~ convert_alb_to_mgdl(CHG),
         TRUE               ~ CHG
       ),
       A1LO = case_when(
-        PARAMCD == "CREAT" ~ convert_creatinine_umolL_to_mgdL(A1LO),
-        PARAMCD == "BUN"   ~ convert_bun_mmolL_to_mgdL(A1LO),
-        PARAMCD == "ALB"   ~ convert_alb_gL_to_mgdL(A1LO),
+        PARAMCD == "CREAT" ~ convert_creat_to_mgdl(A1LO),
+        PARAMCD == "BUN"   ~ convert_bun_to_mgdl(A1LO),
+        PARAMCD == "ALB"   ~ convert_alb_to_mgdl(A1LO),
         TRUE               ~ A1LO
       ),
       A1HI = case_when(
-        PARAMCD == "CREAT" ~ convert_creatinine_umolL_to_mgdL(A1HI),
-        PARAMCD == "BUN"   ~ convert_bun_mmolL_to_mgdL(A1HI),
-        PARAMCD == "ALB"   ~ convert_alb_gL_to_mgdL(A1HI),
+        PARAMCD == "CREAT" ~ convert_creat_to_mgdl(A1HI),
+        PARAMCD == "BUN"   ~ convert_bun_to_mgdl(A1HI),
+        PARAMCD == "ALB"   ~ convert_alb_to_mgdl(A1HI),
         TRUE               ~ A1HI
       ),
       LBSTRESN = case_when(
-        PARAMCD == "CREAT" ~ convert_creatinine_umolL_to_mgdL(LBSTRESN),
-        PARAMCD == "BUN"   ~ convert_bun_mmolL_to_mgdL(LBSTRESN),
-        PARAMCD == "ALB"   ~ convert_alb_gL_to_mgdL(LBSTRESN),
+        PARAMCD == "CREAT" ~ convert_creat_to_mgdl(LBSTRESN),
+        PARAMCD == "BUN"   ~ convert_bun_to_mgdl(LBSTRESN),
+        PARAMCD == "ALB"   ~ convert_alb_to_mgdl(LBSTRESN),
         TRUE               ~ LBSTRESN
       ),
       STRESU = ifelse(PARAMCD %in% c("BUN", "CREAT", "ALB"), "mg/dL", STRESU),
       PARAM = case_when(
         PARAM == "Creatinine (umol/L)"                ~ "Creatinine (mg/dL)",
         PARAM == "Blood Urea Nitrogen (mmol/L)"       ~ "Blood Urea Nitrogen (mg/dL)",
-        PARAM == "Albumin (g/L)"       ~ "Albumin (mg/dL)",
+        PARAM == "Albumin (g/L)"                      ~ "Albumin (mg/dL)",
         TRUE                                         ~ PARAM
       ) # todo: consider removing the units from the PARAM column - if this is implemented also update meta_nepExplorer
     )
-  
   # derive BUN/serum creatinine ratio
   # Filter and select relevant columns
   adam_adlbc_filtered <- adam_adlbc_ %>%

@@ -96,12 +96,13 @@ patientProfileServer <-  function(id, df, selected_measures, settings, subj_id) 
       })
 
       output$ULN_FC <- renderUI({
-
-        available_labs <- intersect(patient_df[[lab_settings$measure_col]] %>%  unique(), selected_measures)
+        available_labs <-
+          intersect(patient_df[[lab_settings$measure_col]] %>%  unique(), selected_measures)
         
         if (length(available_labs) > 0) {
-          drawULNFoldChange(adlb = patient_df, settings = lab_settings,
-                            labs = available_labs) 
+          drawULNFoldChange(adlb = patient_df,
+                            settings = lab_settings,
+                            labs = available_labs)
         } else {
           div()
         }
