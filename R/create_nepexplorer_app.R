@@ -26,6 +26,7 @@ if (is.null(mapping)) {
                                                        "eGFR" = "eGFR",
                                                        "eGFRcys" = "eGFRcys",
                                                        "ALB/CREAT" = "Albumin/Creatinine",
+                                                       "BUN/CREAT" = "Blood Urea Nitrogen/Creatinine",
                                                        "BICARB" =  "Bicarbonate",
                                                        "BUN" =  "Blood Urea Nitrogen",
                                                        "CA" = "Calcium",

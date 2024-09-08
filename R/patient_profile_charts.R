@@ -201,7 +201,7 @@ drawULNFoldChange <- function(adlb, settings,
     theme(legend.title = element_blank()) + #remove legend title
     ylab("xULN (Fold Change)") +
     xlab("Study Day") +
-    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
+    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + # drop yellow
 
     ## Add ULN Annotation
     geom_hline(yintercept = 1, linetype = "dashed", color = "gray") +
@@ -372,16 +372,15 @@ drawDemoTable <- function(adlb, settings, demo_vars = c("USUBJID", "AGE", "SEX",
 #' @importFrom plotly config
 #' @return ggplot object
 drawBunCreat <- function(adlb, settings) {
-  
   adlb_norm <- adlb %>%
-    filter(.data[[settings$measure_col]] == settings$measure_values[["ALB/CREAT"]])
+    filter(.data[[settings$measure_col]] == settings$measure_values[["BUN/CREAT"]])
   
   uacr_unit <- unique(adlb_norm[[settings$unit_col]])
   
   if (length(uacr_unit) > 1)
     warning(paste0("Multiple units have been provided for UACR, therefore unit will",
                    " not be displayed on the Y-axis. Standardize units to see unit on Y-axis."))
-  
+
   p <- ggplot(adlb_norm, aes(x = .data[[settings$studyday_col]], y = .data[[settings$value_col]],
                              color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
                              text = paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
@@ -395,16 +394,16 @@ drawBunCreat <- function(adlb, settings) {
     ylab(uacr_unit) +
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") #drop yellow
-  
-  if (tolower(uacr_unit) == "mg/g") {
-    
+
+  if (tolower(uacr_unit) == "ratio") {
+
     p <- p +
       ## Add two threshold lines, one at 10 and one at 20.
       geom_hline(yintercept = 10, linetype = "dashed", color = "gray") +
-      geom_hline(yintercept = 20, linetype = "dashed", color = "gray") 
+      geom_hline(yintercept = 20, linetype = "dashed", color = "gray")
 
   }
-  
+
   ggplotly(p, tooltip = "text") %>%
     config(displayModeBar = FALSE)
 }

@@ -98,10 +98,10 @@ patientProfileServer <-  function(id, df, selected_measures, settings, subj_id) 
       output$ULN_FC <- renderUI({
 
         available_labs <- intersect(patient_df[[lab_settings$measure_col]] %>%  unique(), selected_measures)
-
+        
         if (length(available_labs) > 0) {
           drawULNFoldChange(adlb = patient_df, settings = lab_settings,
-                            labs = available_labs)
+                            labs = available_labs) 
         } else {
           div()
         }
@@ -134,7 +134,7 @@ patientProfileServer <-  function(id, df, selected_measures, settings, subj_id) 
       
       output$bun_creat <- renderUI({
         
-        if (length(lab_settings$measure_values[["ALB/CREAT"]] %in%
+        if (length(lab_settings$measure_values[["BUN/CREAT"]] %in%
                    patient_df[[lab_settings$measure_col]] %>%  unique()) > 0) {
           drawBunCreat(adlb = patient_df, settings = lab_settings)
         } else {
