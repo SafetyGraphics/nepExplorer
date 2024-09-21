@@ -7,22 +7,27 @@ library(safetyGraphics)
     safetyGraphics::makeChartConfig(),
     safetyGraphics::makeChartConfig(packages = "nepExplorer", packageLocation = "./inst/config", sourceFiles = TRUE)
   )
-  
+
   charts$nepexplorerMod$meta <- nepExplorer::meta_nepExplorer
-  
+
   # Helper functions for unit conversions - shortened names
+  # The conversion factors may vary based on your specific data.
+  # It's recommended to use the conversion units established by your
+  # own sponsor lab conversions.
+
+  # 1 mg/dL creatinine = 88.4 µmol/L
   convert_creat_to_mgdl <- function(value) {
     value / 88.4
   }
-  
+  # 1 mmol/L BUN = 2.8 mg/dL
   convert_bun_to_mgdl <- function(value) {
     value * 2.86
   }
-  
+  # 1 g/L ALB = 100 mg/dL
   convert_alb_to_mgdl <- function(value) {
     value * 100
   }
-  
+
   # Apply unit conversions and data cleaning
   adam_adlbc_ <- safetyData::adam_adlbc |>
     mutate(
@@ -81,11 +86,11 @@ library(safetyGraphics)
       -ALBTRVAL, -ANRIND, -BNRIND, -ABLFL, -AENTMTFL, -LBSEQ,
       -LBNRIND, -AVAL, -BASE, -CHG, -PARAMN, -PARAM
     )
-  
+
   # Reshape the data
   adam_adlbc_wide <- adam_adlbc_filtered %>%
     tidyr::spread(PARAMCD, LBSTRESN)
-  
+
   # Calculate BUN/CREAT ratio
   adam_adlbc_bc <- adam_adlbc_wide %>%
     mutate(
@@ -95,7 +100,7 @@ library(safetyGraphics)
       STRESU = "Ratio",
       AVAL = LBSTRESN
     )
-  
+
   # Calculate ALB/CREAT ratio
   adam_adlbc_ac <- adam_adlbc_wide %>%
     mutate(
@@ -105,12 +110,12 @@ library(safetyGraphics)
       STRESU = "Ratio",
       AVAL = LBSTRESN
     )
-  
+
   # Combine the data
   adam_adlbc_final <- adam_adlbc_ac %>%
     dplyr::bind_rows(adam_adlbc_bc, adam_adlbc_) %>%
     select(-BUN, -CREAT, -ALB)
-  
+
   safetyGraphics::safetyGraphicsApp(domainData = list(
     labs = adam_adlbc_final,
     aes = safetyData::adam_adae,

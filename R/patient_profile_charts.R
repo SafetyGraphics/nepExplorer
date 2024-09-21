@@ -99,14 +99,14 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
   n_orig_test <- n_distinct(adlb_raw_chg[[settings$measure_col]]) #save number of tests for warning information later
 
   # Add units to Test so that legend includes units for user to see, if units provided in data
-  
+
   if (settings$unit_col != "") {
-  
+
   adlb_raw_chg <- adlb_raw_chg %>%
     mutate(!!settings$measure_col := paste0(.data[[settings$measure_col]], " (", .data[[settings$unit_col]], ")"))
 
   }
-  
+
   n_der_test <- n_distinct(adlb_raw_chg[[settings$measure_col]])
 
   if (n_orig_test != n_der_test) {
@@ -374,12 +374,12 @@ drawDemoTable <- function(adlb, settings, demo_vars = c("USUBJID", "AGE", "SEX",
 drawBunCreat <- function(adlb, settings) {
   adlb_norm <- adlb %>%
     filter(.data[[settings$measure_col]] == settings$measure_values[["BUN/CREAT"]])
-  
-  uacr_unit <- unique(adlb_norm[[settings$unit_col]])
-  
-  if (length(uacr_unit) > 1)
-    warning(paste0("Multiple units have been provided for UACR, therefore unit will",
-                   " not be displayed on the Y-axis. Standardize units to see unit on Y-axis."))
+
+  if (is.null(adlb_norm[[settings$unit_col]]) | all(adlb_norm[[settings$unit_col]] == "")) {
+    ubuncr_unit <- "Ratio"
+  } else {
+    ubuncr_unit <- unique(adlb_norm[[settings$unit_col]])
+  }
 
   p <- ggplot(adlb_norm, aes(x = .data[[settings$studyday_col]], y = .data[[settings$value_col]],
                              color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
@@ -391,18 +391,14 @@ drawBunCreat <- function(adlb, settings) {
     geom_point() +
     theme_bw() +
     theme(legend.title = element_blank()) + #remove legend title
-    ylab(uacr_unit) +
+    ylab(ubuncr_unit) +
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") #drop yellow
-
-  if (tolower(uacr_unit) == "ratio") {
 
     p <- p +
       ## Add two threshold lines, one at 10 and one at 20.
       geom_hline(yintercept = 10, linetype = "dashed", color = "gray") +
       geom_hline(yintercept = 20, linetype = "dashed", color = "gray")
-
-  }
 
   ggplotly(p, tooltip = "text") %>%
     config(displayModeBar = FALSE)
