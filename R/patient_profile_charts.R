@@ -381,6 +381,7 @@ drawBunCreat <- function(adlb, settings) {
     ubuncr_unit <- unique(adlb_norm[[settings$unit_col]])
   }
 
+
   p <- ggplot(adlb_norm, aes(x = .data[[settings$studyday_col]], y = .data[[settings$value_col]],
                              color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
                              text = paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
