@@ -286,9 +286,12 @@ drawNormalizedAlbumin <- function(adlb, settings) {
 
   adlb_norm <- adlb %>%
     filter(.data[[settings$measure_col]] == settings$measure_values[["ALB/CREAT"]])
-
-  uacr_unit <- unique(adlb_norm[[settings$unit_col]])
-
+  if (is.null(adlb_norm[[settings$unit_col]]) || all(adlb_norm[[settings$unit_col]] == "")) {
+    uacr_unit <- "Ratio"
+  } else {
+    uacr_unit <- unique(adlb_norm[[settings$unit_col]])
+  }
+ 
   if (length(uacr_unit) > 1)
     warning(paste0("Multiple units have been provided for UACR, therefore unit will",
                    " not be displayed on the Y-axis. Standardize units to see unit on Y-axis."))
@@ -380,7 +383,10 @@ drawBunCreat <- function(adlb, settings) {
   } else {
     ubuncr_unit <- unique(adlb_norm[[settings$unit_col]])
   }
-
+  
+  if (length(ubuncr_unit) > 1)
+    warning(paste0("Multiple units have been provided for UBUNCR, therefore unit will",
+                   " not be displayed on the Y-axis. Standardize units to see unit on Y-axis."))
 
   p <- ggplot(adlb_norm, aes(x = .data[[settings$studyday_col]], y = .data[[settings$value_col]],
                              color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
