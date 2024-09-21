@@ -375,11 +375,12 @@ drawBunCreat <- function(adlb, settings) {
   adlb_norm <- adlb %>%
     filter(.data[[settings$measure_col]] == settings$measure_values[["BUN/CREAT"]])
 
-  if (is.null(adlb_norm[[settings$unit_col]]) | all(adlb_norm[[settings$unit_col]] == "")) {
+  if (is.null(adlb_norm[[settings$unit_col]]) || all(adlb_norm[[settings$unit_col]] == "")) {
     ubuncr_unit <- "Ratio"
   } else {
     ubuncr_unit <- unique(adlb_norm[[settings$unit_col]])
   }
+
 
   p <- ggplot(adlb_norm, aes(x = .data[[settings$studyday_col]], y = .data[[settings$value_col]],
                              color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
