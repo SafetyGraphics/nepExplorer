@@ -10,8 +10,9 @@ measure_values--DIABP,vitals,measure_col,DIABP,field,Diastolic value,Value used 
 unit_col,vitals,unit_col,,column,Unit column,Unit of measure variable name,FALSE,,VSSTRESU
 vs_baseline_flag,vitals,vs_baseline_flag,,column,Vital Signs Baseline Flag,Column for assigning VS baseline visits,FALSE,ABLFL,
 vs_baseline_values--Y,vitals,vs_baseline_flag,Y,field,Vital Signs Baseline Flag value,Value used for VS Baseline in the specified baseline column,FALSE,Y,
-measure_values--ALB,labs,measure_col,ALB,field,Albumin value,Value used for Albumin in the specified measure column,FALSE,Albumin (g/L),Albumin
-measure_values--Albumin/Creatinine,labs,measure_col,ALB/CREAT,field,Albumin/Creatinine Ratio value,Value used for Albumin/Creatinine ratio in the specified measure column,FALSE,Albumin/Creatinine,
+measure_values--ALB,labs,measure_col,ALB,field,Albumin value,Value used for Albumin in the specified measure column,FALSE,Albumin (mg/dL),Albumin
+measure_values--ALB/CREAT,labs,measure_col,ALB/CREAT,field,Albumin/Creatinine Ratio value,Value used for Albumin/Creatinine ratio in the specified measure column,FALSE,Albumin/Creatinine,
+measure_values--BUN/CREAT,labs,measure_col,BUN/CREAT,field,Blood Urea Nitrogen/Creatinine Ratio value,Value used for Blood Urea Nitrogen/Creatinine ratio in the specified measure column,FALSE,Blood Urea Nitrogen/Creatinine,
 measure_values--nepFC_BICARB,labs,measure_col,BICARB,field,Bicarbonate value,Value used for Bicarbonate in the specified measure column,FALSE,Bicarbonate (umol/L),Bicarbonate
 measure_values--nepFC_BUN,labs,measure_col,BUN,field,Blood Urea Nitrogen value,Value used for Blood Urea Nitrogen in the specified measure column,FALSE,Blood Urea Nitrogen (mmol/L),Blood Urea Nitrogen
 measure_values--nepFC_CA,labs,measure_col,CA,field,Calcium value,Value used for Calcium in the specified measure column,FALSE,Calcium (mmol/L),Calcium

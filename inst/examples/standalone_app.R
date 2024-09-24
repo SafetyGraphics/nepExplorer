@@ -17,6 +17,7 @@ new_mapping <- list(labs = list("id_col" = "USUBJID", "measure_col" = "TEST",
                                                     "ALB/CREAT" = "Albumin/Creatinine",
                                                     "nepFC_BICARB" =  "Bicarbonate", #foldchange measures
                                                     "nepFC_BUN" =  "Blood Urea Nitrogen",
+                                                    "BUN/CREAT" = "Blood Urea Nitrogen/Creatinine",
                                                     "nepFC_CA" = "Calcium",
                                                     "nepFC_CL" = "Chloride",
                                                     "nepFC_PHOS" = "Phosphorus",
