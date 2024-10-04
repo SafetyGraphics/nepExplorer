@@ -98,9 +98,14 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
 
   n_orig_test <- n_distinct(adlb_raw_chg[[settings$measure_col]]) #save number of tests for warning information later
 
-  # Add units to Test so that legend includes units for user to see
+  # Add units to Test so that legend includes units for user to see, if units provided in data
+
+  if (settings$unit_col != "") {
+
   adlb_raw_chg <- adlb_raw_chg %>%
     mutate(!!settings$measure_col := paste0(.data[[settings$measure_col]], " (", .data[[settings$unit_col]], ")"))
+
+  }
 
   n_der_test <- n_distinct(adlb_raw_chg[[settings$measure_col]])
 
@@ -175,7 +180,6 @@ drawULNFoldChange <- function(adlb, settings,
                                        "Calcium", "Chloride", "Phosphorus",
                                        "Potassium", "Sodium")) {
 
-
   adlb_FC <- adlb %>%
     filter(.data[[settings$measure_col]] %in% labs) %>%
     group_by(.data[[settings$measure_col]]) %>%
@@ -197,7 +201,7 @@ drawULNFoldChange <- function(adlb, settings,
     theme(legend.title = element_blank()) + #remove legend title
     ylab("xULN (Fold Change)") +
     xlab("Study Day") +
-    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
+    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + # drop yellow
 
     ## Add ULN Annotation
     geom_hline(yintercept = 1, linetype = "dashed", color = "gray") +
@@ -282,9 +286,12 @@ drawNormalizedAlbumin <- function(adlb, settings) {
 
   adlb_norm <- adlb %>%
     filter(.data[[settings$measure_col]] == settings$measure_values[["ALB/CREAT"]])
-
-  uacr_unit <- unique(adlb_norm[[settings$unit_col]])
-
+  if (is.null(adlb_norm[[settings$unit_col]]) || all(adlb_norm[[settings$unit_col]] == "")) {
+    uacr_unit <- "Ratio"
+  } else {
+    uacr_unit <- unique(adlb_norm[[settings$unit_col]])
+  }
+ 
   if (length(uacr_unit) > 1)
     warning(paste0("Multiple units have been provided for UACR, therefore unit will",
                    " not be displayed on the Y-axis. Standardize units to see unit on Y-axis."))
@@ -353,4 +360,53 @@ drawDemoTable <- function(adlb, settings, demo_vars = c("USUBJID", "AGE", "SEX",
   demo_data %>%
     gt()
 
+}
+
+#' Draw BUN/serum creatinine over time,
+#'
+#' @param adlb lab data in tall format that must contain DY for study day,
+#'   VISITN for visit number, TEST for lab test, and STRESN for lab value
+#' @param settings settings object with column mappings
+#'
+#' @import ggplot2
+#' @import dplyr
+#' @import RColorBrewer
+#' @importFrom plotly ggplotly
+#' @importFrom plotly config
+#' @return ggplot object
+drawBunCreat <- function(adlb, settings) {
+  adlb_norm <- adlb %>%
+    filter(.data[[settings$measure_col]] == settings$measure_values[["BUN/CREAT"]])
+
+  if (is.null(adlb_norm[[settings$unit_col]]) || all(adlb_norm[[settings$unit_col]] == "")) {
+    ubuncr_unit <- "Ratio"
+  } else {
+    ubuncr_unit <- unique(adlb_norm[[settings$unit_col]])
+  }
+  
+  if (length(ubuncr_unit) > 1)
+    warning(paste0("Multiple units have been provided for UBUNCR, therefore unit will",
+                   " not be displayed on the Y-axis. Standardize units to see unit on Y-axis."))
+
+  p <- ggplot(adlb_norm, aes(x = .data[[settings$studyday_col]], y = .data[[settings$value_col]],
+                             color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
+                             text = paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
+                                           "Lab Test: ", .data[[settings$measure_col]], "\n",
+                                           "Raw Value: ", format(round(.data[[settings$value_col]], 2), nsmall = 2)
+                             ))) +
+    geom_line() +
+    geom_point() +
+    theme_bw() +
+    theme(legend.title = element_blank()) + #remove legend title
+    ylab(ubuncr_unit) +
+    xlab("Study Day") +
+    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") #drop yellow
+
+    p <- p +
+      ## Add two threshold lines, one at 10 and one at 20.
+      geom_hline(yintercept = 10, linetype = "dashed", color = "gray") +
+      geom_hline(yintercept = 20, linetype = "dashed", color = "gray")
+
+  ggplotly(p, tooltip = "text") %>%
+    config(displayModeBar = FALSE)
 }

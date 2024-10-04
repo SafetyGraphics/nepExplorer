@@ -10,18 +10,19 @@ measure_values--DIABP,vitals,measure_col,DIABP,field,Diastolic value,Value used 
 unit_col,vitals,unit_col,,column,Unit column,Unit of measure variable name,FALSE,,VSSTRESU
 vs_baseline_flag,vitals,vs_baseline_flag,,column,Vital Signs Baseline Flag,Column for assigning VS baseline visits,FALSE,ABLFL,
 vs_baseline_values--Y,vitals,vs_baseline_flag,Y,field,Vital Signs Baseline Flag value,Value used for VS Baseline in the specified baseline column,FALSE,Y,
-measure_values--ALB,labs,measure_col,ALB,field,Albumin value,Value used for Albumin in the specified measure column,FALSE,Albumin (g/L),Albumin
-measure_values--Albumin/Creatinine,labs,measure_col,ALB/CREAT,field,Albumin/Creatinine Ratio value,Value used for Albumin/Creatinine ratio in the specified measure column,FALSE,Albumin/Creatinine,
-measure_values--BICARB,labs,measure_col,BICARB,field,Bicarbonate value,Value used for Bicarbonate in the specified measure column,FALSE,Bicarbonate (umol/L),Bicarbonate
-measure_values--BUN,labs,measure_col,BUN,field,Blood Urea Nitrogen value,Value used for Blood Urea Nitrogen in the specified measure column,FALSE,Blood Urea Nitrogen (mmol/L),Blood Urea Nitrogen
-measure_values--CA,labs,measure_col,CA,field,Calcium value,Value used for Calcium in the specified measure column,FALSE,Calcium (mmol/L),Calcium
-measure_values--CL,labs,measure_col,CL,field,Chloride value,Value used for Chloride in the specified measure column,FALSE,Chloride (mmol/L),Chloride
+measure_values--ALB,labs,measure_col,ALB,field,Albumin value,Value used for Albumin in the specified measure column,FALSE,Albumin (mg/dL),Albumin
+measure_values--ALB/CREAT,labs,measure_col,ALB/CREAT,field,Albumin/Creatinine Ratio value,Value used for Albumin/Creatinine ratio in the specified measure column,FALSE,Albumin/Creatinine,
+measure_values--BUN/CREAT,labs,measure_col,BUN/CREAT,field,Blood Urea Nitrogen/Creatinine Ratio value,Value used for Blood Urea Nitrogen/Creatinine ratio in the specified measure column,FALSE,Blood Urea Nitrogen/Creatinine,
+measure_values--nepFC_BICARB,labs,measure_col,BICARB,field,Bicarbonate value,Value used for Bicarbonate in the specified measure column,FALSE,Bicarbonate (umol/L),Bicarbonate
+measure_values--nepFC_BUN,labs,measure_col,BUN,field,Blood Urea Nitrogen value,Value used for Blood Urea Nitrogen in the specified measure column,FALSE,Blood Urea Nitrogen (mmol/L),Blood Urea Nitrogen
+measure_values--nepFC_CA,labs,measure_col,CA,field,Calcium value,Value used for Calcium in the specified measure column,FALSE,Calcium (mmol/L),Calcium
+measure_values--nepFC_CL,labs,measure_col,CL,field,Chloride value,Value used for Chloride in the specified measure column,FALSE,Chloride (mmol/L),Chloride
 measure_values--CREAT,labs,measure_col,CREAT,field,Creatinine value,Value used for Creatinine in the specified measure column,FALSE,Creatinine (mg/dL),Creatinine
 measure_values--CYSTC,labs,measure_col,CYSTC,field,Cystatin C value,Value used for Cystatin C in the specified measure column,FALSE,Cystatin C (umol/L),Cystatin C
 measure_values--eGFR,labs,measure_col,eGFR,field,eGFR value,Value used for the Estimated Glomerular Filtration Rate in the specified measure column,FALSE,eGFR (mL/min),eGFR
 measure_values--eGFRcys,labs,measure_col,eGFRcys,field,eGFRcys value,Value used for the Cystatic C-based Estimated Glomerular Filtration Rate in the specified measure column,FALSE,eGFRcys (mL/min),eGFRcys
-measure_values--PHOS,labs,measure_col,PHOS,field,Phosphate value,Value used for Phosphate in the specified measure column,FALSE,Phosphate (mmol/L),Phosphate
-measure_values--K,labs,measure_col,K,field,Potassium value,Value used for Potassium in the specified measure column,FALSE,Potassium (mmol/L),Potassium
-measure_values--SODIUM,labs,measure_col,SODIUM,field,Sodium value,Value used for Sodium in the specified measure column,FALSE,Sodium (mmol/L),Sodium
+measure_values--nepFC_PHOS,labs,measure_col,PHOS,field,Phosphate value,Value used for Phosphate in the specified measure column,FALSE,Phosphate (mmol/L),Phosphate
+measure_values--nepFC_K,labs,measure_col,K,field,Potassium value,Value used for Potassium in the specified measure column,FALSE,Potassium (mmol/L),Potassium
+measure_values--nepFC_SODIUM,labs,measure_col,SODIUM,field,Sodium value,Value used for Sodium in the specified measure column,FALSE,Sodium (mmol/L),Sodium
 baseline_flag,labs,baseline_flag,,column,Baseline Flag column,Column for assigning baseline visits,FALSE,ABLFL,LBBLFL
 baseline_values--Y,labs,baseline_flag,Y,field,Baseline Flag value,Value used for Baseline in the specified baseline column,FALSE,Y,Y
