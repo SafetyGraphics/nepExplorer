@@ -98,15 +98,27 @@ nepexplorer_server <- function(input, output, session, params) {
   })
 
   # Populate sidebar control with measures and select all by default
+  # Populate sidebar control with measures and select all by default
   observe({
+    
+    default_labs <-  c(param()$settings$labs$measure_value$BICARB,
+                       param()$settings$labs$measure_value$BUN,
+                       param()$settings$labs$measure_value$CA,
+                       param()$settings$labs$measure_value$CL,
+                       param()$settings$labs$measure_value$PHOS,
+                       param()$settings$labs$measure_value$K,
+                       param()$settings$labs$measure_value$SODIUM)
+    
+    
     measure_col <- param()$settings$labs$measure_col
-    measures <- unique(param()$data$labs[[measure_col]])
+    measures <- intersect(unique(param()$data$labs[[measure_col]]), default_labs)
+    
     updateSelectizeInput(session,
                          "measures",
                          choices = measures,
                          selected = measures
     )
-
+    
   })
 
   animate <- reactive(input$animate)
@@ -133,10 +145,17 @@ nepexplorer_server <- function(input, output, session, params) {
   })
   #Patient Profile (demo tables + lab line charts)
   observeEvent(selected_subject(), {
-
-    if (length(selected_subject()) == 1) { # avoid triggering patient profiles if there isn't a subject
+    if (length(selected_subject()) == 1) {
       patientProfileServer("patprofile", df = param()$data$labs,
-                           settings = param()$settings$labs, subj_id = selected_subject())
+                           settings = param()$settings$labs, subj_id = selected_subject(),
+                           patient_measures = input$measures)
+      
+      # Create a nested observeEvent for input$measure
+      observeEvent(input$measures, {
+        patientProfileServer("patprofile", df = param()$data$labs,
+                             settings = param()$settings$labs, subj_id = selected_subject(),
+                             patient_measures = input$measures)
+      }, ignoreInit = TRUE)
     }
   }, ignoreInit = TRUE)
 
