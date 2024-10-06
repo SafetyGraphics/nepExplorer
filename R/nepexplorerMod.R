@@ -12,7 +12,7 @@ nepexplorer_ui <- function(id) {
 
   #future home of settings panel
   sidebar <- sidebarPanel(
-    selectizeInput(
+    pickerInput(
       ns("measures"),
       "Select Patient Profile Fold Change Measures",
       multiple = TRUE,
@@ -118,7 +118,7 @@ nepexplorer_server <- function(input, output, session, params) {
     
     # update selectize to reflect what's specific in metadata
 
-    updateSelectizeInput(session,
+    updatePickerInput(session,
                          "measures",
                          choices = measures,
                          selected = fold_change_measures
