@@ -28,7 +28,8 @@ Imports:
     scales,
     rlang,
     shinyjs,
-    grDevices
+    grDevices,
+    shinyWidgets
 Suggests:
     safetyGraphics, 
     safetyData
