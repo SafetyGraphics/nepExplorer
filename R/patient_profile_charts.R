@@ -174,6 +174,7 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
 #' @import RColorBrewer
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
+#' @importFrom grDevices colorRampPalette
 #' @return ggplot object
 drawULNFoldChange <- function(adlb, settings,
                               labs = c("Bicarbonate", "Blood Urea Nitrogen",

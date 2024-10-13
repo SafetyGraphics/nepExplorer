@@ -20,14 +20,15 @@ Imports:
     shiny,
     dplyr,
     ggplot2,
-    RColorBrewer, 
+    RColorBrewer,
     magrittr,
     plotly (>= 4.0.0),
     gt,
     htmlwidgets,
     scales,
     rlang,
-    shinyjs
+    shinyjs,
+    grDevices
 Suggests:
     safetyGraphics, 
     safetyData
