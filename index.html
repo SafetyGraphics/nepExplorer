@@ -48,8 +48,34 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="nepexplorer">nepExplorer<a class="anchor" aria-label="anchor" href="#nepexplorer"></a>
 </h1></div>
-<p>Interactive Graphic for Exploring Kidney Function Data in Clinical Trials</p>
-<p><!-- badges: start --> <a href="https://github.com/SafetyGraphics/nep-explorer/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/SafetyGraphics/nep-explorer/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <!-- badges: end --></p>
+<!-- badges: start -->
+
+<div class="section level2">
+<h2 id="interactive-visual-kidney-function-data-exploration-in-clinical-trials">Interactive Visual Kidney Function Data Exploration in Clinical Trials<a class="anchor" aria-label="anchor" href="#interactive-visual-kidney-function-data-exploration-in-clinical-trials"></a>
+</h2>
+<div class="section level3">
+<h3 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
+</h3>
+<p>The ASA Biopharmaceutical Working Group’s <a href="https://safetygraphics.github.io/" class="external-link">taskforce on Interactive Safety Graphics</a> has developed an open-source, interactive graphical tool to allow safety professionals to easily explore clinical trial laboratory data in order to identify instances of acute declines in renal function. “Drill down” capabilities provide a means to evaluate subject level data. The tool is accompanied by a comprehensive “clinical workflow” that guides the user through a series of evaluations each with a textual discussion regarding the goal of the evaluation step and the relevance of any findings with references to the supporting nephrology literature.</p>
+</div>
+<div class="section level3">
+<h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h3>
+<p>nepExplorer is not available on CRAN yet. You can install the package from GitHub: <code>devtools::install_github('safetyGraphics/nepExplorer', ref = 'main')</code></p>
+</div>
+<div class="section level3">
+<h3 id="using-the-app">Using the App<a class="anchor" aria-label="anchor" href="#using-the-app"></a>
+</h3>
+<p>nepExplorer was built using the safetyGraphics framework and uses a settings object to map fields from input data sets to chart aesthetics and configuration options. A demo of the app is available <a href="https://sb75h1-preston0burns.shinyapps.io/nep-explorer/" class="external-link">here</a>.</p>
+<p>The {nepExplorer} package can be used in two ways:</p>
+<ul>
+<li><p>As a standalone app using create_nepexplorer_app(). See <a href="https://github.com/SafetyGraphics/nepExplorer/blob/master/inst/examples/standalone_app.R" class="external-link">code example</a> here.</p></li>
+<li><p>As a shiny module within a <a href="https://github.com/SafetyGraphics/safetyGraphics" class="external-link">safetyGraphics</a> application. See <a href="https://github.com/SafetyGraphics/nepExplorer/blob/master/inst/examples/safetyGraphics_demo_app.R" class="external-link">code example</a> here.</p></li>
+</ul>
+<p>Data domain, field, and format expectations are detailed in the <a href="https://github.com/SafetyGraphics/nepExplorer/wiki/Data-and-Settings-Guidelines" class="external-link">Data and Settings Guidelines Wiki</a>.</p>
+<p>If it’s your first time configuring and running nepExplorer, check out the Configuration vignette for a walkthrough. (Under Construction)</p>
+</div>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
@@ -87,7 +113,12 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/SafetyGraphics/nep-explorer/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/SafetyGraphics/nep-explorer/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
