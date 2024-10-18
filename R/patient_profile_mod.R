@@ -52,26 +52,26 @@ patientProfileServer <-  function(id, df, selected_measures, settings, subj_id) 
                       demo_vars = c(dm_settings$id_col, dm_settings$age_col, dm_settings$sex_col,
                                     dm_settings$race_col, dm_settings$treatment_col))
       })
-
+      
       output$percent_change <- renderUI({
-
-       default_labs <- c(lab_settings$measure_values$CREAT, lab_settings$measure_values$CYSTC)
-       available_labs <- intersect(patient_df[[lab_settings$measure_col]] %>%  unique(), default_labs)
-     
+        
+        default_labs <- c(lab_settings$measure_values$CREAT, lab_settings$measure_values$CYSTC)
+        available_labs <- intersect(patient_df[[lab_settings$measure_col]] %>%  unique(), default_labs)
+        
         if (length(available_labs) > 0) {
-            drawPercentChange(adlb = patient_df,
-                              labs = available_labs,
-                              settings = lab_settings)
+          drawPercentChange(adlb = patient_df,
+                            labs = available_labs,
+                            settings = lab_settings)
         } else {
           div()
         }
       })
-
+      
       output$raw_change <- renderUI({
-
+        
         default_labs <- c(lab_settings$measure_values$CREAT, lab_settings$measure_values$CYSTC)
         available_labs <- intersect(patient_df[[lab_settings$measure_col]] %>%  unique(), default_labs)
-
+        
         if (length(available_labs) > 0) {
           drawRawChange(adlb = patient_df, settings = lab_settings,
                         labs = available_labs,
@@ -80,12 +80,12 @@ patientProfileServer <-  function(id, df, selected_measures, settings, subj_id) 
           div()
         }
       })
-
+      
       output$raw_change_egfr <- renderUI({
-
+        
         default_labs <- c(lab_settings$measure_values$eGFR, lab_settings$measure_values$eGFRcys)
         available_labs <- intersect(patient_df[[lab_settings$measure_col]] %>%  unique(), default_labs)
-
+        
         if (length(available_labs) > 0) {
           drawRawChange(adlb = patient_df, settings = lab_settings,
                         labs = available_labs,
@@ -94,7 +94,7 @@ patientProfileServer <-  function(id, df, selected_measures, settings, subj_id) 
           div()
         }
       })
-
+      
       output$ULN_FC <- renderUI({
         available_labs <-
           intersect(patient_df[[lab_settings$measure_col]] %>%  unique(), selected_measures)
@@ -107,24 +107,24 @@ patientProfileServer <-  function(id, df, selected_measures, settings, subj_id) 
           div()
         }
       })
-
+      
       output$blood_pressure <- renderUI({
-
+        
         default_vitals <- c(vitals_settings$measure_values$DIABP,
-                          vitals_settings$measure_values$SYSBP)
-
+                            vitals_settings$measure_values$SYSBP)
+        
         available_vitals <- intersect(patient_df[[vitals_settings$measure_col]] %>%  unique(), default_vitals)
-
+        
         if (length(available_vitals) > 0) {
           drawBloodPressure(adlb = patient_df, settings = vitals_settings,
-                        labs = available_vitals)
+                            labs = available_vitals)
         } else {
           div()
         }
       })
-
+      
       output$normalized_albumin <- renderUI({
-
+        
         if (length(lab_settings$measure_values[["ALB/CREAT"]] %in%
                    patient_df[[lab_settings$measure_col]] %>%  unique()) > 0) {
           drawNormalizedAlbumin(adlb = patient_df, settings = lab_settings)
@@ -142,7 +142,7 @@ patientProfileServer <-  function(id, df, selected_measures, settings, subj_id) 
           div()
         }
       })
-
+      
     }
   )
 }

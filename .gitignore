@@ -108,7 +108,6 @@ dist
 # Ignoring R History and R Data Root:
 .Rhistory
 .RData
-docs
 nepExplorer.Rcheck/
 nepExplorer*.tar.gz
 nepExplorer*.tgz
