@@ -6,6 +6,7 @@
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
 #' @importFrom shinyjs hidden
+#' @importFrom shinyWidgets pickerInput
 #' @export
 nepexplorer_ui <- function(id) {
   ns <- NS(id)

@@ -203,9 +203,13 @@ drawULNFoldChange <- function(adlb, settings,
   # Create a color generator function
   color_generator <- colorRampPalette(combined_palette)
   
-  # Generate a large number of colors
+  # if more than 19 labs selected, bring in the generator
+  color_scale <- if (length(labs) <= 19) {
+    color_scale <- combined_palette
+  } else {
+    color_scale <- color_generator(100)
+  }
 
-  
   p <- ggplot(adlb_FC, aes(x = .data[[settings$studyday_col]], y = .data$FOLD_CHG,
                            color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
                            text = paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
@@ -218,7 +222,7 @@ drawULNFoldChange <- function(adlb, settings,
     theme(legend.title = element_blank()) + #remove legend title
     ylab("xULN (Fold Change)") +
     xlab("Study Day") +
-    scale_colour_manual(values = color_generator(100), name = "Lab Test") + # drop yellow
+    scale_colour_manual(values = color_scale, name = "Lab Test") + # drop yellow
 
     ## Add ULN Annotation
     geom_hline(yintercept = 1, linetype = "dashed", color = "gray") +
