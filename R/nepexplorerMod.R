@@ -6,13 +6,14 @@
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
 #' @importFrom shinyjs hidden
+#' @importFrom shinyWidgets pickerInput
 #' @export
 nepexplorer_ui <- function(id) {
   ns <- NS(id)
 
   #future home of settings panel
   sidebar <- sidebarPanel(
-    selectizeInput(
+    shinyWidgets::pickerInput(
       ns("measures"),
       "Select Patient Profile Fold Change Measures",
       multiple = TRUE,
@@ -106,6 +107,7 @@ nepexplorer_server <- function(input, output, session, params) {
   })
 
   # Populate sidebar control with measures and select all by default
+
   observeEvent(param(), {
     measure_col <- param()$settings$labs$measure_col
     measures <- unique(param()$data[[measure_col]])
@@ -116,7 +118,8 @@ nepexplorer_server <- function(input, output, session, params) {
                                       measure_values[grep("nepFC", names(measure_values))])
     
     # update selectize to reflect what's specific in metadata
-    updateSelectizeInput(session,
+
+    shinyWidgets::updatePickerInput(session,
                          "measures",
                          choices = measures,
                          selected = fold_change_measures
@@ -147,9 +150,15 @@ nepexplorer_server <- function(input, output, session, params) {
   })
   #Patient Profile (demo tables + lab line charts)
   observeEvent(selected_subject(), {
-    if (length(selected_subject()) == 1) { # avoid triggering patient profiles if there isn't a subject
+    if (length(selected_subject()) == 1) {
       patientProfileServer("patprofile", df = param()$data, selected_measures = input$measures,
                            settings = param()$settings, subj_id = selected_subject())
+      
+      # Create a nested observeEvent for input$measure
+      observeEvent(input$measures, {
+        patientProfileServer("patprofile", df = param()$data, selected_measures = input$measures,
+                             settings = param()$settings, subj_id = selected_subject())
+      }, ignoreInit = TRUE)
     }
   }, ignoreInit = TRUE)
 

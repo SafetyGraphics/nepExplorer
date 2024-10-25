@@ -174,6 +174,7 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
 #' @import RColorBrewer
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
+#' @importFrom grDevices colorRampPalette
 #' @return ggplot object
 drawULNFoldChange <- function(adlb, settings,
                               labs = c("Bicarbonate", "Blood Urea Nitrogen",
@@ -189,6 +190,26 @@ drawULNFoldChange <- function(adlb, settings,
              .data[[settings$normal_col_high]]) %>%
     ungroup()
 
+
+  # Get the initial colors from Set1, excluding the 6th color
+  initial_colors <- brewer.pal(9, "Set1")[-6]
+  
+  # Choose another palette for extending
+  extend_palette <- brewer.pal(11, "Spectral")
+  
+  # Combine the palettes
+  combined_palette <- c(initial_colors, extend_palette)
+  
+  # Create a color generator function
+  color_generator <- colorRampPalette(combined_palette)
+  
+  # if more than 19 labs selected, bring in the generator
+  color_scale <- if (length(labs) <= 19) {
+    color_scale <- combined_palette
+  } else {
+    color_scale <- color_generator(100)
+  }
+
   p <- ggplot(adlb_FC, aes(x = .data[[settings$studyday_col]], y = .data$FOLD_CHG,
                            color = .data[[settings$measure_col]], group = .data[[settings$measure_col]],
                            text = paste0("Study Day: ", .data[[settings$studyday_col]], "\n",
@@ -201,7 +222,7 @@ drawULNFoldChange <- function(adlb, settings,
     theme(legend.title = element_blank()) + #remove legend title
     ylab("xULN (Fold Change)") +
     xlab("Study Day") +
-    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + # drop yellow
+    scale_colour_manual(values = color_scale, name = "Lab Test") + # drop yellow
 
     ## Add ULN Annotation
     geom_hline(yintercept = 1, linetype = "dashed", color = "gray") +
