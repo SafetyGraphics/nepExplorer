@@ -8,7 +8,7 @@ Authors@R: c(
 	person("Jared", "Woolfork", email = "jaredwoolfolk@gmail.com", role = "aut"),
 	person("Eli", "Miller", email = "eli.miller@atorusresearch.com", role = "aut"),
 	person("James", "Buchanan", email = "jbuchanan@covilance.com", role = "aut"),
-	person("Barbara Hendrickson", email = "bhendric@bsd.uchicago.edu", role = "aut"),
+	person("Barbara", "Hendrickson", email = "bhendric@bsd.uchicago.edu", role = "aut"),
 	person("Siu-Chi", "Sun", email = "Siu-Chi.Sun@gilead.com", role = "aut"))
 Description: nepExplorer enables safety professionals to explore clinical trial laboratory
     data and identify instances of acute declines in renal function. "Drill down" capabilities 
