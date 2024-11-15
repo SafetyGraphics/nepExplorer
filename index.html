@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Interactive Graphic for Exploring Kidney Function Data in Clinical Trials • nepExplorer</title>
+<title>Kidney Function Data Exploration in Clinical Trials • nepExplorer</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Interactive Graphic for Exploring Kidney Function Data in Clinical Trials">
-<meta name="description" content="Shiny app of interactive creatinine scatterplot for exploring kidney function data in clinical trials.">
-<meta property="og:description" content="Shiny app of interactive creatinine scatterplot for exploring kidney function data in clinical trials.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Kidney Function Data Exploration in Clinical Trials">
+<meta name="description" content='nepExplorer enables safety professionals to explore clinical trial laboratory data and identify instances of acute declines in renal function. "Drill down" capabilities provide a means to evaluate subject-level data. The tool is accompanied by a comprehensive clinical workflow that guides the user through a series of evaluations each with a textual discussion regarding the goal of the evaluation step and the relevance of any findings with references to the supporting nephrology literature. nepExplorer is designed as a Shiny application that can be used stand-alone or configured within the safetyGraphics framework.'>
+<meta property="og:description" content='nepExplorer enables safety professionals to explore clinical trial laboratory data and identify instances of acute declines in renal function. "Drill down" capabilities provide a means to evaluate subject-level data. The tool is accompanied by a comprehensive clinical workflow that guides the user through a series of evaluations each with a textual discussion regarding the goal of the evaluation step and the relevance of any findings with references to the supporting nephrology literature. nepExplorer is designed as a Shiny application that can be used stand-alone or configured within the safetyGraphics framework.'>
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">nepExplorer</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/SafetyGraphics/nep-explorer/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/SafetyGraphics/nepExplorer/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -80,8 +80,8 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/SafetyGraphics/nep-explorer/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/SafetyGraphics/nep-explorer/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/SafetyGraphics/nepExplorer/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/SafetyGraphics/nepExplorer/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -110,6 +110,8 @@
 <li>Jared Woolfork <br><small class="roles"> Author </small>  </li>
 <li>Eli Miller <br><small class="roles"> Author </small>  </li>
 <li>James Buchanan <br><small class="roles"> Author </small>  </li>
+<li>Barbara Hendrickson <br><small class="roles"> Author </small>  </li>
+<li>Siu-Chi Sun <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
@@ -125,7 +127,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Preston Burns, Lovemore Gakava, Jared Woolfork, Eli Miller, James Buchanan.</p>
+  <p>Developed by Preston Burns, Lovemore Gakava, Jared Woolfork, Eli Miller, James Buchanan, Barbara Hendrickson, Siu-Chi Sun.</p>
 </div>
 
 <div class="pkgdown-footer-right">
