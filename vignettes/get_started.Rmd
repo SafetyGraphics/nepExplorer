@@ -1,8 +1,8 @@
 ---
-title: "Getting Started with nepExplorera"
+title: "Getting Started with nepExplorer"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{get_started}
+  %\VignetteIndexEntry{Getting Started with nepExplorer}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -28,11 +28,14 @@ library(nepExplorer)
 
 ## Mapping Configuration
 
+
 ### Mapping Structure Overview
 
 A comprehensive mapping helps nepExplorer correctly interpret your clinical trial datasets.
 
+
 ### Detailed Mapping Configuration
+
 
 ```r
 custom_map <- list(
@@ -91,6 +94,7 @@ custom_map <- list(
 
 ## Launch Interactive Application
 
+
 ```r
 create_nepexplorer_app(
   data = list(
@@ -103,6 +107,7 @@ create_nepexplorer_app(
 ```
 
 ## Mapping Configuration Guidelines
+
 
 ### Key Mapping Components
 - `id_col`: Unique subject identifier
@@ -117,11 +122,13 @@ create_nepexplorer_app(
 - `measure_values`: Custom measurement labels
 
 ### Customization Tips
+
 - Match column names exactly to your dataset
 - Modify `measure_values` to match your specific measurements
 - Ensure consistent column naming across datasets
 
 ## Troubleshooting
+
 - Verify data frame column names
 - Check data types and formats
 - Ensure all required columns are present
