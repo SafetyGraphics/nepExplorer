@@ -1,0 +1,128 @@
+---
+title: "Getting Started with nepExplorera"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{get_started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Package Installation
+
+```r
+devtools::install_github('safetyGraphics/nepExplorer', ref = 'main')
+```
+
+## Library and Data Preparation
+
+```r
+library(nepExplorer)
+```
+
+## Mapping Configuration
+
+### Mapping Structure Overview
+
+A comprehensive mapping helps nepExplorer correctly interpret your clinical trial datasets.
+
+### Detailed Mapping Configuration
+
+```r
+custom_map <- list(
+  vitals = list(
+    "id_col" = "USUBJID",               # Unique subject identifier
+    "treatment_col" = "ARM",            # Treatment arm
+    "measure_col" = "TEST",             # Vitals measure variable
+    "value_col" = "VSSTRESN",           # Vitals result value
+    "unit_col" = "VSSTRESU",            # Unit of measure
+    "visit_col" = "VISIT",              # Visit name
+    "visitn_col" = "VISITNUM",          # Visit number
+    "studyday_col" = "VSDY",            # Study day
+    "vs_baseline_flag" = "ABLFL",       # Baseline flag column
+    "vs_baseline_values" = list("Y" = "Y"),  # Baseline value
+    "measure_values" = list(
+      "SYSBP" = "Systolic Blood Pressure (mmHg)",
+      "DIABP" = "Diastolic Blood Pressure (mmHg)"
+    )
+  ),
+  
+  labs = list(
+    "id_col" = "USUBJID",
+    "treatment_col" = "ARM",
+    "measure_col" = "LBTEST",
+    "value_col" = "LBSTRESN",
+    "unit_col" = "LBSTRESU",
+    "studyday_col" = "LBDY",
+    "visit_col" = "VISIT", 
+    "visitn_col" = "VISITNUM",
+    "baseline_flag" = "LBBLFL",
+    "baseline_values" = list("Y" = "Y"),
+    "measure_values" = list(
+      "ALB" = "Albumin (mg/dL)",
+      "ALB/CREAT" = "Albumin/Creatinine",
+      "BICARB" = "Bicarbonate (umol/L)",
+      "BUN" = "Blood Urea Nitrogen (mmol/L)",
+      "BUN/CREAT" = "Blood Urea Nitrogen/Creatinine",
+      "CA" = "Calcium (mmol/L)",
+      "CL" = "Chloride (mmol/L)",
+      "CREAT" = "Creatinine (mg/dL)",
+      "CYSTC" = "Cystatin C (umol/L)",
+      "eGFR" = "eGFR (mL/min)",
+      "eGFRcys" = "eGFRcys (mL/min)",
+      "PHOS" = "Phosphate (mmol/L)",
+      "K" = "Potassium (mmol/L)",
+      "SODIUM" = "Sodium (mmol/L)"
+    )
+  ),
+  
+  dm = list(
+    "id_col" = "USUBJID",
+    "treatment_col" = "ARM"
+  )
+)
+```
+
+## Launch Interactive Application
+
+```r
+create_nepexplorer_app(
+  data = list(
+    dm = nepExplorer::adsl,   # Demographic data
+    labs = nepExplorer::adlb, # Laboratory measurements
+    vitals = nepExplorer::advs # Vital signs
+  ), 
+  mapping = custom_map
+)
+```
+
+## Mapping Configuration Guidelines
+
+### Key Mapping Components
+- `id_col`: Unique subject identifier
+- `treatment_col`: Treatment arm identifier
+- `measure_col`: Measurement type column
+- `value_col`: Numeric result column
+- `unit_col`: Measurement units
+- `visit_col`: Visit name
+- `visitn_col`: Visit number
+- `studyday_col`: Study day
+- `baseline_flag`: Baseline identification column
+- `measure_values`: Custom measurement labels
+
+### Customization Tips
+- Match column names exactly to your dataset
+- Modify `measure_values` to match your specific measurements
+- Ensure consistent column naming across datasets
+
+## Troubleshooting
+- Verify data frame column names
+- Check data types and formats
+- Ensure all required columns are present
+
