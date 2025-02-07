@@ -21,9 +21,7 @@ URL: https://github.com/SafetyGraphics/nepExplorer, https://safetygraphics.githu
 BugReports: https://github.com/SafetyGraphics/nepExplorer/issues
 Depends: R (>= 4.0)
 License: MIT + file LICENSE
-Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.2
 Imports:
     shiny,
     dplyr,
@@ -40,4 +38,13 @@ Imports:
     shinyWidgets
 Suggests:
     safetyGraphics, 
-    safetyData
+    safetyData,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
