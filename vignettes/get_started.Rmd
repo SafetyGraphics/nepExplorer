@@ -14,48 +14,37 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Package Installation
-
-```r
+# Installation
+```{r eval=FALSE}
 devtools::install_github('safetyGraphics/nepExplorer', ref = 'main')
 ```
 
-## Library and Data Preparation
-
-```r
+# Setup
+```{r}
 library(nepExplorer)
 ```
 
-## Mapping Configuration
-
-
-### Mapping Structure Overview
-
+# Data Mapping
 A comprehensive mapping helps nepExplorer correctly interpret your clinical trial datasets.
 
-
-### Detailed Mapping Configuration
-
-
-```r
+```{r}
 custom_map <- list(
   vitals = list(
-    "id_col" = "USUBJID",               # Unique subject identifier
-    "treatment_col" = "ARM",            # Treatment arm
-    "measure_col" = "TEST",             # Vitals measure variable
-    "value_col" = "VSSTRESN",           # Vitals result value
-    "unit_col" = "VSSTRESU",            # Unit of measure
-    "visit_col" = "VISIT",              # Visit name
-    "visitn_col" = "VISITNUM",          # Visit number
-    "studyday_col" = "VSDY",            # Study day
-    "vs_baseline_flag" = "ABLFL",       # Baseline flag column
-    "vs_baseline_values" = list("Y" = "Y"),  # Baseline value
+    "id_col" = "USUBJID",          # Unique subject identifier
+    "treatment_col" = "ARM",        # Treatment arm
+    "measure_col" = "TEST",         # Vitals measure variable
+    "value_col" = "VSSTRESN",      # Vitals result value
+    "unit_col" = "VSSTRESU",       # Unit of measure
+    "visit_col" = "VISIT",         # Visit name
+    "visitn_col" = "VISITNUM",     # Visit number
+    "studyday_col" = "VSDY",       # Study day
+    "vs_baseline_flag" = "ABLFL",  # Baseline flag column
+    "vs_baseline_values" = list("Y" = "Y"), # Baseline value
     "measure_values" = list(
       "SYSBP" = "Systolic Blood Pressure (mmHg)",
       "DIABP" = "Diastolic Blood Pressure (mmHg)"
     )
   ),
-  
   labs = list(
     "id_col" = "USUBJID",
     "treatment_col" = "ARM",
@@ -63,7 +52,7 @@ custom_map <- list(
     "value_col" = "LBSTRESN",
     "unit_col" = "LBSTRESU",
     "studyday_col" = "LBDY",
-    "visit_col" = "VISIT", 
+    "visit_col" = "VISIT",
     "visitn_col" = "VISITNUM",
     "baseline_flag" = "LBBLFL",
     "baseline_values" = list("Y" = "Y"),
@@ -84,7 +73,6 @@ custom_map <- list(
       "SODIUM" = "Sodium (mmol/L)"
     )
   ),
-  
   dm = list(
     "id_col" = "USUBJID",
     "treatment_col" = "ARM"
@@ -92,24 +80,21 @@ custom_map <- list(
 )
 ```
 
-## Launch Interactive Application
-
-
-```r
+# Launch App
+```{r eval=FALSE}
 create_nepexplorer_app(
   data = list(
-    dm = nepExplorer::adsl,   # Demographic data
-    labs = nepExplorer::adlb, # Laboratory measurements
-    vitals = nepExplorer::advs # Vital signs
-  ), 
+    dm = nepExplorer::adsl,        # Demographic data
+    labs = nepExplorer::adlb,      # Laboratory measurements
+    vitals = nepExplorer::advs     # Vital signs
+  ),
   mapping = custom_map
 )
 ```
 
-## Mapping Configuration Guidelines
+# Configuration Guide
 
-
-### Key Mapping Components
+## Required Fields
 - `id_col`: Unique subject identifier
 - `treatment_col`: Treatment arm identifier
 - `measure_col`: Measurement type column
@@ -121,15 +106,12 @@ create_nepexplorer_app(
 - `baseline_flag`: Baseline identification column
 - `measure_values`: Custom measurement labels
 
-### Customization Tips
-
+## Best Practices
 - Match column names exactly to your dataset
 - Modify `measure_values` to match your specific measurements
 - Ensure consistent column naming across datasets
 
-## Troubleshooting
-
+## Common Issues
 - Verify data frame column names
 - Check data types and formats
 - Ensure all required columns are present
-
