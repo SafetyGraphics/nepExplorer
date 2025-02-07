@@ -8,3 +8,4 @@
 ^nepExplorer\.Rcheck$
 ^nepExplorer.*\.tar\.gz$
 ^nepExplorer.*\.tgz$
+^LICENSE\.md$
