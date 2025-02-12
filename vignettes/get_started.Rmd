@@ -24,8 +24,11 @@ devtools::install_github("safetyGraphics/nepExplorer", ref = "main")
 library(nepExplorer)
 ```
 
-# Data Mapping
-A comprehensive mapping helps nepExplorer correctly interpret your clinical trial datasets.
+# Standalone App
+
+## Data Mapping
+A comprehensive mapping helps nepExplorer correctly interpret your clinical trial datasets. To ensure your data is compatible with nepExplorer and you can effectively utilize its features, please see the following link for detailed information about required data domains, data format, and specific column requirements: [Data and Settings Guidelines](https://github.com/SafetyGraphics/nepExplorer/wiki/2.-Data-and-Settings-Guidelines#required-data-domains). This resource provides a comprehensive guide to preparing your data for analysis and visualization within nepExplorer.
+
 
 ```{r}
 custom_map <- list(
@@ -80,7 +83,7 @@ custom_map <- list(
 )
 ```
 
-# Launch App
+## Launch App
 ```{r eval=FALSE}
 create_nepexplorer_app(
   data = list(
@@ -92,9 +95,9 @@ create_nepexplorer_app(
 )
 ```
 
-# Configuration Guide
+## Configuration Guide
 
-## Required Fields
+### Required Fields
 - `id_col`: Unique subject identifier
 - `treatment_col`: Treatment arm identifier
 - `measure_col`: Measurement type column
@@ -106,12 +109,67 @@ create_nepexplorer_app(
 - `baseline_flag`: Baseline identification column
 - `measure_values`: Custom measurement labels
 
-## Best Practices
+### Best Practices
 - Match column names exactly to your dataset
 - Modify `measure_values` to match your specific measurements
 - Ensure consistent column naming across datasets
 
-## Common Issues
+### Common Issues
 - Verify data frame column names
 - Check data types and formats
 - Ensure all required columns are present
+
+## safetyGraphics application
+
+This nepExplorer charts can be added to the {safetyGraphics} shiny app, which allows us to create the charts with any mappings/data combination loaded in the app. The configuration will be captured in a [YAML](https://yaml.org/) file.
+
+```{yaml}
+env: safetyGraphics
+label: Nep Explorer - Module
+name: nepexplorerMod
+type: module
+package: nepExplorer
+order: 9
+domain:
+  - labs
+- vitals
+- dm
+workflow:
+  ui: nepexplorer_ui
+server: nepexplorer_server
+links:
+  nepExplorer: https://github.com/SafetyGraphics/nep-explorer
+```
+
+With the nepExplorer loaded in to our session and the configuration file saved in our working directory as nepExplorer.yaml, we can add the charts to the app as follows:
+
+
+```{r}
+library(nepExplorer)
+library(yaml)
+charts <- c(
+  safetyGraphics::makeChartConfig(),
+  safetyGraphics::makeChartConfig(
+    packages = "nepExplorer",
+    packageLocation = "./inst/config", # location of nepExplorer.yaml file 
+    sourceFiles = TRUE
+  )
+)
+charts$nepexplorerMod$meta <- nepExplorer::meta_nepExplorer
+
+safetyGraphics::safetyGraphicsApp(
+  domainData = list(
+    labs = safetyData::adam_adlbc,
+    dm = safetyData::adam_adsl,
+    vitals = safetyData::adam_advs
+  ),
+  charts = charts
+)
+```
+
+
+Under the charts tab, you'll see:
+
+-TBD: mention update to mapping for this example
+-TBD: mention the chat
+-TBD: mention what to lookout for
