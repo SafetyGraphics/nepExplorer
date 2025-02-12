@@ -6,14 +6,14 @@
 \title{advs}
 \format{
 a data frame with 3170 rows and 26 columns. Retrieved from
-  \url{https://github.com/RhoInc/data-library/tree/master/data/clinical-trials/renderer-specific}
-  and filtered for VS tests. BLFL also derived.
+\url{https://github.com/RhoInc/data-library/tree/master/data/clinical-trials/renderer-specific}
+and filtered for VS tests. BLFL also derived.
 }
 \usage{
 advs
 }
 \description{
 vital signs dataset in tall format that includes baseline
-  characteristics.
+characteristics.
 }
 \keyword{datasets}
