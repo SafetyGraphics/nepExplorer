@@ -123,7 +123,7 @@ create_nepexplorer_app(
 
 This nepExplorer charts can be added to the {safetyGraphics} shiny app, which allows us to create the charts with any mappings/data combination loaded in the app. The configuration will be captured in a [YAML](https://yaml.org/) file.
 
-```{yaml}
+```yaml
 env: safetyGraphics
 label: Nep Explorer - Module
 name: nepexplorerMod
@@ -144,9 +144,11 @@ links:
 With the nepExplorer loaded in to our session and the configuration file saved in our working directory as nepExplorer.yaml, we can add the charts to the app as follows:
 
 
-```{r}
+```{r eval=FALSE}
 library(nepExplorer)
+
 library(yaml)
+
 charts <- c(
   safetyGraphics::makeChartConfig(),
   safetyGraphics::makeChartConfig(
