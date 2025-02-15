@@ -42,7 +42,7 @@ custom_map <- list(
     "visitn_col" = "VISITNUM",     # Visit number
     "studyday_col" = "VSDY",       # Study day
     "vs_baseline_flag" = "ABLFL",  # Baseline flag column
-    "vs_baseline_values" = list("Y" = "Y"), # Baseline value
+    "vs_baseline_values" = "Y", # Baseline value
     "measure_values" = list(
       "SYSBP" = "Systolic Blood Pressure (mmHg)",
       "DIABP" = "Diastolic Blood Pressure (mmHg)"
@@ -99,7 +99,6 @@ create_nepexplorer_app(
 
 ### Required Fields
 - `id_col`: Unique subject identifier
-- `treatment_col`: Treatment arm identifier
 - `measure_col`: Measurement type column
 - `value_col`: Numeric result column
 - `unit_col`: Measurement units
@@ -107,7 +106,10 @@ create_nepexplorer_app(
 - `visitn_col`: Visit number
 - `studyday_col`: Study day
 - `baseline_flag`: Baseline identification column
-- `measure_values`: Custom measurement labels
+- `baseline_values`: Value in `baseline_flag` column indicating a baseline record
+
+### Required Lab Test
+- `Creatinine`: Creatinine is a required lab test collected in `measure_col`. It must be in conventional units. 
 
 ### Best Practices
 - Match column names exactly to your dataset
@@ -118,6 +120,7 @@ create_nepexplorer_app(
 - Verify data frame column names
 - Check data types and formats
 - Ensure all required columns are present
+- Ensure lab results are in conventional units
 
 ## safetyGraphics application
 
