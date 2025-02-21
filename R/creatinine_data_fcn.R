@@ -61,7 +61,7 @@ creatinine_data_fcn <- function(df, settings) {
       }
     }
     
-    return("Stage 0")
+    "Stage 0"
   }
 
   #get highest stage by subject
@@ -73,11 +73,8 @@ creatinine_data_fcn <- function(df, settings) {
 
     )
 
-  return(
     list(
       patient_level_stages = patient_level_stages,
       creatine_level_data = processed_creatinine_data
     )
-  )
-
 }
