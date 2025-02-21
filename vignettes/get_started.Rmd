@@ -122,7 +122,7 @@ create_nepexplorer_app(
 - Ensure all required columns are present
 - Ensure lab results are in conventional units
 
-## safetyGraphics application
+# safetyGraphics application
 
 This nepExplorer charts can be added to the {safetyGraphics} shiny app, which allows us to create the charts with any mappings/data combination loaded in the app. The configuration will be captured in a [YAML](https://yaml.org/) file.
 
@@ -144,7 +144,7 @@ links:
   nepExplorer: https://github.com/SafetyGraphics/nep-explorer
 ```
 
-With the nepExplorer loaded in to our session and the configuration file saved in our working directory as nepExplorer.yaml, we can add the charts to the app as follows:
+With the nepExplorer loaded in to our session and the configuration file saved in our working directory as nepExplorer.yaml, we can add the charts to the safetyGraphics application as follows:
 
 
 ```{r eval=FALSE}
@@ -160,6 +160,7 @@ charts <- c(
     sourceFiles = TRUE
   )
 )
+
 charts$nepexplorerMod$meta <- nepExplorer::meta_nepExplorer
 
 safetyGraphics::safetyGraphicsApp(
@@ -172,9 +173,27 @@ safetyGraphics::safetyGraphicsApp(
 )
 ```
 
+### Configuring the Mapping Tab
 
-Under the charts tab, you'll see:
+After launching the safetyGraphics app with nepExplorer integration:
 
--TBD: mention update to mapping for this example
--TBD: mention the chat
--TBD: mention what to lookout for
+- Navigate to the Mapping tab in the user interface
+
+- Configure the following required mappings:
+
+All required variables must be correctly mapped for nepExplorer visualizations to work properly. Refer to the [detailed mapping guidelines](https://github.com/SafetyGraphics/nepExplorer/wiki/2.-Data-and-Settings-Guidelines) for specific requirements.
+
+
+After completing the mapping, switch to the Charts tab to view the nepExplorer visualizations
+
+For a complete tutorial on safetyGraphics mappings, see the [safetyGraphics ChartConfiguration](https://github.com/SafetyGraphics/safetyGraphics/wiki/ChartConfiguration).
+
+### Troubleshooting Tips
+
+- Verify data frame column names match your mapping configuration
+
+- Ensure all required columns are present in your datasets
+
+- Check that lab results are in conventional units
+
+- Validate that baseline records are properly flagged
