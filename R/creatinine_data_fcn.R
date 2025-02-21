@@ -52,17 +52,16 @@ creatinine_data_fcn <- function(df, settings) {
     left_join(baseline_creat, by = settings$id_col) %>%
     filter(.data[[settings$baseline_flag]] != settings$baseline_values)
 
-
   get_highest_stage <- function(vector_of_stages) {
-    if ("Stage 3" %in% vector_of_stages) {
-      return("Stage 3")
-    } else if ("Stage 2" %in% vector_of_stages) {
-      return("Stage 2")
-    } else if ("Stage 1" %in% vector_of_stages) {
-      return("Stage 1")
-    } else {
-      "Stage 0"
+    stages <- c("Stage 3", "Stage 2", "Stage 1", "Stage 0")
+    
+    for (stage in stages) {
+      if (stage %in% vector_of_stages) {
+        return(stage)
+      }
     }
+    
+    return("Stage 0")
   }
 
   #get highest stage by subject

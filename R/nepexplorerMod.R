@@ -68,7 +68,7 @@ nepexplorer_ui <- function(id) {
     fluid = TRUE
   )
 
-  return(ui)
+  ui
 }
 
 
