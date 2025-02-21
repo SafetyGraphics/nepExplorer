@@ -5,6 +5,8 @@ vignette: >
   %\VignetteIndexEntry{Getting Started with nepExplorer}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+resource_files:
+  - inst/doc/nepexplorer.gif
 ---
 
 ```{r, include = FALSE}
@@ -183,8 +185,12 @@ After launching the safetyGraphics app with nepExplorer integration:
 
 All required variables must be correctly mapped for nepExplorer visualizations to work properly. Refer to the [detailed mapping guidelines](https://github.com/SafetyGraphics/nepExplorer/wiki/2.-Data-and-Settings-Guidelines) for specific requirements.
 
-
 After completing the mapping, switch to the Charts tab to view the nepExplorer visualizations
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("images/nepexplorer.gif")
+```
+
 
 For a complete tutorial on safetyGraphics mappings, see the [safetyGraphics ChartConfiguration](https://github.com/SafetyGraphics/safetyGraphics/wiki/ChartConfiguration).
 
