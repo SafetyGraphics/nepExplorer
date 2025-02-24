@@ -33,5 +33,5 @@ init_nepExplorer <- function(data, settings) {
                      by = c(settings[["labs"]][["id_col"]],
                             settings[["labs"]][["treatment_col"]]))
 
-  return(list(data = anly, settings = settings))
+  list(data = anly, settings = settings)
 }

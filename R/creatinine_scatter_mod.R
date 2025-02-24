@@ -109,7 +109,7 @@ function(el, x) {
                               animation_time_unit = animation_time_unit()) %>% onRender(update_color_js)
     })
 
-    return(processed_creatinine_data)
+    processed_creatinine_data
 
     }
   )

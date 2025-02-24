@@ -13,7 +13,7 @@ nepexplorer_server(input, output, session, params)
 
 \item{session}{module session}
 
-\item{params}{parameters object with `data` and `settings` options.}
+\item{params}{parameters object with \code{data} and \code{settings} options.}
 }
 \value{
 returns shiny module Server function
