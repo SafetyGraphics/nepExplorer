@@ -94,9 +94,9 @@ check_expected_cols <- function(data_domain, settings_list, data_list) {
   missing_cols <- setdiff(expected_cols, colnames(data_list[[data_domain]]))
   
   if (length(missing_cols) > 0) {
-    return(paste("The following columns were specified in", data_domain, "settings but not found in the",
-                 data_domain, "dataset: ", paste(missing_cols, collapse = ", ")))
+    paste("The following columns were specified in", data_domain, "settings but not found in the",
+                 data_domain, "dataset: ", paste(missing_cols, collapse = ", "))
   } else {
-    return(NULL)
+    NULL
   }
 }

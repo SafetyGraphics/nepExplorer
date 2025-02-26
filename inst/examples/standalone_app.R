@@ -37,7 +37,7 @@ dm = list("id_col" = "USUBJID", "treatment_col" = "ARM"),
 
 
 vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM", "measure_col" = "TEST",
-              "baseline_values" = list("Y" = "TRUE"), 
+              "baseline_values" = list("Y" = "TRUE"),
               "baseline_flag" = "BLFL",
               "visit_col" = "VISIT",
               "visitn_col" = "VISITN",
