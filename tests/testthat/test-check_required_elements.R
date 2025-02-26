@@ -13,7 +13,7 @@ test_that("No warnings when all required elements are present", {
     vitals = list("id_col" = "USUBJID",  "measure_col" = "PARAM", "extra_col" = "EXTRA")
   )
   
-  missing_elements <- check_required_elements(expected_settings, actual_settings)
+  missing_elements <- check_required_settings(expected_settings, actual_settings)
   expect_equal(length(missing_elements), 0)
 })
 
@@ -29,7 +29,7 @@ test_that("Missing settings are detected and warning is raised", {
     vitals = list()
   )
   
-  missing_elements <- check_required_elements(expected_settings, actual_settings)
+  missing_elements <- check_required_settings(expected_settings, actual_settings)
   expect_equal(length(missing_elements), 6)
   expect_true("labs$visitn_col" %in% names(missing_elements))
   expect_true("labs$baseline_flag" %in% names(missing_elements))
@@ -53,7 +53,7 @@ test_that("Nested missing settings are detected", {
     vitals = list("id_col" = "USUBJID", "measure_col" = "PARAM")
   )
   
-  missing_elements <- check_required_elements(expected_settings, actual_settings)
+  missing_elements <- check_required_settings(expected_settings, actual_settings)
   expect_equal(length(missing_elements), 1)
   expect_true("labs$measure_values$CREAT" %in% names(missing_elements))
 })
