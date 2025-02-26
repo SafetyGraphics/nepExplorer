@@ -6,7 +6,7 @@ test_that("No warnings when all required elements are present", {
       "value_col" = "STRESN", "unit_col" = "STRESU",
       "studyday_col" = "DY", "visit_col" = "VISIT",
       "visitn_col" = "VISITN", "baseline_flag" = "BLFL",
-      "baseline_values" = "Y", "normal_col_high" = "STNRHI",
+      "baseline_values" = list("Y" = "Y"), "normal_col_high" = "STNRHI",
       "extra_col" = "EXTRA"
     ),
     dm = list("id_col" = "USUBJID"),
@@ -47,7 +47,7 @@ test_that("Nested missing settings are detected", {
       "value_col" = "STRESN", "unit_col" = "STRESU",
       "studyday_col" = "DY", "visit_col" = "VISIT",
       "visitn_col" = "VISITN", "baseline_flag" = "BLFL",
-      "baseline_values" = "Y", "normal_col_high" = "STNRHI"
+      "baseline_values" = list("Y" = "Y"), "normal_col_high" = "STNRHI"
     ),
     dm = list("id_col" = "USUBJID"),
     vitals = list("id_col" = "USUBJID", "measure_col" = "PARAM")
