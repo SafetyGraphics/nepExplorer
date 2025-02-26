@@ -15,10 +15,9 @@ creatinine_data_fcn <- function(df, settings) {
            .data[[settings$measure_col]],
            .data[[settings$value_col]], .data[[settings$baseline_flag]])
 
-
   #get baseline creatinine levels for each subject for hover text
   baseline_creat <- creatinine_data %>%
-    filter(.data[[settings$baseline_flag]] == settings$baseline_values) %>%
+    filter(.data[[settings$baseline_flag]] == settings$baseline_values$Y) %>%
     select(.data[[settings$id_col]], BASELINE = .data[[settings$value_col]])
 
 

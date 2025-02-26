@@ -118,10 +118,9 @@ nepexplorer_server <- function(input, output, session, params) {
                                       measure_values[grep("nepFC", names(measure_values))])
     
     # update selectize to reflect what's specific in metadata
-
     shinyWidgets::updatePickerInput(session,
                          "measures",
-                         choices = measures,
+                         choices = measures[!is.na(measures)],
                          selected = fold_change_measures
     )
   })

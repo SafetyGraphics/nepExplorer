@@ -43,8 +43,8 @@ custom_map <- list(
     "visit_col" = "VISIT",         # Visit name
     "visitn_col" = "VISITNUM",     # Visit number
     "studyday_col" = "VSDY",       # Study day
-    "vs_baseline_flag" = "ABLFL",  # Baseline flag column
-    "vs_baseline_values" = "Y", # Baseline value
+    "baseline_flag" = "ABLFL",  # Baseline flag column
+    "baseline_values" = list("Y" = "Y"), # Baseline value
     "measure_values" = list(
       "SYSBP" = "Systolic Blood Pressure (mmHg)",
       "DIABP" = "Diastolic Blood Pressure (mmHg)"

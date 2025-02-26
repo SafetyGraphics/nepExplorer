@@ -8,8 +8,8 @@ visitn_col,vitals,visitn_col,,column,Visit Number column,Visit number variable n
 measure_values--SYSBP,vitals,measure_col,SYSBP,field,Systolic value,Value used for Systolic Blood Pressure in the specified measure column,FALSE,Systolic Blood Pressure (mmHg),Systolic Blood Pressure 
 measure_values--DIABP,vitals,measure_col,DIABP,field,Diastolic value,Value used for Diastolic  Blood Pressure in the specified measure column,FALSE,Diastolic Blood Pressure (mmHg),Diastolic Blood Pressure
 unit_col,vitals,unit_col,,column,Unit column,Unit of measure variable name for Blood Pressure,FALSE,STRESU,VSSTRESU
-vs_baseline_flag_col,vitals,vs_baseline_flag,,column,VS Baseline Flag,Column for assigning baseline visits for Blood Pressure,FALSE,ABLFL,
-vs_baseline_values--POS,vitals,vs_baseline_flag_col,POS,field,VS Baseline Flag value,Value used for Baseline in the specified baseline column  for Blood Pressure,FALSE,Y,Y
+baseline_flag_col,vitals,vs_baseline_flag,,column,VS Baseline Flag,Column for assigning baseline visits for Blood Pressure,FALSE,ABLFL,
+baseline_values--Y,vitals,vs_baseline_flag_col,Y,field,VS Baseline Flag value,Value used for Baseline in the specified baseline column  for Blood Pressure,FALSE,Y,Y
 lab_unit_col,labs,lab_unit_col,,column,Unit column,Unit of measure variable name,FALSE,STRESU,STRESU
 measure_values--ALB,labs,measure_col,ALB,field,Albumin value,Value used for Albumin in the specified measure column,FALSE,Albumin (g/L),Albumin
 measure_values--BICARB,labs,measure_col,BICARB,field,Bicarbonate value,Value used for Bicarbonate in the specified measure column,FALSE,Bicarbonate (umol/L),Bicarbonate

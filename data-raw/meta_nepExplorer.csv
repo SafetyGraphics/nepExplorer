@@ -8,8 +8,8 @@ visitn_col,vitals,visitn_col,,column,Visit Number column,Visit number variable n
 measure_values--SYSBP,vitals,measure_col,SYSBP,field,Systolic value,Value used for Systolic Blood Pressure in the specified measure column,FALSE,Systolic Blood Pressure (mmHg),Systolic Blood Pressure 
 measure_values--DIABP,vitals,measure_col,DIABP,field,Diastolic value,Value used for Diastolic  Blood Pressure in the specified measure column,FALSE,Diastolic Blood Pressure (mmHg),Diastolic Blood Pressure
 unit_col,vitals,unit_col,,column,Unit column,Unit of measure variable name,FALSE,,VSSTRESU
-vs_baseline_flag,vitals,vs_baseline_flag,,column,Vital Signs Baseline Flag,Column for assigning VS baseline visits,FALSE,ABLFL,
-vs_baseline_values--Y,vitals,vs_baseline_flag,Y,field,Vital Signs Baseline Flag value,Value used for VS Baseline in the specified baseline column,FALSE,Y,
+baseline_flag,vitals,vs_baseline_flag,,column,Vital Signs Baseline Flag,Column for assigning VS baseline visits,FALSE,ABLFL,
+baseline_values--Y,vitals,vs_baseline_flag,Y,field,Vital Signs Baseline Flag value,Value used for VS Baseline in the specified baseline column,FALSE,Y,
 measure_values--ALB,labs,measure_col,ALB,field,Albumin value,Value used for Albumin in the specified measure column,FALSE,Albumin (mg/dL),Albumin
 measure_values--ALB/CREAT,labs,measure_col,ALB/CREAT,field,Albumin/Creatinine Ratio value,Value used for Albumin/Creatinine ratio in the specified measure column,FALSE,Albumin/Creatinine,
 measure_values--BUN/CREAT,labs,measure_col,BUN/CREAT,field,Blood Urea Nitrogen/Creatinine Ratio value,Value used for Blood Urea Nitrogen/Creatinine ratio in the specified measure column,FALSE,Blood Urea Nitrogen/Creatinine,
