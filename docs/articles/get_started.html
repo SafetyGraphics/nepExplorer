@@ -72,7 +72,7 @@
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/SafetyGraphics/nep-explorer" class="external-link">nepExplorer</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/SafetyGraphics/nepExplorer" class="external-link">nepExplorer</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="standalone-app">Standalone App<a class="anchor" aria-label="anchor" href="#standalone-app"></a>
@@ -99,8 +99,8 @@ nepExplorer.</p>
 <span>    <span class="st">"visit_col"</span> <span class="op">=</span> <span class="st">"VISIT"</span>,         <span class="co"># Visit name</span></span>
 <span>    <span class="st">"visitn_col"</span> <span class="op">=</span> <span class="st">"VISITNUM"</span>,     <span class="co"># Visit number</span></span>
 <span>    <span class="st">"studyday_col"</span> <span class="op">=</span> <span class="st">"VSDY"</span>,       <span class="co"># Study day</span></span>
-<span>    <span class="st">"vs_baseline_flag"</span> <span class="op">=</span> <span class="st">"ABLFL"</span>,  <span class="co"># Baseline flag column</span></span>
-<span>    <span class="st">"vs_baseline_values"</span> <span class="op">=</span> <span class="st">"Y"</span>, <span class="co"># Baseline value</span></span>
+<span>    <span class="st">"baseline_flag"</span> <span class="op">=</span> <span class="st">"ABLFL"</span>,  <span class="co"># Baseline flag column</span></span>
+<span>    <span class="st">"baseline_values"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Y"</span> <span class="op">=</span> <span class="st">"Y"</span><span class="op">)</span>, <span class="co"># Baseline value</span></span>
 <span>    <span class="st">"measure_values"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      <span class="st">"SYSBP"</span> <span class="op">=</span> <span class="st">"Systolic Blood Pressure (mmHg)"</span>,</span>
 <span>      <span class="st">"DIABP"</span> <span class="op">=</span> <span class="st">"Diastolic Blood Pressure (mmHg)"</span></span>
@@ -238,7 +238,7 @@ combination loaded in the app. The configuration will be captured in a
 file saved in our working directory as nepExplorer.yaml, we can add the
 charts to the safetyGraphics application as follows:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/SafetyGraphics/nep-explorer" class="external-link">nepExplorer</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/SafetyGraphics/nepExplorer" class="external-link">nepExplorer</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/vubiostat/r-yaml/" class="external-link">yaml</a></span><span class="op">)</span></span>
 <span></span>

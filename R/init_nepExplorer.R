@@ -11,6 +11,26 @@
 #' @export
 
 init_nepExplorer <- function(data, settings) {
+
+  # check for any missing required settings and warn user
+  missing_settings <- check_required_settings(expected_settings, settings)
+
+  if (length(missing_settings) > 0) {
+    warning(paste("The following required nepExplorer settings were not detected:",
+                  paste(names(missing_settings), collapse = ", ")))
+  }
+    
+  # check for any missing columns that are specified in settings
+  missing_cols_results <- lapply(c("labs", "vitals", "dm"),
+                                 function(domain) check_expected_cols(domain, settings, data))
+  
+  missing_cols_msgs <- Filter(Negate(is.null), missing_cols_results)
+
+  if (length(missing_cols_msgs) > 0) {
+    warning(paste(missing_cols_msgs, collapse = "\n"))
+  }
+  
+  # subset vital signs dataset to blood pressure tests
   vs_sub <-
     data$vitals %>%
     filter(.data[[settings[["vitals"]]$measure_col]] %in%
@@ -18,20 +38,21 @@ init_nepExplorer <- function(data, settings) {
                settings[["vitals"]]$measure_values$DIABP,
                settings[["vitals"]]$measure_values$SYSBP
              ))
-
+  
+  # stack labs and vitals
   vs_labs <- data$labs %>% bind_rows(vs_sub)
-
+  
+  #subset dm dataset to usable columns
   dm_sub <- data$dm %>%
     dplyr::select(any_of(c(settings[["dm"]][["id_col"]],
-                  settings[["dm"]][["treatment_col"]],
-                  settings[["dm"]][["race_col"]],
-                  settings[["dm"]][["age_col"]])))
-
-  # left join to keep all rows in dm
+                           settings[["dm"]][["treatment_col"]],
+                           settings[["dm"]][["race_col"]],
+                           settings[["dm"]][["age_col"]])))
+  
+  # left join labs/vitals to keep all rows in dm
   anly <- dm_sub %>%
     dplyr::left_join(vs_labs,
-                     by = c(settings[["labs"]][["id_col"]],
-                            settings[["labs"]][["treatment_col"]]))
-
+                     by = setNames(settings[["dm"]][["id_col"]], settings[["labs"]][["id_col"]]))
+  
   list(data = anly, settings = settings)
 }
