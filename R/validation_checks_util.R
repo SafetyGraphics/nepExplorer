@@ -42,7 +42,7 @@ expected_settings <-  list(labs = list("id_col" = "USUBJID", "measure_col" = "PA
                                        "visit_col" = "VISIT",
                                        "visitn_col" = "VISITN",
                                        "baseline_flag" = "BLFL",
-                                       "baseline_values" = "Y",
+                                       "baseline_values" = list("Y" = "Y"),
                                        "normal_col_high" = "STNRHI"),
                            dm = list("id_col" = "USUBJID"),
                            vitals = list("id_col" = "USUBJID", "measure_col" = "PARAM"))
