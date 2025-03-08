@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   get_started: get_started.html
-last_built: 2025-03-05T20:39Z
+last_built: 2025-03-08T04:25Z
 urls:
   reference: https://safetygraphics.github.io/nepExplorer/reference
   article: https://safetygraphics.github.io/nepExplorer/articles
