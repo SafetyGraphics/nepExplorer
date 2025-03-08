@@ -42,6 +42,8 @@ init_nepExplorer <- function(data, settings) {
   # stack labs and vitals
   vs_labs <- data$labs %>% bind_rows(vs_sub)
   
+  ##TODO: subset to only columns in settings object
+  
   #subset dm dataset to usable columns
   dm_sub <- data$dm %>%
     dplyr::select(any_of(c(settings[["dm"]][["id_col"]],

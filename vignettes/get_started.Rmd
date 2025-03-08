@@ -36,15 +36,14 @@ A comprehensive mapping helps nepExplorer correctly interpret your clinical tria
 custom_map <- list(
   vitals = list(
     "id_col" = "USUBJID",          # Unique subject identifier
-    "treatment_col" = "ARM",        # Treatment arm
     "measure_col" = "TEST",         # Vitals measure variable
-    "value_col" = "VSSTRESN",      # Vitals result value
-    "unit_col" = "VSSTRESU",       # Unit of measure
+    "value_col" = "STRESN",      # Vitals result value
+    "unit_col" = "STRESU",       # Unit of measure
     "visit_col" = "VISIT",         # Visit name
-    "visitn_col" = "VISITNUM",     # Visit number
-    "studyday_col" = "VSDY",       # Study day
-    "baseline_flag" = "ABLFL",  # Baseline flag column
-    "baseline_values" = list("Y" = "Y"), # Baseline value
+    "visitn_col" = "VISITN",     # Visit number
+    "studyday_col" = "DY",       # Study day
+    "baseline_flag" = "BLFL",  # Baseline flag column
+    "baseline_values" = list("Y" = "TRUE"), # Baseline value
     "measure_values" = list(
       "SYSBP" = "Systolic Blood Pressure (mmHg)",
       "DIABP" = "Diastolic Blood Pressure (mmHg)"
@@ -52,30 +51,30 @@ custom_map <- list(
   ),
   labs = list(
     "id_col" = "USUBJID",
-    "treatment_col" = "ARM",
-    "measure_col" = "LBTEST",
-    "value_col" = "LBSTRESN",
-    "unit_col" = "LBSTRESU",
-    "studyday_col" = "LBDY",
+    "measure_col" = "TEST",
+    "value_col" = "STRESN",
+    "unit_col" = "STRESU",
+    "studyday_col" = "DY",
     "visit_col" = "VISIT",
-    "visitn_col" = "VISITNUM",
-    "baseline_flag" = "LBBLFL",
-    "baseline_values" = list("Y" = "Y"),
+    "visitn_col" = "VISITN",
+    "baseline_flag" = "BLFL",
+    "baseline_values" = list("Y" = "TRUE"),
+    "normal_col_high" = "STNRHI",
     "measure_values" = list(
-      "ALB" = "Albumin (mg/dL)",
+      "nepFC_ALB" = "Albumin (mg/dL)",
       "ALB/CREAT" = "Albumin/Creatinine",
-      "BICARB" = "Bicarbonate (umol/L)",
-      "BUN" = "Blood Urea Nitrogen (mmol/L)",
+      "nepFC_BICARB" = "Bicarbonate (umol/L)",
+      "nepFC_BUN" = "Blood Urea Nitrogen (mmol/L)",
       "BUN/CREAT" = "Blood Urea Nitrogen/Creatinine",
-      "CA" = "Calcium (mmol/L)",
-      "CL" = "Chloride (mmol/L)",
+      "nepFC_CA" = "Calcium (mmol/L)",
+      "nepFC_CL" = "Chloride (mmol/L)",
       "CREAT" = "Creatinine (mg/dL)",
       "CYSTC" = "Cystatin C (umol/L)",
       "eGFR" = "eGFR (mL/min)",
       "eGFRcys" = "eGFRcys (mL/min)",
-      "PHOS" = "Phosphate (mmol/L)",
-      "K" = "Potassium (mmol/L)",
-      "SODIUM" = "Sodium (mmol/L)"
+      "nepFC_PHOS" = "Phosphate (mmol/L)",
+      "nepFC_K" = "Potassium (mmol/L)",
+      "nepFC_SODIUM" = "Sodium (mmol/L)"
     )
   ),
   dm = list(

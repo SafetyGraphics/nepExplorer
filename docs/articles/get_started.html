@@ -34,6 +34,7 @@
 <li><a class="dropdown-item" href="../articles/get_started.html">Getting Started with nepExplorer</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -92,15 +93,14 @@ nepExplorer.</p>
 <code class="sourceCode R"><span><span class="va">custom_map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  vitals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="st">"id_col"</span> <span class="op">=</span> <span class="st">"USUBJID"</span>,          <span class="co"># Unique subject identifier</span></span>
-<span>    <span class="st">"treatment_col"</span> <span class="op">=</span> <span class="st">"ARM"</span>,        <span class="co"># Treatment arm</span></span>
 <span>    <span class="st">"measure_col"</span> <span class="op">=</span> <span class="st">"TEST"</span>,         <span class="co"># Vitals measure variable</span></span>
-<span>    <span class="st">"value_col"</span> <span class="op">=</span> <span class="st">"VSSTRESN"</span>,      <span class="co"># Vitals result value</span></span>
-<span>    <span class="st">"unit_col"</span> <span class="op">=</span> <span class="st">"VSSTRESU"</span>,       <span class="co"># Unit of measure</span></span>
+<span>    <span class="st">"value_col"</span> <span class="op">=</span> <span class="st">"STRESN"</span>,      <span class="co"># Vitals result value</span></span>
+<span>    <span class="st">"unit_col"</span> <span class="op">=</span> <span class="st">"STRESU"</span>,       <span class="co"># Unit of measure</span></span>
 <span>    <span class="st">"visit_col"</span> <span class="op">=</span> <span class="st">"VISIT"</span>,         <span class="co"># Visit name</span></span>
-<span>    <span class="st">"visitn_col"</span> <span class="op">=</span> <span class="st">"VISITNUM"</span>,     <span class="co"># Visit number</span></span>
-<span>    <span class="st">"studyday_col"</span> <span class="op">=</span> <span class="st">"VSDY"</span>,       <span class="co"># Study day</span></span>
-<span>    <span class="st">"baseline_flag"</span> <span class="op">=</span> <span class="st">"ABLFL"</span>,  <span class="co"># Baseline flag column</span></span>
-<span>    <span class="st">"baseline_values"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Y"</span> <span class="op">=</span> <span class="st">"Y"</span><span class="op">)</span>, <span class="co"># Baseline value</span></span>
+<span>    <span class="st">"visitn_col"</span> <span class="op">=</span> <span class="st">"VISITN"</span>,     <span class="co"># Visit number</span></span>
+<span>    <span class="st">"studyday_col"</span> <span class="op">=</span> <span class="st">"DY"</span>,       <span class="co"># Study day</span></span>
+<span>    <span class="st">"baseline_flag"</span> <span class="op">=</span> <span class="st">"BLFL"</span>,  <span class="co"># Baseline flag column</span></span>
+<span>    <span class="st">"baseline_values"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Y"</span> <span class="op">=</span> <span class="st">"TRUE"</span><span class="op">)</span>, <span class="co"># Baseline value</span></span>
 <span>    <span class="st">"measure_values"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      <span class="st">"SYSBP"</span> <span class="op">=</span> <span class="st">"Systolic Blood Pressure (mmHg)"</span>,</span>
 <span>      <span class="st">"DIABP"</span> <span class="op">=</span> <span class="st">"Diastolic Blood Pressure (mmHg)"</span></span>
@@ -108,30 +108,30 @@ nepExplorer.</p>
 <span>  <span class="op">)</span>,</span>
 <span>  labs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="st">"id_col"</span> <span class="op">=</span> <span class="st">"USUBJID"</span>,</span>
-<span>    <span class="st">"treatment_col"</span> <span class="op">=</span> <span class="st">"ARM"</span>,</span>
-<span>    <span class="st">"measure_col"</span> <span class="op">=</span> <span class="st">"LBTEST"</span>,</span>
-<span>    <span class="st">"value_col"</span> <span class="op">=</span> <span class="st">"LBSTRESN"</span>,</span>
-<span>    <span class="st">"unit_col"</span> <span class="op">=</span> <span class="st">"LBSTRESU"</span>,</span>
-<span>    <span class="st">"studyday_col"</span> <span class="op">=</span> <span class="st">"LBDY"</span>,</span>
+<span>    <span class="st">"measure_col"</span> <span class="op">=</span> <span class="st">"TEST"</span>,</span>
+<span>    <span class="st">"value_col"</span> <span class="op">=</span> <span class="st">"STRESN"</span>,</span>
+<span>    <span class="st">"unit_col"</span> <span class="op">=</span> <span class="st">"STRESU"</span>,</span>
+<span>    <span class="st">"studyday_col"</span> <span class="op">=</span> <span class="st">"DY"</span>,</span>
 <span>    <span class="st">"visit_col"</span> <span class="op">=</span> <span class="st">"VISIT"</span>,</span>
-<span>    <span class="st">"visitn_col"</span> <span class="op">=</span> <span class="st">"VISITNUM"</span>,</span>
-<span>    <span class="st">"baseline_flag"</span> <span class="op">=</span> <span class="st">"LBBLFL"</span>,</span>
-<span>    <span class="st">"baseline_values"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Y"</span> <span class="op">=</span> <span class="st">"Y"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"visitn_col"</span> <span class="op">=</span> <span class="st">"VISITN"</span>,</span>
+<span>    <span class="st">"baseline_flag"</span> <span class="op">=</span> <span class="st">"BLFL"</span>,</span>
+<span>    <span class="st">"baseline_values"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Y"</span> <span class="op">=</span> <span class="st">"TRUE"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"normal_col_high"</span> <span class="op">=</span> <span class="st">"STNRHI"</span>,</span>
 <span>    <span class="st">"measure_values"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      <span class="st">"ALB"</span> <span class="op">=</span> <span class="st">"Albumin (mg/dL)"</span>,</span>
+<span>      <span class="st">"nepFC_ALB"</span> <span class="op">=</span> <span class="st">"Albumin (mg/dL)"</span>,</span>
 <span>      <span class="st">"ALB/CREAT"</span> <span class="op">=</span> <span class="st">"Albumin/Creatinine"</span>,</span>
-<span>      <span class="st">"BICARB"</span> <span class="op">=</span> <span class="st">"Bicarbonate (umol/L)"</span>,</span>
-<span>      <span class="st">"BUN"</span> <span class="op">=</span> <span class="st">"Blood Urea Nitrogen (mmol/L)"</span>,</span>
+<span>      <span class="st">"nepFC_BICARB"</span> <span class="op">=</span> <span class="st">"Bicarbonate (umol/L)"</span>,</span>
+<span>      <span class="st">"nepFC_BUN"</span> <span class="op">=</span> <span class="st">"Blood Urea Nitrogen (mmol/L)"</span>,</span>
 <span>      <span class="st">"BUN/CREAT"</span> <span class="op">=</span> <span class="st">"Blood Urea Nitrogen/Creatinine"</span>,</span>
-<span>      <span class="st">"CA"</span> <span class="op">=</span> <span class="st">"Calcium (mmol/L)"</span>,</span>
-<span>      <span class="st">"CL"</span> <span class="op">=</span> <span class="st">"Chloride (mmol/L)"</span>,</span>
+<span>      <span class="st">"nepFC_CA"</span> <span class="op">=</span> <span class="st">"Calcium (mmol/L)"</span>,</span>
+<span>      <span class="st">"nepFC_CL"</span> <span class="op">=</span> <span class="st">"Chloride (mmol/L)"</span>,</span>
 <span>      <span class="st">"CREAT"</span> <span class="op">=</span> <span class="st">"Creatinine (mg/dL)"</span>,</span>
 <span>      <span class="st">"CYSTC"</span> <span class="op">=</span> <span class="st">"Cystatin C (umol/L)"</span>,</span>
 <span>      <span class="st">"eGFR"</span> <span class="op">=</span> <span class="st">"eGFR (mL/min)"</span>,</span>
 <span>      <span class="st">"eGFRcys"</span> <span class="op">=</span> <span class="st">"eGFRcys (mL/min)"</span>,</span>
-<span>      <span class="st">"PHOS"</span> <span class="op">=</span> <span class="st">"Phosphate (mmol/L)"</span>,</span>
-<span>      <span class="st">"K"</span> <span class="op">=</span> <span class="st">"Potassium (mmol/L)"</span>,</span>
-<span>      <span class="st">"SODIUM"</span> <span class="op">=</span> <span class="st">"Sodium (mmol/L)"</span></span>
+<span>      <span class="st">"nepFC_PHOS"</span> <span class="op">=</span> <span class="st">"Phosphate (mmol/L)"</span>,</span>
+<span>      <span class="st">"nepFC_K"</span> <span class="op">=</span> <span class="st">"Potassium (mmol/L)"</span>,</span>
+<span>      <span class="st">"nepFC_SODIUM"</span> <span class="op">=</span> <span class="st">"Sodium (mmol/L)"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  dm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>

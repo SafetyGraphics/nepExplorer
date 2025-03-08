@@ -250,6 +250,8 @@ drawULNFoldChange <- function(adlb, settings,
 #' @return ggplot object
 drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure", "Systolic Blood Pressure")) {
 
+  
+  #TODO: add null handling since unit_col is not required for vs
   adlb_bp <- adlb %>%
     filter(.data[[settings$measure_col]] %in% labs)
 

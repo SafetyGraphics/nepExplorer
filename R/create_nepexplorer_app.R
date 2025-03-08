@@ -20,44 +20,46 @@ create_nepexplorer_app <- function(
     runNow = TRUE
 ) {
 if (is.null(mapping)) {
-    mapping <- list(labs = list("id_col" = "USUBJID", "measure_col" = "PARAM",
-                               "measure_values" = list("CREAT" = "Creatinine",
-                                                       "CYSTC" = "Cystatin C",
-                                                       "eGFR" = "eGFR",
-                                                       "eGFRcys" = "eGFRcys",
-                                                       "ALB/CREAT" = "Albumin/Creatinine",
-                                                       "BUN/CREAT" = "Blood Urea Nitrogen/Creatinine",
-                                                       "BICARB" =  "Bicarbonate",
-                                                       "BUN" =  "Blood Urea Nitrogen",
-                                                       "CA" = "Calcium",
-                                                       "CL" = "Chloride",
-                                                       "PHOS" = "Phosphorus",
-                                                       "K" = "Potassium",
-                                                       "SODIUM" =  "Sodium"
-                                                       ),
-                               "value_col" = "STRESN",
-                               "unit_col" = "STRESU",
-                               "studyday_col" = "DY",
-                               "visit_col" = "VISIT",
-                               "visitn_col" = "VISITN",
-                               "baseline_flag" = "BLFL",
-                               "baseline_values" = list("Y" = "Y"),
-                               "normal_col_high" = "STNRHI",
-                               "id_col" = "USUBJID",
-                               "age_col" = "AGE",
-                               "sex_col" = "SEX",
-                               "race_col" = "RACE",
-                               "treatment_col" = "ARM"
-                               ),
+    mapping <- list(labs = list("id_col" = "USUBJID", "measure_col" = "TEST",
+                                "measure_values" = list("CREAT" = "Creatinine", #specified measures
+                                                        "CYSTC" = "Cystatin C",
+                                                        "eGFR" = "eGFR",
+                                                        "eGFRcys" = "eGFRcys",
+                                                        "ALB/CREAT" = "Albumin/Creatinine",
+                                                        "nepFC_BICARB" =  "Bicarbonate", #foldchange measures
+                                                        "nepFC_BUN" =  "Blood Urea Nitrogen",
+                                                        "BUN/CREAT" = "Blood Urea Nitrogen/Creatinine",
+                                                        "nepFC_CA" = "Calcium",
+                                                        "nepFC_CL" = "Chloride",
+                                                        "nepFC_PHOS" = "Phosphorus",
+                                                        "nepFC_K" = "Potassium",
+                                                        "nepFC_SODIUM" =  "Sodium"
+                                ),
+                                "value_col" = "STRESN",
+                                "unit_col" = "STRESU",
+                                "studyday_col" = "DY",
+                                "visit_col" = "VISIT",
+                                "visitn_col" = "VISITN",
+                                "baseline_flag" = "BLFL",
+                                "baseline_values" = list("Y" = "TRUE"),
+                                "normal_col_high" = "STNRHI"),
+                    
 
                     dm = list("id_col" = "USUBJID", "treatment_col" = "ARM",
                               "race_col" = "RACE", "age_col" = "AGE"),
 
-                    vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM", "measure_col" = "PARAM",
+                    vitals = list("id_col" = "USUBJID",  "measure_col" = "TEST",
+                                  "baseline_values" = list("Y" = "TRUE"),
+                                  "baseline_flag" = "BLFL",
+                                  "visit_col" = "VISIT",
+                                  "visitn_col" = "VISITN",
+                                  "studyday_col" = "DY",
+                                  "value_col" = "STRESN",
+                                  "unit_col" = "STRESU",
                                   "measure_values" = list("DIABP" = "Diastolic Blood Pressure",
-                                                          "SYSBP" = "Systolic Blood Pressure"
-                                                          )
-                                  )
+                                                          "SYSBP" = "Systolic Blood Pressure")
+                    )
+                                  
     )
   }
   ## create object containing data and setting to pass to server

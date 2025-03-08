@@ -36,7 +36,7 @@ new_mapping <- list(labs = list("id_col" = "USUBJID", "measure_col" = "TEST",
 dm = list("id_col" = "USUBJID", "treatment_col" = "ARM"),
 
 
-vitals = list("id_col" = "USUBJID", "treatment_col" = "ARM", "measure_col" = "TEST",
+vitals = list("id_col" = "USUBJID", "measure_col" = "TEST",
               "baseline_values" = list("Y" = "TRUE"),
               "baseline_flag" = "BLFL",
               "visit_col" = "VISIT",
