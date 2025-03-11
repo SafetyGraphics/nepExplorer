@@ -1,5 +1,9 @@
-if (!require(nepExplorer)) {devtools::install_github('safetyGraphics/nepExplorer', ref = 'master')}
-if (!require(dplyr)) {install.packages("dplyr")}
+if (!require(nepExplorer)) {
+  devtools::install_github("safetyGraphics/nepExplorer", ref = "master")
+}
+if (!require(dplyr)) {
+  install.packages("dplyr")
+}
 library(nepExplorer)
 library(dplyr)
 

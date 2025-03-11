@@ -9,13 +9,13 @@ patientProfileUI <-  function(id) {
   ns <- NS(id)
   fluidPage(
     gt_output(ns("demo_table")),
-    uiOutput(ns("percent_change")),
-    uiOutput(ns("raw_change")),
-    uiOutput(ns("raw_change_egfr")),
-    uiOutput(ns("ULN_FC")),
-    uiOutput(ns("blood_pressure")),
-    uiOutput(ns("normalized_albumin")),
-    uiOutput(ns("bun_creat"))
+    uiOutput(ns("percent_change"), width = "100%"),
+    uiOutput(ns("raw_change"), width = "100%"),
+    uiOutput(ns("raw_change_egfr"), width = "100%"),
+    uiOutput(ns("ULN_FC"), width = "100%"),
+    uiOutput(ns("blood_pressure"), width = "100%"),
+    uiOutput(ns("normalized_albumin"), width = "100%"),
+    uiOutput(ns("bun_creat"), width = "100%")
   )
 }
 

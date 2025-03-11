@@ -1,3 +1,23 @@
+#' Adjust and Convert ggplot to Plotly
+#'
+#' This function converts a ggplot object to a plotly object and adjusts the layout to ensure consistent spacing
+#' for the y-axis labels and positions the legend below the plot.
+#'
+#' @param p A ggplot object to be adjusted and converted.
+#'
+#' @return A plotly object with adjusted layout settings.
+#'
+#' @importFrom plotly ggplotly layout config
+adjusted_ggplotly <- function(p) {
+  ggplotly(p, tooltip = "text") %>%
+    layout(
+      autosize = TRUE,
+      margin = list(l = 120, r = 50, b = 50, t = 50, pad = 4),
+      legend = list(orientation = "h", x = 0.5, xanchor = "center", y = -0.2)
+    ) %>%
+    config(displayModeBar = FALSE)
+}
+
 #' Draw Time Series Plot for Percent Change in Lab Values from Baseline
 #'
 #' @param adlb lab data in tall format that must contain DY for study day,
@@ -14,6 +34,7 @@
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
 #' @importFrom scales percent_format
+#' @importFrom plotly layout
 #'
 #' @return ggplot object
 drawPercentChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), KDIGO_reference_ranges = TRUE) {
@@ -42,6 +63,7 @@ drawPercentChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C
     theme_bw() +
     scale_y_continuous(name = "Percent Change",
                        labels = scales::percent_format(accuracy = 1)) + #format % on y axis
+    scale_x_continuous(limits = c(0, max(adlb$DY))) + # set consistent x-axis
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
 
@@ -66,8 +88,7 @@ drawPercentChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C
     annotate("text", x = max(adlb_pct_chg[[settings$studyday_col]]) / 10, y = 3, label = "\nKDIGO Stage 3",
              color = "gray44", size = 3)
 
-  ggplotly(p, tooltip = "text") %>%
-    config(displayModeBar = FALSE)
+  adjusted_ggplotly(p)
 }
 
 #' Draw Time Series Plot for Raw Change in Lab Values from Baseline
@@ -85,6 +106,7 @@ drawPercentChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C
 #' @import RColorBrewer
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
+#' @importFrom plotly layout
 #' @importFrom rlang :=
 #' @return ggplot object
 drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), delta_creatinine_ref_ranges = TRUE) {
@@ -127,7 +149,8 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
     theme(legend.title = element_blank()) + #remove legend title
     ylab("Raw Change") +
     xlab("Study Day") +
-    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test")  #drop yellow
+    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
+    scale_x_continuous(limits = c(0, max(adlb$DY))) # set consistent x-axis
 
   if (delta_creatinine_ref_ranges) {
 
@@ -157,8 +180,7 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
   }
 
 
-  ggplotly(p, tooltip = "text") %>%
-    config(displayModeBar = FALSE)
+  adjusted_ggplotly(p)
 }
 
 #' Draw Time Series Plot for Fold Change from ULN
@@ -174,6 +196,7 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
 #' @import RColorBrewer
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
+#' @importFrom plotly layout
 #' @importFrom grDevices colorRampPalette
 #' @return ggplot object
 drawULNFoldChange <- function(adlb, settings,
@@ -223,15 +246,14 @@ drawULNFoldChange <- function(adlb, settings,
     ylab("xULN (Fold Change)") +
     xlab("Study Day") +
     scale_colour_manual(values = color_scale, name = "Lab Test") + # drop yellow
-
+    scale_x_continuous(limits = c(0, max(adlb$DY))) + # set consistent x-axis
+    
     ## Add ULN Annotation
     geom_hline(yintercept = 1, linetype = "dashed", color = "gray") +
     annotate("text", x = max(adlb_FC[[settings$studyday_col]]) / 10, y = 1, label = "\nULN", color = "gray44",
              size = 3)
 
-  ggplotly(p, tooltip = "text") %>%
-    config(displayModeBar = FALSE)
-
+  adjusted_ggplotly(p)
 }
 
 #' Draw Time Series Plot for Blood Pressure
@@ -247,6 +269,7 @@ drawULNFoldChange <- function(adlb, settings,
 #' @import RColorBrewer
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
+#' @importFrom plotly layout
 #' @return ggplot object
 drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure", "Systolic Blood Pressure")) {
 
@@ -277,6 +300,7 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
     ylab(bp_unit) +
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test")  + #drop yellow
+    scale_x_continuous(limits = c(0, max(adlb$DY))) + # set consistent x-axis
 
     # Add ideal BP annotations
     geom_hline(yintercept = 80, linetype = "dashed", color = "gray") + #add diastolic dashed line
@@ -289,8 +313,7 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
              label = "Ideal Systolic \n Blood Pressure",
              color = "gray44",  size = 3)
 
-  ggplotly(p, tooltip = "text") %>%
-    config(displayModeBar = FALSE)
+  adjusted_ggplotly(p)
 }
 
 #' Draw Time Series Plot for Normalized Albumin
@@ -304,6 +327,7 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
 #' @import RColorBrewer
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
+#' @importFrom plotly layout
 #' @return ggplot object
 drawNormalizedAlbumin <- function(adlb, settings) {
 
@@ -331,8 +355,9 @@ drawNormalizedAlbumin <- function(adlb, settings) {
     theme(legend.title = element_blank()) + #remove legend title
     ylab(uacr_unit) +
     xlab("Study Day") +
-    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") #drop yellow
-
+    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
+    scale_x_continuous(limits = c(0, max(adlb$DY))) # set consistent x-axis
+  
   if (tolower(uacr_unit) == "mg/g") {
 
     p <- p +
@@ -353,8 +378,7 @@ drawNormalizedAlbumin <- function(adlb, settings) {
 
   }
 
-  ggplotly(p, tooltip = "text") %>%
-    config(displayModeBar = FALSE)
+  adjusted_ggplotly(p)
 }
 
 #' Draw Demography Table
@@ -396,6 +420,7 @@ drawDemoTable <- function(adlb, settings, demo_vars = c("USUBJID", "AGE", "SEX",
 #' @import RColorBrewer
 #' @importFrom plotly ggplotly
 #' @importFrom plotly config
+#' @importFrom plotly layout
 #' @return ggplot object
 drawBunCreat <- function(adlb, settings) {
   adlb_norm <- adlb %>%
@@ -423,13 +448,12 @@ drawBunCreat <- function(adlb, settings) {
     theme(legend.title = element_blank()) + #remove legend title
     ylab(ubuncr_unit) +
     xlab("Study Day") +
-    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") #drop yellow
-
+    scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
+    scale_x_continuous(limits = c(0, max(adlb$DY))) # set consistent x-axis
     p <- p +
       ## Add two threshold lines, one at 10 and one at 20.
       geom_hline(yintercept = 10, linetype = "dashed", color = "gray") +
       geom_hline(yintercept = 20, linetype = "dashed", color = "gray")
 
-  ggplotly(p, tooltip = "text") %>%
-    config(displayModeBar = FALSE)
+  adjusted_ggplotly(p)
 }
