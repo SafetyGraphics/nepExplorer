@@ -63,7 +63,8 @@ drawPercentChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C
     theme_bw() +
     scale_y_continuous(name = "Percent Change",
                        labels = scales::percent_format(accuracy = 1)) + #format % on y axis
-    scale_x_continuous(limits = c(0, max(adlb[[settings$studyday_col]]))) + # set consistent x-axis
+    scale_x_continuous(limits = c(min(adlb[[settings$studyday_col]]),
+                                  max(adlb[[settings$studyday_col]]))) + # set consistent x-axis
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
 
@@ -150,7 +151,8 @@ drawRawChange <- function(adlb, settings, labs = c("Creatinine", "Cystatin C"), 
     ylab("Raw Change") +
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
-    scale_x_continuous(limits = c(0, max(adlb[[settings$studyday_col]]))) # set consistent x-axis
+    scale_x_continuous(limits = c(min(adlb[[settings$studyday_col]]),
+                                  max(adlb[[settings$studyday_col]]))) # set consistent x-axis
 
   if (delta_creatinine_ref_ranges) {
 
@@ -246,7 +248,8 @@ drawULNFoldChange <- function(adlb, settings,
     ylab("xULN (Fold Change)") +
     xlab("Study Day") +
     scale_colour_manual(values = color_scale, name = "Lab Test") + # drop yellow
-    scale_x_continuous(limits = c(0, max(adlb[[settings$studyday_col]]))) + # set consistent x-axis
+    scale_x_continuous(limits = c(min(adlb[[settings$studyday_col]]),
+                                  max(adlb[[settings$studyday_col]]))) + # set consistent x-axis
     
     ## Add ULN Annotation
     geom_hline(yintercept = 1, linetype = "dashed", color = "gray") +
@@ -300,7 +303,8 @@ drawBloodPressure <- function(adlb, settings, labs = c("Diastolic Blood Pressure
     ylab(bp_unit) +
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test")  + #drop yellow
-    scale_x_continuous(limits = c(0, max(adlb[[settings$studyday_col]]))) + # set consistent x-axis
+    scale_x_continuous(limits = c(min(adlb[[settings$studyday_col]]),
+                                  max(adlb[[settings$studyday_col]]))) + # set consistent x-axis
 
     # Add ideal BP annotations
     geom_hline(yintercept = 80, linetype = "dashed", color = "gray") + #add diastolic dashed line
@@ -356,7 +360,8 @@ drawNormalizedAlbumin <- function(adlb, settings) {
     ylab(uacr_unit) +
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
-    scale_x_continuous(limits = c(0, max(adlb[[settings$studyday_col]]))) # set consistent x-axis
+    scale_x_continuous(limits = c(min(adlb[[settings$studyday_col]]),
+                                  max(adlb[[settings$studyday_col]]))) # set consistent x-axis
   
   if (tolower(uacr_unit) == "mg/g") {
 
@@ -449,7 +454,8 @@ drawBunCreat <- function(adlb, settings) {
     ylab(ubuncr_unit) +
     xlab("Study Day") +
     scale_colour_manual(values = brewer.pal(9, "Set1")[-6], name = "Lab Test") + #drop yellow
-    scale_x_continuous(limits = c(0, max(adlb[[settings$studyday_col]]))) # set consistent x-axis
+    scale_x_continuous(limits = c(min(adlb[[settings$studyday_col]]),
+                                  max(adlb[[settings$studyday_col]]))) # set consistent x-axis
     p <- p +
       ## Add two threshold lines, one at 10 and one at 20.
       geom_hline(yintercept = 10, linetype = "dashed", color = "gray") +
