@@ -46,7 +46,7 @@ init_nepExplorer <- function(data, settings) {
       settings[["vitals"]][["studyday_col"]],
       settings[["vitals"]][["visit_col"]],
       settings[["vitals"]][["visitn_col"]],
-      settings[["vitals"]][["baseline_flag"]],
+      settings[["vitals"]][["baseline_flag"]]
     )))
   
   # stack labs and vitals
