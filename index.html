@@ -68,7 +68,7 @@
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
-<p>nepExplorer is not available on CRAN yet. You can install the package from GitHub: <code>devtools::install_github('safetyGraphics/nepExplorer', ref = 'main')</code></p>
+<p>nepExplorer is not available on CRAN yet. You can install the package from GitHub: <code>devtools::install_github('safetyGraphics/nepExplorer', ref = 'master')</code></p>
 </div>
 <div class="section level3">
 <h3 id="using-the-app">Using the App<a class="anchor" aria-label="anchor" href="#using-the-app"></a>
@@ -76,11 +76,11 @@
 <p>nepExplorer was built using the safetyGraphics framework and uses a settings object to map fields from input data sets to chart aesthetics and configuration options. A demo of the app is available <a href="https://sb75h1-preston0burns.shinyapps.io/nep-explorer/" class="external-link">here</a>.</p>
 <p>The {nepExplorer} package can be used in two ways:</p>
 <ul>
-<li><p>As a standalone app using create_nepexplorer_app(). See <a href="https://github.com/SafetyGraphics/nepExplorer/blob/master/inst/examples/standalone_app.R" class="external-link">code example</a> here.</p></li>
-<li><p>As a shiny module within a <a href="https://github.com/SafetyGraphics/safetyGraphics" class="external-link">safetyGraphics</a> application. See <a href="https://github.com/SafetyGraphics/nepExplorer/blob/master/inst/examples/safetyGraphics_demo_app.R" class="external-link">code example</a> here.</p></li>
+<li><p>As a standalone app using create_nepexplorer_app(). To run the standalone app with example data and default mappings simply use: <code><a href="reference/create_nepexplorer_app.html">create_nepexplorer_app()</a></code>. If you need to customize the arguments for your own data, see the <a href="https://github.com/SafetyGraphics/nepExplorer/blob/master/inst/examples/standalone_app.R" class="external-link">standalone example</a> here.</p></li>
+<li><p>As a shiny module within a <a href="https://github.com/SafetyGraphics/safetyGraphics" class="external-link">safetyGraphics</a> application. See <a href="https://github.com/SafetyGraphics/nepExplorer/blob/master/inst/examples/safetyGraphics_demo_app.R" class="external-link">safetyGraphics example</a> here. The unit conversion functions included in this code are specific to the safetyData datasets. Conversion factors will vary based on your data. It’s recommended to use the conversion units established by your own sponsor lab conversions.</p></li>
 </ul>
 <p>Data domain, field, and format expectations are detailed in the <a href="https://github.com/SafetyGraphics/nepExplorer/wiki/Data-and-Settings-Guidelines" class="external-link">Data and Settings Guidelines Wiki</a>.</p>
-<p>If it’s your first time configuring and running nepExplorer, check out the Configuration vignette for a walkthrough. (Under Construction)</p>
+<p>If it’s your first time configuring and running nepExplorer, check out the <a href="https://safetygraphics.github.io/nepExplorer/articles/get_started.html">Getting Started Vignette</a>.</p>
 </div>
 </div>
 </div>
