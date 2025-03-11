@@ -12,7 +12,7 @@ The ASA Biopharmaceutical Working Group's [taskforce on Interactive Safety Graph
 
 ### Installation
 nepExplorer is not available on CRAN yet. You can install the package from GitHub:
-`devtools::install_github('safetyGraphics/nepExplorer', ref = 'main')`
+`devtools::install_github('safetyGraphics/nepExplorer', ref = 'master')`
 
 ### Using the App
 
@@ -20,10 +20,10 @@ nepExplorer was built using the safetyGraphics framework and uses a settings obj
 
 The {nepExplorer} package can be used in two ways:
 
--   As a standalone app using create_nepexplorer_app(). See [code example](https://github.com/SafetyGraphics/nepExplorer/blob/master/inst/examples/standalone_app.R) here.
+-   As a standalone app using create_nepexplorer_app(). To run the standalone app with example data and default mappings simply use: `create_nepexplorer_app()`. If you need to customize the arguments for your own data, see the [standalone example](https://github.com/SafetyGraphics/nepExplorer/blob/master/inst/examples/standalone_app.R) here.
 
--   As a shiny module within a [safetyGraphics](https://github.com/SafetyGraphics/safetyGraphics) application. See [code example](https://github.com/SafetyGraphics/nepExplorer/blob/master/inst/examples/safetyGraphics_demo_app.R) here.
+-   As a shiny module within a [safetyGraphics](https://github.com/SafetyGraphics/safetyGraphics) application. See [safetyGraphics example](https://github.com/SafetyGraphics/nepExplorer/blob/master/inst/examples/safetyGraphics_demo_app.R) here. The unit conversion functions included in this code are specific to the safetyData datasets. Conversion factors will vary based on your data. It's recommended to use the conversion units established by your own sponsor lab conversions.
 
 Data domain, field, and format expectations are detailed in the [Data and Settings Guidelines Wiki](https://github.com/SafetyGraphics/nepExplorer/wiki/Data-and-Settings-Guidelines).
 
-If it's your first time configuring and running nepExplorer, check out the Configuration vignette for a walkthrough. (Under Construction)
+If it's your first time configuring and running nepExplorer, check out the [Getting Started Vignette](https://safetygraphics.github.io/nepExplorer/articles/get_started.html).

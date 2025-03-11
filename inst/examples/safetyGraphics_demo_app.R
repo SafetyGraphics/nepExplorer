@@ -1,11 +1,11 @@
-devtools::load_all()
-library(dplyr)
-library(safetyGraphics)
+if (!require(nepExplorer)) {devtools::install_github('safetyGraphics/nepExplorer', ref = 'master')}
+if (!require(safetyGraphics)) {install.packages("safetyGraphics")}
+if (!require(dplyr)) {install.packages("dplyr")}
 
   # Safety Graphics app with nep-explorer included
   charts <- c(
     safetyGraphics::makeChartConfig(),
-    safetyGraphics::makeChartConfig(packages = "nepExplorer", packageLocation = "./inst/config", sourceFiles = TRUE)
+    safetyGraphics::makeChartConfig(packages = "nepExplorer", packageLocation = "config", sourceFiles = TRUE)
   )
 
   charts$nepexplorerMod$meta <- nepExplorer::meta_nepExplorer

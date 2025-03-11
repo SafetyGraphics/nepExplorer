@@ -15,7 +15,7 @@ nepexplorer_ui <- function(id) {
   sidebar <- sidebarPanel(
     shinyWidgets::pickerInput(
       ns("measures"),
-      "Select Patient Profile Fold Change Measures",
+      "Patient Profile: Select xULN (Fold Change) Measures",
       multiple = TRUE,
       choices = c("")
     ),

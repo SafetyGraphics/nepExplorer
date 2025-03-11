@@ -1,13 +1,7 @@
-if (!interactive()) {
-  sink(stderr(), type = "output")
-  tryCatch({
-    library("nepExplorer")
-  }, error = function(e) {
-    devtools::load_all()
-  })
-} else {
-  devtools::load_all()
-}
+if (!require(nepExplorer)) {devtools::install_github('safetyGraphics/nepExplorer', ref = 'master')}
+if (!require(dplyr)) {install.packages("dplyr")}
+library(nepExplorer)
+library(dplyr)
 
 new_mapping <- list(labs = list("id_col" = "USUBJID", "measure_col" = "TEST",
                             "measure_values" = list("CREAT" = "Creatinine", #specified measures
