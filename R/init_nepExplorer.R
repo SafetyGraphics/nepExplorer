@@ -37,12 +37,33 @@ init_nepExplorer <- function(data, settings) {
              c(
                settings[["vitals"]]$measure_values$DIABP,
                settings[["vitals"]]$measure_values$SYSBP
-             ))
+             )) %>%
+    dplyr::select(any_of(c(
+      settings[["vitals"]][["id_col"]],
+      settings[["vitals"]][["measure_col"]],
+      settings[["vitals"]][["value_col"]],
+      settings[["vitals"]][["unit_col"]],
+      settings[["vitals"]][["studyday_col"]],
+      settings[["vitals"]][["visit_col"]],
+      settings[["vitals"]][["visitn_col"]],
+      settings[["vitals"]][["baseline_flag"]],
+    )))
   
   # stack labs and vitals
-  vs_labs <- data$labs %>% bind_rows(vs_sub)
-  
-  ##TODO: subset to only columns in settings object
+  vs_labs <- data$labs %>%
+    dplyr::select(any_of(c(
+      settings[["labs"]][["id_col"]],
+      settings[["labs"]][["measure_col"]],
+      settings[["labs"]][["value_col"]],
+      settings[["labs"]][["unit_col"]],
+      settings[["labs"]][["studyday_col"]],
+      settings[["labs"]][["visit_col"]],
+      settings[["labs"]][["visitn_col"]],
+      settings[["labs"]][["baseline_flag"]],
+      settings[["labs"]][["normal_col_high"]]
+    ))) %>%
+    bind_rows(vs_sub)
+
   
   #subset dm dataset to usable columns
   dm_sub <- data$dm %>%
