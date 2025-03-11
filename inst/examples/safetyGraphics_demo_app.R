@@ -8,6 +8,10 @@ if (!require(dplyr)) {
   install.packages("dplyr")
 }
 
+library(nepExplorer)
+library(dplyr)
+library(safetyGraphics)
+
 # Safety Graphics app with nep-explorer included
 charts <- c(
   safetyGraphics::makeChartConfig(),
