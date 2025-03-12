@@ -7,10 +7,10 @@
 init_nepExplorer(data, settings)
 }
 \arguments{
-\item{data}{`list` Named list of data frames that includes participant-level subject data (`dm`)
-labs(`labs`) and vital signs data (`vitals`).}
+\item{data}{\code{list} Named list of data frames that includes participant-level subject data (\code{dm})
+labs(\code{labs}) and vital signs data (\code{vitals}).}
 
-\item{settings}{`list` Named list of settings.}
+\item{settings}{\code{list} Named list of settings.}
 }
 \value{
 returns list with data and settings

@@ -15,10 +15,9 @@ creatinine_data_fcn <- function(df, settings) {
            .data[[settings$measure_col]],
            .data[[settings$value_col]], .data[[settings$baseline_flag]])
 
-
   #get baseline creatinine levels for each subject for hover text
   baseline_creat <- creatinine_data %>%
-    filter(.data[[settings$baseline_flag]] == settings$baseline_values) %>%
+    filter(.data[[settings$baseline_flag]] == settings$baseline_values$Y) %>%
     select(.data[[settings$id_col]], BASELINE = .data[[settings$value_col]])
 
 
@@ -52,17 +51,16 @@ creatinine_data_fcn <- function(df, settings) {
     left_join(baseline_creat, by = settings$id_col) %>%
     filter(.data[[settings$baseline_flag]] != settings$baseline_values)
 
-
   get_highest_stage <- function(vector_of_stages) {
-    if ("Stage 3" %in% vector_of_stages) {
-      return("Stage 3")
-    } else if ("Stage 2" %in% vector_of_stages) {
-      return("Stage 2")
-    } else if ("Stage 1" %in% vector_of_stages) {
-      return("Stage 1")
-    } else {
-      "Stage 0"
+    stages <- c("Stage 3", "Stage 2", "Stage 1", "Stage 0")
+    
+    for (stage in stages) {
+      if (stage %in% vector_of_stages) {
+        return(stage)
+      }
     }
+    
+    "Stage 0"
   }
 
   #get highest stage by subject
@@ -74,11 +72,8 @@ creatinine_data_fcn <- function(df, settings) {
 
     )
 
-  return(
     list(
       patient_level_stages = patient_level_stages,
       creatine_level_data = processed_creatinine_data
     )
-  )
-
 }

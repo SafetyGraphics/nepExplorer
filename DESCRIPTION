@@ -1,33 +1,50 @@
 Package: nepExplorer
 Type: Package
-Title: Interactive Graphic for Exploring Kidney Function Data in Clinical Trials.\
-Version: 0.1.0
+Title: Kidney Function Data Exploration in Clinical Trials
+Version: 1.0.0
 Authors@R: c(
 	person("Preston", "Burns", email = "s.preston.burns@gmail.com", role = c("cre","aut")),
 	person("Lovemore", "Gakava", email = "lovemore.gakava@gmail.com", role = "aut"),
 	person("Jared", "Woolfork", email = "jaredwoolfolk@gmail.com", role = "aut"),
 	person("Eli", "Miller", email = "eli.miller@atorusresearch.com", role = "aut"),
-	person("James", "Buchanan", email = "jbuchanan@covilance.com", role = "aut"))
-Description: Shiny app of interactive creatinine scatterplot for exploring kidney function data in clinical trials.
-URL: https://github.com/SafetyGraphics/nep-explorer
-BugReports: https://github.com/SafetyGraphics/nep-explorer/issues
+	person("James", "Buchanan", email = "jbuchanan@covilance.com", role = "aut"),
+	person("Barbara", "Hendrickson", email = "bhendric@bsd.uchicago.edu", role = "aut"),
+	person("Siu-Chi", "Sun", email = "Siu-Chi.Sun@gilead.com", role = "aut"))
+Description: nepExplorer enables safety professionals to explore clinical trial laboratory
+    data and identify instances of acute declines in renal function. "Drill down" capabilities 
+    provide a means to evaluate subject-level data. The tool is accompanied by a comprehensive
+    clinical workflow that guides the user through a series of evaluations each with a textual 
+    discussion regarding the goal of the evaluation step and the relevance of any findings with
+    references to the supporting nephrology literature. nepExplorer is designed as a Shiny 
+    application that can be used stand-alone or configured within the safetyGraphics framework. 
+URL: https://github.com/SafetyGraphics/nepExplorer, https://safetygraphics.github.io/nepExplorer/
+BugReports: https://github.com/SafetyGraphics/nepExplorer/issues
 Depends: R (>= 4.0)
 License: MIT + file LICENSE
-Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
 Imports:
     shiny,
     dplyr,
     ggplot2,
-    RColorBrewer, 
+    RColorBrewer,
     magrittr,
     plotly (>= 4.0.0),
     gt,
     htmlwidgets,
     scales,
     rlang,
-    shinyjs
+    shinyjs,
+    grDevices,
+    shinyWidgets
 Suggests:
     safetyGraphics, 
-    safetyData
+    safetyData,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

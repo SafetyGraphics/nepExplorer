@@ -5,3 +5,7 @@
 ^outline\.md$
 ^\.github$
 ^\.lintr$
+^nepExplorer\.Rcheck$
+^nepExplorer.*\.tar\.gz$
+^nepExplorer.*\.tgz$
+^LICENSE\.md$

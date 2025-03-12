@@ -6,15 +6,16 @@
 #' @import shiny
 #' @importFrom shinyjs useShinyjs
 #' @importFrom shinyjs hidden
+#' @importFrom shinyWidgets pickerInput
 #' @export
 nepexplorer_ui <- function(id) {
   ns <- NS(id)
 
   #future home of settings panel
   sidebar <- sidebarPanel(
-    selectizeInput(
+    shinyWidgets::pickerInput(
       ns("measures"),
-      "Select Measures",
+      "Patient Profile: Select xULN (Fold Change) Measures",
       multiple = TRUE,
       choices = c("")
     ),
@@ -42,6 +43,14 @@ nepexplorer_ui <- function(id) {
 
 
   main <- mainPanel(
+    # HTML header with style specifications.
+    tags$head(
+      tags$style(
+        # hide measure values from mappings tab that we want controlled within "measure" dropdown
+        HTML("div.field-wrap:has(label[id^='sg-mapping-labs-measure_col-measure_values--nepFC_']) { display: none; }"
+        )
+      )
+    ),
     useShinyjs(),
     # Scatter PLot + Summary Table UI
     creatinineScatterUI(ns("scatter")),
@@ -59,7 +68,7 @@ nepexplorer_ui <- function(id) {
     fluid = TRUE
   )
 
-  return(ui)
+  ui
 }
 
 
@@ -98,15 +107,22 @@ nepexplorer_server <- function(input, output, session, params) {
   })
 
   # Populate sidebar control with measures and select all by default
-  observe({
-    measure_col <- param()$settings$labs$measure_col
-    measures <- unique(param()$data$labs[[measure_col]])
-    updateSelectizeInput(session,
-                         "measures",
-                         choices = measures,
-                         selected = measures
-    )
 
+  observeEvent(param(), {
+    measure_col <- param()$settings$labs$measure_col
+    measures <- unique(param()$data[[measure_col]])
+    measure_values <- param()$settings$labs$measure_values
+
+    # go through metadata file and grab measure values with prefix "nepFC"
+    fold_change_measures <- intersect(measures,
+                                      measure_values[grep("nepFC", names(measure_values))])
+    
+    # update selectize to reflect what's specific in metadata
+    shinyWidgets::updatePickerInput(session,
+                         "measures",
+                         choices = measures[!is.na(measures)],
+                         selected = fold_change_measures
+    )
   })
 
   animate <- reactive(input$animate)
@@ -122,7 +138,7 @@ nepexplorer_server <- function(input, output, session, params) {
   # get processed data to use for subsetting to subject on scatterplot click
   processed_creatinine_data <- reactive({
 
-    creatinineScatterServer("scatter", df = param()$data$labs, settings = param()$settings$labs,
+    creatinineScatterServer("scatter", df = param()$data, settings = param()$settings$labs,
                             animate = animate,
                             animation_transition_time = reactive(input$animation_transition_time),
                             animation_time_unit = animation_time_unit)
@@ -133,10 +149,15 @@ nepexplorer_server <- function(input, output, session, params) {
   })
   #Patient Profile (demo tables + lab line charts)
   observeEvent(selected_subject(), {
-
-    if (length(selected_subject()) == 1) { # avoid triggering patient profiles if there isn't a subject
-      patientProfileServer("patprofile", df = param()$data$labs,
-                           settings = param()$settings$labs, subj_id = selected_subject())
+    if (length(selected_subject()) == 1) {
+      patientProfileServer("patprofile", df = param()$data, selected_measures = input$measures,
+                           settings = param()$settings, subj_id = selected_subject())
+      
+      # Create a nested observeEvent for input$measure
+      observeEvent(input$measures, {
+        patientProfileServer("patprofile", df = param()$data, selected_measures = input$measures,
+                             settings = param()$settings, subj_id = selected_subject())
+      }, ignoreInit = TRUE)
     }
   }, ignoreInit = TRUE)
 
