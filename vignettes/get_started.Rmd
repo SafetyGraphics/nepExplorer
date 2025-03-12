@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 # Installation
 ```{r eval=FALSE}
-devtools::install_github("safetyGraphics/nepExplorer", ref = "main")
+devtools::install_github("safetyGraphics/nepExplorer", ref = "master")
 ```
 
 # Setup
